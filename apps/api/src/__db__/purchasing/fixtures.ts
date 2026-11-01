@@ -55,7 +55,7 @@ export const P_ACCOUNTANT = "bbbbbbbb-0000-4000-8000-0000000000b3";
 export const TENANT_P = "77777777-7777-7777-7777-777777777777";
 
 const audit = new AuditService(new DrizzleAuditStore());
-const posting = new PostingService(audit, new PartnerSubledgerService());
+const posting = new PostingService(audit, new PartnerSubledgerService(), null);
 const numbering = new NumberingService(audit);
 const resolver = new TaxResolverService();
 const matching = new MatchingService();
@@ -85,7 +85,7 @@ export const pGl = new GlQueries();
 export const pReconciliation = new ReconciliationService(audit);
 export const pOpeningDrafts = new OpeningBalancesService(audit);
 export const pOpeningPost = new OpeningBalancesPostingService(audit, posting);
-export const warehouses = new WarehouseService(audit);
+export const warehouses = new WarehouseService(audit, null);
 export const taxCodes = new TaxCodesService(audit);
 export const registrations = new RegistrationService(audit);
 

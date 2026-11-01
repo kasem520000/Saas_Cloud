@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { envelope } from "../../../infra/http/envelope";
 import { identityOf } from "../../../infra/context/session-context";
+import { LimitCheck } from "../../../infra/auth/limit-check.decorator";
 import { RequirePermissions } from "../../../infra/auth/require-permissions.decorator";
 import { InvitationService } from "../application/invitation-service";
 import { UsersService } from "../application/users-service";
@@ -56,6 +57,7 @@ export class UsersController {
   /** Issue an invitation (owner; email + tenant role; 72 h token). */
   @Post("invitations")
   @RequirePermissions("identity.users.invite")
+  @LimitCheck("invite_user")
   @HttpCode(HttpStatus.OK)
   async invite(@Req() request: Request, @Body() body: unknown) {
     const identity = requireIdentity(request);

@@ -21,7 +21,7 @@ export interface AuditEventInput {
   action: string;
   entityType: string;
   entityId: string;
-  actorId?: string;
+  actorId?: string | null;
   before?: unknown;
   after?: unknown;
   deviceId?: string;

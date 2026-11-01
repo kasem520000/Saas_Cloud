@@ -34,6 +34,7 @@ export const MIGRATIONS: readonly string[] = [
   "0018_sales_core",
   "0019_sales_ar",
   "0020_reporting_core",
+  "0021_billing_notifications",
 ];
 
 /**

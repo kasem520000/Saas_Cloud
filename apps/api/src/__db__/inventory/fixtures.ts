@@ -42,10 +42,10 @@ export const I_SUPERVISOR = "aaaaaaaa-0000-4000-8000-0000000000a3";
 export const TENANT_I = "55555555-5555-5555-5555-555555555555";
 
 const audit = new AuditService(new DrizzleAuditStore());
-const posting = new PostingService(audit, new PartnerSubledgerService());
+const posting = new PostingService(audit, new PartnerSubledgerService(), null);
 const numbering = new NumberingService(audit);
 
-export const warehouses = new WarehouseService(audit);
+export const warehouses = new WarehouseService(audit, null);
 export const stock = new StockService(audit, posting);
 export const adjustments = new AdjustmentService(audit, posting, numbering);
 export const transfers = new TransferService(audit, posting, numbering);

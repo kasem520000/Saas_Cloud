@@ -50,7 +50,7 @@ export const S_CASHIER = "cccccccc-0000-4000-8000-0000000000c3";
 export const TENANT_S = "88888888-8888-8888-8888-888888888888";
 
 const audit = new AuditService(new DrizzleAuditStore());
-const posting = new PostingService(audit, new PartnerSubledgerService());
+const posting = new PostingService(audit, new PartnerSubledgerService(), null);
 const numbering = new NumberingService(audit);
 const resolver = new TaxResolverService();
 
@@ -75,7 +75,7 @@ export const sCoa = new CoaService(audit);
 export const sGl = new GlQueries();
 export const sReconciliation = new ReconciliationService(audit);
 export const sOpeningDrafts = new OpeningBalancesService(audit);
-export const warehouses = new WarehouseService(audit);
+export const warehouses = new WarehouseService(audit, null);
 export const openingStock = new OpeningStockService(audit, posting);
 export const taxCodes = new TaxCodesService(audit);
 export const registrations = new RegistrationService(audit);

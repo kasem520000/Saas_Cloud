@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 
 import { AccountingModule } from "../accounting/accounting.module";
+import { TenancyModule } from "../tenancy/tenancy.module";
 import { AuditModule } from "../audit/audit.module";
 import { NotificationsModule } from "../notifications/notifications.module";
 import { WarehouseService } from "./application/warehouse-service";
@@ -33,7 +34,7 @@ import { InventoryController } from "./presentation/inventory.controller";
  * inventory exclusively owns stock_moves + stock_layers).
  */
 @Module({
-  imports: [AccountingModule, AuditModule, NotificationsModule],
+  imports: [AccountingModule, AuditModule, NotificationsModule, TenancyModule],
   controllers: [InventoryController],
   providers: [
     WarehouseService,

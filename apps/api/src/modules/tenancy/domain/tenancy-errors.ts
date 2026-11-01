@@ -152,3 +152,85 @@ export class PlanClosureInvalidError extends DomainError {
     });
   }
 }
+
+// ---------------------------------------------------------------------------
+// PHASE-014 billing / usage / read-only errors (ERROR_MODEL §2: codes are
+// contracts; statuses mapped once in the ErrorModelFilter).
+// ---------------------------------------------------------------------------
+
+/**
+ * 403 subscription_read_only — read-only grace state (SUBSCRIPTION §8):
+ * the tenant is in GRACE; state-changing routes fail with this typed error
+ * naming the resolving action. Reads, reports, exports and printing stay
+ * alive — they never reach this error.
+ */
+export class SubscriptionReadOnlyError extends DomainError {
+  constructor(detail: string) {
+    super(
+      "subscription/read-only",
+      "Subscription is in the read-only grace period — posting and changes are paused until payment",
+      { resolvingAction: "pay", detail },
+    );
+  }
+}
+
+/** 422 limit_exceeded — hard block on a creation action (§6 matrix). */
+export class LimitExceededError extends DomainError {
+  constructor(counterKey: string, limit: number, current: number) {
+    super(
+      "subscription/limit-exceeded",
+      `Limit reached for ${counterKey}: ${current}/${limit} — upgrade the plan or free a slot`,
+      { counterKey, limit, current },
+    );
+  }
+}
+
+/** 422 — plan downgrade blocked because current usage exceeds the target plan's limits. */
+export class DowngradeBlockedError extends DomainError {
+  constructor(blockers: ReadonlyArray<{ counterKey: string; current: number; limit: number }>) {
+    super(
+      "subscription/downgrade-blocked",
+      "Downgrade blocked: current usage exceeds the target plan's limits",
+      { blockers },
+    );
+  }
+}
+
+/** 401 — webhook signature verification failed (SECRETS_MANAGEMENT; never leak which part failed). */
+export class WebhookSignatureInvalidError extends DomainError {
+  constructor() {
+    super("billing/webhook-signature-invalid", "Webhook signature verification failed");
+  }
+}
+
+/** 409 — the provider event was already processed (replay) — handled idempotently, never an error to the caller. */
+export class WebhookReplayError extends DomainError {
+  constructor(providerEventId: string) {
+    super("billing/webhook-replay", "Provider event already processed", { providerEventId });
+  }
+}
+
+/** 404 — checkout session / invoice not found in this tenant. */
+export class BillingRecordNotFoundError extends DomainError {
+  constructor(kind: string, id: string) {
+    super("billing/not-found", `${kind} not found`, { kind, id });
+  }
+}
+
+/** 409 — invalid subscription lifecycle transition (state machine). */
+export class InvalidSubscriptionTransitionError extends DomainError {
+  constructor(current: string, attempted: string) {
+    super(
+      "subscription/invalid-transition",
+      `Cannot ${attempted} a subscription in state ${current}`,
+      { current, attempted },
+    );
+  }
+}
+
+/** 422 — checkout against a plan the tenant already holds, or a malformed provider payload. */
+export class CheckoutInvalidError extends DomainError {
+  constructor(message: string, details?: Record<string, unknown>) {
+    super("billing/checkout-invalid", message, details);
+  }
+}

@@ -27,6 +27,8 @@ import { SalesModule } from "./modules/sales/sales.module";
 import { ReportingModule } from "./modules/reporting/reporting.module";
 import { AuditEventsController } from "./modules/audit/presentation/audit-events.controller";
 import { FeatureEntitlementsGuard } from "./infra/auth/feature-entitlements.guard";
+import { SubscriptionReadOnlyGuard } from "./infra/auth/subscription-read-only.guard";
+import { UsageLimitsGuard } from "./infra/auth/usage-limits.guard";
 
 /**
  * PHASE-007 module graph: the previous substrates + the accounting core —
@@ -62,6 +64,8 @@ import { FeatureEntitlementsGuard } from "./infra/auth/feature-entitlements.guar
     { provide: APP_GUARD, useClass: IdempotencyKeyGuard },
     { provide: APP_GUARD, useClass: PermissionsGuard },
     { provide: APP_GUARD, useClass: FeatureEntitlementsGuard },
+    { provide: APP_GUARD, useClass: SubscriptionReadOnlyGuard },
+    { provide: APP_GUARD, useClass: UsageLimitsGuard },
     { provide: APP_INTERCEPTOR, useClass: TenantContextInterceptor },
   ],
 })

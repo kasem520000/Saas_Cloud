@@ -25,6 +25,7 @@ import { PlatformConsoleService } from "../../application/platform-console-servi
 import { EntitlementsService } from "../../application/entitlements-service";
 import { LifecycleService } from "../../application/lifecycle-service";
 import { SupportAccessService } from "../../application/support-access-service";
+import { BillingService } from "../../application/billing/billing-service";
 
 /**
  * Platform admin console (PHASE-004 §2.7/T10; matrix §3.10; S-07):
@@ -56,6 +57,10 @@ const supportOpenSchema = z.object({
   maxHours: z.number().int().min(1).max(4).optional(),
 });
 const supportCloseSchema = z.object({ reason: z.string().min(3).max(500) });
+const manualPaymentSchema = z.object({
+  invoiceId: z.string().uuid(),
+  reason: z.string().min(3).max(500),
+});
 
 function requireIdentity(request: Request): SessionContext {
   const identity = identityOf(request);
@@ -93,6 +98,7 @@ export class PlatformConsoleController {
     @Inject(EntitlementsService) private readonly entitlements: EntitlementsService,
     @Inject(LifecycleService) private readonly lifecycle: LifecycleService,
     @Inject(SupportAccessService) private readonly support: SupportAccessService,
+    @Inject(BillingService) private readonly billing: BillingService,
   ) {}
 
   // -- tenant list/search + detail --------------------------------------------
@@ -230,6 +236,61 @@ export class PlatformConsoleController {
         trialDays: input.trialDays,
       }),
     );
+  }
+
+  // -- PHASE-014 billing: manual payment fallback + subscription suspend/restore --
+
+  /**
+   * T3 — the mandatory manual-invoicing fallback (A-009): record an offline
+   * payment against an OPEN subscription invoice. Audited via_platform_admin
+   * with a mandatory reason; produces the identical end state as the provider
+   * webhook (invoice PAID + subscription activated).
+   */
+  @Post("tenants/:id/billing/invoices/:invoiceId/manual-payment")
+  @RequirePermissions("platform.subscriptions.manage")
+  @HttpCode(HttpStatus.OK)
+  async recordManualPayment(
+    @Req() request: Request,
+    @Param("id") tenantId: string,
+    @Param("invoiceId") invoiceId: string,
+    @Body() body: unknown,
+  ): Promise<unknown> {
+    const identity = requireIdentity(request);
+    const input = manualPaymentSchema.parse({ ...(body as object), invoiceId });
+    return envelope(
+      await this.billing.recordManualPayment(identity.userId, tenantId, {
+        invoiceId,
+        reason: input.reason,
+      }),
+    );
+  }
+
+  /** Subscription-level suspend (audited, PHASE-004 semantics via lifecycle). */
+  @Post("tenants/:id/subscription/suspend")
+  @RequirePermissions("platform.subscriptions.manage")
+  @HttpCode(HttpStatus.OK)
+  async suspendSubscription(
+    @Req() request: Request,
+    @Param("id") tenantId: string,
+    @Body() body: unknown,
+  ): Promise<unknown> {
+    const identity = requireIdentity(request);
+    const input = suspendSchema.parse(body);
+    return envelope(await this.lifecycle.suspend(identity.userId, tenantId, input.reason));
+  }
+
+  /** Subscription-level restore (re-activates the tenant). */
+  @Post("tenants/:id/subscription/restore")
+  @RequirePermissions("platform.subscriptions.manage")
+  @HttpCode(HttpStatus.OK)
+  async restoreSubscription(
+    @Req() request: Request,
+    @Param("id") tenantId: string,
+    @Body() body: unknown,
+  ): Promise<unknown> {
+    const identity = requireIdentity(request);
+    const input = suspendSchema.parse(body);
+    return envelope(await this.lifecycle.restore(identity.userId, tenantId, input.reason));
   }
 
   // -- cross-tenant audit viewer (platform.audit.view) --------------------------

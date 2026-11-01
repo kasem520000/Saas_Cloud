@@ -13,6 +13,7 @@ import { ErrorState } from "../../../components/client-ui";
 import { AppShell } from "../../../components/app-shell";
 import { InfoNotice } from "../../../components/notices";
 import { OnboardingWizard } from "../../../components/onboarding-wizard";
+import { JourneyChecklist } from "../../../components/journey-checklist";
 import { RetryButton } from "../../../components/retry-button";
 import { getDictionary, isLocale, type Locale } from "../../../i18n/dictionaries";
 import { ONBOARDING_FEATURE_KEY } from "../../../lib/constants";
@@ -60,7 +61,12 @@ export default async function OnboardingPage({
   } else if (!canProvision) {
     content = <InfoNotice>{d.tenancyErrorFeatureNotEntitled}</InfoNotice>;
   } else {
-    content = <OnboardingWizard locale={localeValue} />;
+    content = (
+      <div className="flex flex-col gap-4">
+        <OnboardingWizard locale={localeValue} />
+        <JourneyChecklist locale={localeValue} />
+      </div>
+    );
   }
 
   return (

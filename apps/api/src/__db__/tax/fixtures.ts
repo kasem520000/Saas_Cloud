@@ -38,7 +38,7 @@ import { S3FilesStore } from "../../modules/files/infrastructure/s3-files.store"
 
 const audit = new AuditService(new DrizzleAuditStore());
 const subledgerPort = new PartnerSubledgerService();
-const posting = new PostingService(audit, subledgerPort);
+const posting = new PostingService(audit, subledgerPort, null);
 const numbering = new NumberingService(audit);
 const pettyCash = new PettyCashGuard(audit);
 export const taxResolver = new TaxResolverService();

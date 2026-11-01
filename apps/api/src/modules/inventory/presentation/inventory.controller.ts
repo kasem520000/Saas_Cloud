@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { identityOf, type SessionContext } from "../../../infra/context/session-context";
 import { UnauthenticatedError } from "../../identity/api/identity";
+import { LimitCheck } from "../../../infra/auth/limit-check.decorator";
 import { RequirePermissions } from "../../../infra/auth/require-permissions.decorator";
 import { envelope } from "../../../infra/http/envelope";
 import { WarehouseService } from "../application/warehouse-service";
@@ -195,6 +196,7 @@ export class InventoryController {
 
   @Post("warehouses")
   @RequirePermissions("inventory.warehouses.manage")
+  @LimitCheck("create_warehouse")
   @HttpCode(HttpStatus.CREATED)
   async createWarehouse(@Req() request: Request, @Body() body: unknown) {
     const identity = requireIdentity(request);

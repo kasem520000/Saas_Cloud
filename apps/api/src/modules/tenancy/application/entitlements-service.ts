@@ -67,14 +67,7 @@ export class EntitlementsService {
       periodEnd,
       providerRef: null,
     });
-    await store.deleteExpiredEntitlements();
-    for (const featureKey of plan.featureKeys) {
-      await store.upsertPlanEntitlement({ featureKey, expiresAt: input.expiresAt });
-    }
-    // Stale subscription-derived grants from the replaced plan drop so the
-    // materialized set is exactly plan ∪ active overrides (§4: never
-    // mid-state; §9: MANUAL/PROMO overrides survive).
-    await store.deleteStalePlanEntitlements(plan.featureKeys);
+    await this.materializePlan(actorId, plan, input.source, input.expiresAt);
     const tenant = await store.getOwnTenant();
     await this.audit.record({
       action: "plan.assigned",
@@ -88,6 +81,30 @@ export class EntitlementsService {
         keys: plan.featureKeys.length,
       },
     });
+    return { planKey: plan.key, grantedKeys: plan.featureKeys.length, expiresAt: input.expiresAt };
+  }
+
+  /**
+   * PHASE-014: re-materialize a plan's keys WITHOUT touching the
+   * subscription row (billing activation/plan change keep the subscription
+   * record and refresh the entitlement set transactionally — §10.3 "never
+   * mid-state"). Emits the config-cache events per key.
+   */
+  async materializePlan(
+    actorId: string | null,
+    plan: { id: string; key: string; featureKeys: string[] },
+    source: EntitlementSource,
+    expiresAt: string | null,
+  ): Promise<void> {
+    await store.deleteExpiredEntitlements();
+    for (const featureKey of plan.featureKeys) {
+      await store.upsertPlanEntitlement({ featureKey, expiresAt });
+    }
+    // Stale subscription-derived grants from the replaced plan drop so the
+    // materialized set is exactly plan ∪ active overrides (§4: never
+    // mid-state; §9: MANUAL/PROMO overrides survive).
+    await store.deleteStalePlanEntitlements(plan.featureKeys);
+    const tenant = await store.getOwnTenant();
     publishTenancyEvent({ type: "plan.changed", tenantId: tenant.id, planKey: plan.key });
     for (const key of plan.featureKeys) {
       publishTenancyEvent({
@@ -97,7 +114,8 @@ export class EntitlementsService {
         change: "granted",
       });
     }
-    return { planKey: plan.key, grantedKeys: plan.featureKeys.length, expiresAt: input.expiresAt };
+    void actorId;
+    void source;
   }
 
   /** Manual/promo/trial grant with closure validation (BR-040) + audit. */

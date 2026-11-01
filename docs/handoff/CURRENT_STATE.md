@@ -1,6 +1,6 @@
 # Current State
 
-> **Status:** LIVING DOCUMENT — updated at every phase completion · **Updated:** 2026-11-01
+> **Status:** LIVING DOCUMENT — updated at every phase completion · **Updated:** 2026-11-02
 
 What actually exists in this repository right now. Paired with
 [../planning/IMPLEMENTATION_STATUS.md](../planning/IMPLEMENTATION_STATUS.md) (phase
@@ -43,7 +43,13 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
   provider, costing default, ZATCA scope, Yemen scope, observability vendors, and the
   v2.0 expansion set: platform expansion, fixed assets, notes & installments,
   budgeting, payroll scope, consolidation), and this handoff set.
-- **Application code: PHASE-001 … PHASE-013 (all COMPLETE).** The
+- **Application code: PHASE-001 … PHASE-014 (all COMPLETE).** PHASE-014 (2026-11-02, tag `phase/014`) added the commercial machinery:
+  subscription/billing/usage/notifications substrate (migration `0021`), sandbox checkout +
+  signature-verified replay-safe webhook + manual-invoicing fallback (A-009), lifecycle
+  TRIAL→GRACE(read-only)→SUSPENDED, usage counters that never block posting (INV-022),
+  notifications center, and the web surfaces `/pricing`, `/billing`, `/notifications`,
+  report-contract-bound dashboard widgets, Journey A checklist, and the platform
+  manual-payment console. Evidence: `docs/implementation/phases/reports/PHASE-014-COMPLETION.md`. The
   pnpm + Turborepo monorepo with all local gates green (re-verified 2026-11-01):
   - `apps/api` — NestJS with `GET /health/live` + `GET /health/ready` (DB +
     migration state + queue liveness); modules: `audit` (append-only, transactional

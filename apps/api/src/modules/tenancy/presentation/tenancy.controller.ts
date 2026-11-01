@@ -19,6 +19,7 @@ import { envelope } from "../../../infra/http/envelope";
 import { identityOf, type SessionContext } from "../../../infra/context/session-context";
 import { effectivePermissions } from "../../identity/infrastructure/identity.store";
 import { NAV_ITEMS, resolveNavigation } from "@erp/contracts";
+import { LimitCheck } from "../../../infra/auth/limit-check.decorator";
 import { RequirePermissions } from "../../../infra/auth/require-permissions.decorator";
 import { RequireFeature } from "../../../infra/auth/require-feature.decorator";
 import { publishTenancyEvent } from "../../configuration/api";
@@ -29,6 +30,9 @@ import { BranchService } from "../application/branch-service";
 import { SettingsService } from "../application/settings-service";
 import { EntitlementsService } from "../application/entitlements-service";
 import { SupportAccessService } from "../application/support-access-service";
+import { SubscriptionsService } from "../application/subscriptions-service";
+import { BillingService } from "../application/billing/billing-service";
+import { UsageService } from "../application/usage-service";
 import * as store from "../infrastructure/tenancy.store";
 
 /**
@@ -67,6 +71,9 @@ const provisionSchema = z.object({
   numberingAssignAt: z.enum(["approval", "posting"]).optional(),
 });
 
+const changePlanSchema = z.object({ planKey: z.enum(["starter", "business", "enterprise"]) });
+const checkoutSchema = z.object({ planKey: z.enum(["starter", "business", "enterprise"]) });
+
 function requireIdentity(request: Request): SessionContext {
   const identity = identityOf(request);
   if (identity === undefined) {
@@ -91,6 +98,9 @@ export class TenancyController {
     @Inject(SettingsService) private readonly settings: SettingsService,
     @Inject(EntitlementsService) private readonly entitlements: EntitlementsService,
     @Inject(SupportAccessService) private readonly support: SupportAccessService,
+    @Inject(SubscriptionsService) private readonly subscriptions: SubscriptionsService,
+    @Inject(BillingService) private readonly billing: BillingService,
+    @Inject(UsageService) private readonly usage: UsageService,
   ) {}
 
   // -- profile ---------------------------------------------------------------
@@ -157,6 +167,7 @@ export class TenancyController {
 
   @Post("branches")
   @RequirePermissions("tenancy.branches.manage")
+  @LimitCheck("create_branch")
   @HttpCode(HttpStatus.OK)
   async createBranch(@Req() request: Request, @Body() body: unknown): Promise<unknown> {
     const identity = requireIdentity(request);
@@ -238,6 +249,49 @@ export class TenancyController {
       identity.permissions ??
       (tenantId !== null ? await effectivePermissions(identity.userId, tenantId) : new Set());
     return envelope(resolveNavigation(NAV_ITEMS, { featureKeys, permissions }));
+  }
+
+  // -- PHASE-014: subscription, billing, usage (matrix §3.9) -------------------
+
+  @Get("subscription")
+  @RequirePermissions("tenancy.subscription.manage")
+  @RequireFeature("platform.subscriptions")
+  async getSubscription(): Promise<unknown> {
+    return envelope(await this.subscriptions.current());
+  }
+
+  @Post("subscriptions/change-plan")
+  @RequirePermissions("tenancy.subscription.manage")
+  @RequireFeature("platform.subscriptions")
+  @HttpCode(HttpStatus.OK)
+  async changePlan(@Req() request: Request, @Body() body: unknown): Promise<unknown> {
+    const identity = requireIdentity(request);
+    const input = changePlanSchema.parse(body);
+    return envelope(await this.subscriptions.changePlan(identity.userId, input));
+  }
+
+  @Post("subscriptions/checkout")
+  @RequirePermissions("tenancy.subscription.manage")
+  @RequireFeature("platform.subscriptions")
+  @HttpCode(HttpStatus.OK)
+  async checkout(@Req() request: Request, @Body() body: unknown): Promise<unknown> {
+    const identity = requireIdentity(request);
+    const input = checkoutSchema.parse(body);
+    return envelope(await this.billing.createCheckoutSession(identity.userId, input));
+  }
+
+  @Get("subscription/billing-history")
+  @RequirePermissions("tenancy.subscription.manage")
+  @RequireFeature("platform.subscriptions")
+  async billingHistory(): Promise<unknown> {
+    return envelope(await this.subscriptions.billingHistory());
+  }
+
+  @Get("usage")
+  @RequirePermissions("tenancy.subscription.manage")
+  @RequireFeature("platform.subscriptions")
+  async usageSnapshot(): Promise<unknown> {
+    return envelope(await this.usage.snapshot());
   }
 
   // -- support sessions (tenant side, matrix §7 rules 5/6) --------------------

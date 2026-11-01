@@ -1,4 +1,4 @@
-import { Inject, Module, OnModuleInit } from "@nestjs/common";
+import { Inject, Module, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
 
 import { InfrastructureModule } from "../../infra/infra.module";
 import { JobsService, getBoss } from "../../infra/jobs/boss";
@@ -9,20 +9,26 @@ import {
   identitySenders,
   type EmailJobPayload,
 } from "./application/email-service";
+import { NotificationsService } from "./application/notifications-service";
+import { NotificationsController } from "./presentation/notifications.controller";
 
-/** DI tokens (exported for consumer modules). */
-export const EMAIL_SERVICE = Symbol("EMAIL_SERVICE");
-export const IDENTITY_EMAIL_SENDERS = Symbol("IDENTITY_EMAIL_SENDERS");
+/** DI tokens (exported for consumer modules; defined in ./tokens to keep the
+ *  module/service import graph acyclic). */
+export { EMAIL_SERVICE, IDENTITY_EMAIL_SENDERS, NOTIFICATIONS_SERVICE } from "./tokens";
+import { EMAIL_SERVICE, IDENTITY_EMAIL_SENDERS, NOTIFICATIONS_SERVICE } from "./tokens";
 export type { IdentityEmailSenders } from "./application/email-service";
 
 /**
- * Notifications module skeleton (PHASE-003 §2.8): the email adapter only —
- * the in-app notification center arrives with PHASE-015. Registers the
- * email job handler on both the API and worker processes (WORKER_MODE
- * selects what listens for HTTP; jobs run in both).
+ * Notifications module (PHASE-003 email adapter + PHASE-014 T10 in-app
+ * center): the email queue handler runs on both API and worker processes;
+ * the inbox/preferences REST surface is tenant-plane. Imports no other
+ * business module — callers (tenancy/reporting/sales) resolve owner emails
+ * themselves and pass them in (the identity→notifications edge already
+ * exists, so notifications→identity would be a boundary cycle).
  */
 @Module({
   imports: [InfrastructureModule],
+  controllers: [NotificationsController],
   providers: [
     {
       provide: EMAIL_SERVICE,
@@ -39,10 +45,12 @@ export type { IdentityEmailSenders } from "./application/email-service";
       useFactory: (email: EmailService) => identitySenders(email, env.WEB_BASE_URL),
       inject: [EMAIL_SERVICE],
     },
+    NotificationsService,
+    { provide: NOTIFICATIONS_SERVICE, useExisting: NotificationsService },
   ],
-  exports: [EMAIL_SERVICE, IDENTITY_EMAIL_SENDERS],
+  exports: [EMAIL_SERVICE, IDENTITY_EMAIL_SENDERS, NotificationsService, NOTIFICATIONS_SERVICE],
 })
-export class NotificationsModule implements OnModuleInit {
+export class NotificationsModule implements OnModuleInit, OnModuleDestroy {
   constructor(@Inject(EMAIL_SERVICE) private readonly email: EmailService) {}
 
   async onModuleInit(): Promise<void> {
@@ -53,5 +61,9 @@ export class NotificationsModule implements OnModuleInit {
         await this.email.handleJob(job.data);
       }
     });
+  }
+
+  async onModuleDestroy(): Promise<void> {
+    // pg-boss stop is owned by the infra JobsService lifecycle.
   }
 }

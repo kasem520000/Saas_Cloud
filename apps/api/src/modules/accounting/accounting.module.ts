@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 
 import { AuditModule } from "../audit/audit.module";
+import { TenancyModule } from "../tenancy/tenancy.module";
 import { PartnerSubledgerService } from "../partners/application/subledger-service";
 import { CoaService } from "./application/coa-service";
 import { PeriodService } from "./application/period-service";
@@ -28,7 +29,9 @@ import { PARTNER_SUBLEDGER_PORT } from "./application/partner-subledger-port";
  * binding is the module's composition point, above the layers).
  */
 @Module({
-  imports: [AuditModule],
+  // PHASE-014: tenancy api supplies the UsageService port (documents/month
+  // counter — a read-model beside the posting, never in front of it).
+  imports: [AuditModule, TenancyModule],
   controllers: [AccountingController, JournalsController, GlController],
   providers: [
     { provide: PARTNER_SUBLEDGER_PORT, useClass: PartnerSubledgerService },

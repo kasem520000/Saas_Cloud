@@ -60,6 +60,9 @@ const NO_UPDATE_GRANT = new Set([
   // PHASE-012 (migration 0019): the sales mirror — INSERT-only by grants.
   "sales_reallocations",
   "sales_reallocation_lines",
+  // PHASE-014 (migration 0021): the billing event log is append-only by
+  // grants (SELECT + INSERT only — replay-protected webhook ingestion).
+  "billing_events",
 ]);
 
 /** Fixture rows seeded per tenant (A2's total-count expectation). The
@@ -1160,6 +1163,55 @@ async function seedFixtures(superuser: {
     [TENANT_A, TENANT_B],
   );
 
+  // PHASE-014 billing/usage/notifications fixtures (migration 0021).
+  await superuser.query(
+    `INSERT INTO subscription_invoices (id, tenant_id, subscription_id, number, amount, currency_code,
+                                        period_start, period_end, due_date)
+     VALUES
+       ('d5d5d5d5-0000-4000-8000-000000000001', $1, 'adadadad-0000-4000-8000-000000000001',
+        'SUB-INV-2026-000001', 0, 'SAR', '2026-01-01', '2026-01-31', '2026-02-14'),
+       ('d5d5d5d5-0000-4000-8000-000000000002', $2, 'adadadad-0000-4000-8000-000000000002',
+        'SUB-INV-2026-000001', 0, 'SAR', '2026-01-01', '2026-01-31', '2026-02-14')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO billing_events (id, tenant_id, event_type, subscription_id, invoice_id, payload)
+     VALUES
+       ('d6d6d6d6-0000-4000-8000-000000000001', $1, 'invoice.created',
+        'adadadad-0000-4000-8000-000000000001', 'd5d5d5d5-0000-4000-8000-000000000001', '{}'::jsonb),
+       ('d6d6d6d6-0000-4000-8000-000000000002', $2, 'invoice.created',
+        'adadadad-0000-4000-8000-000000000002', 'd5d5d5d5-0000-4000-8000-000000000002', '{}'::jsonb)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO usage_counters (id, tenant_id, counter_key, period, value)
+     VALUES
+       ('d7d7d7d7-0000-4000-8000-000000000001', $1, 'documents_per_month', '2026-01-01', 5),
+       ('d7d7d7d7-0000-4000-8000-000000000002', $2, 'documents_per_month', '2026-01-01', 7)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO notifications (id, tenant_id, type, title, body)
+     VALUES
+       ('d8d8d8d8-0000-4000-8000-000000000001', $1, 'invoice.overdue',
+        '{"ar":"فواتير متأخرة","en":"Overdue"}'::jsonb, '{"ar":"...","en":"..."}'::jsonb),
+       ('d8d8d8d8-0000-4000-8000-000000000002', $2, 'invoice.overdue',
+        '{"ar":"فواتير متأخرة","en":"Overdue"}'::jsonb, '{"ar":"...","en":"..."}'::jsonb)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO notification_preferences (id, tenant_id, event_type, in_app, email)
+     VALUES
+       ('d9d9d9d9-0000-4000-8000-000000000001', $1, 'invoice.overdue', true, true),
+       ('d9d9d9d9-0000-4000-8000-000000000002', $2, 'invoice.overdue', true, false)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+
   // -- seedFixtures end --
 
 }
@@ -1317,6 +1369,11 @@ const OWN_ROW: Record<string, [string, string]> = {
   // one template registry row per tenant.
   report_runs: ["7d7d7d7d-0000-4000-8000-000000000001", "7d7d7d7d-0000-4000-8000-000000000002"],
   print_templates: ["7e7e7e7e-0000-4000-8000-000000000001", "7e7e7e7e-0000-4000-8000-000000000002"],
+  subscription_invoices: ["d5d5d5d5-0000-4000-8000-000000000001", "d5d5d5d5-0000-4000-8000-000000000002"],
+  billing_events: ["d6d6d6d6-0000-4000-8000-000000000001", "d6d6d6d6-0000-4000-8000-000000000002"],
+  usage_counters: ["d7d7d7d7-0000-4000-8000-000000000001", "d7d7d7d7-0000-4000-8000-000000000002"],
+  notifications: ["d8d8d8d8-0000-4000-8000-000000000001", "d8d8d8d8-0000-4000-8000-000000000002"],
+  notification_preferences: ["d9d9d9d9-0000-4000-8000-000000000001", "d9d9d9d9-0000-4000-8000-000000000002"],
 };
 
 /** Mismatched-tenant INSERT shapes per table (A3) — explicit columns so the
@@ -1626,6 +1683,20 @@ const MISMATCHED_INSERT: Record<string, string> = {
              '{"locale": "ar"}'::jsonb, 'iso-attack', 'inline', 'QUEUED')`,
   print_templates: `INSERT INTO print_templates (id, tenant_id, key, version, locale_variants)
      VALUES ('7e7e7e7e-3000-4000-8000-000000000003', $1, 'receipt-58', 1, '{"ar": 1}'::jsonb)`,
+  subscription_invoices: `INSERT INTO subscription_invoices (id, tenant_id, subscription_id, number, amount, currency_code,
+                                              period_start, period_end, due_date)
+     VALUES ('d5d5d5d5-3000-4000-8000-000000000003', $1, 'adadadad-0000-4000-8000-000000000001',
+             'SUB-INV-2026-000099', 0, 'SAR', '2026-01-01', '2026-01-31', '2026-02-14')`,
+  billing_events: `INSERT INTO billing_events (id, tenant_id, event_type, subscription_id, payload)
+     VALUES ('d6d6d6d6-3000-4000-8000-000000000003', $1, 'subscription.suspended',
+             'adadadad-0000-4000-8000-000000000001', '{"attack": true}'::jsonb)`,
+  usage_counters: `INSERT INTO usage_counters (id, tenant_id, counter_key, period, value)
+     VALUES ('d7d7d7d7-3000-4000-8000-000000000003', $1, 'users', '2026-01-01', 99)`,
+  notifications: `INSERT INTO notifications (id, tenant_id, type, title, body)
+     VALUES ('d8d8d8d8-3000-4000-8000-000000000003', $1, 'invoice.overdue',
+             '{"ar":"x","en":"x"}'::jsonb, '{"ar":"x","en":"x"}'::jsonb)`,
+  notification_preferences: `INSERT INTO notification_preferences (id, tenant_id, event_type, in_app, email)
+     VALUES ('d9d9d9d9-3000-4000-8000-000000000003', $1, 'limit.warning', false, false)`,
 };
 
 beforeAll(async () => {
@@ -1777,7 +1848,9 @@ describe("generated attack suite A1–A10 — as erp_app", () => {
                           ? "reason"
                           : table === "sales_reallocation_lines"
                             ? "amount"
-                            : "updated_at";
+                            : table === "billing_events"
+                              ? "event_type"
+                              : "updated_at";
         await expect(
           app.query(`UPDATE ${table} SET ${column} = ${column} WHERE id = $1`, [foreignRow]),
         ).rejects.toMatchObject({ code: "42501" });

@@ -9,6 +9,7 @@ import { NotFoundError } from "../../identity/api/identity";
 import { listTenantMembers } from "../../identity/api/identity";
 import { withPlatformScope, withTenantOnTx } from "../../../infra/db/tenant-context";
 import * as store from "../infrastructure/tenancy.store";
+import * as billingStore from "../infrastructure/billing.store";
 import { PLATFORM_TENANT_ID } from "./lifecycle-service";
 import { EntitlementsService } from "./entitlements-service";
 
@@ -36,6 +37,8 @@ export interface ConsoleTenantSummary {
 
 export interface ConsoleTenantDetail extends ConsoleTenantSummary {
   subscription: store.SubscriptionRow | null;
+  /** PHASE-014 T3: open invoices for the manual-payment fallback UI. */
+  invoices: billingStore.InvoiceRow[];
   plan: { key: string; name: string; nameAr: string } | null;
   entitlements: store.EntitlementRow[];
   branches: store.BranchRow[];
@@ -102,12 +105,13 @@ export class PlatformConsoleService {
             plan = { key: planRow.key, name: planRow.name, nameAr: planRow.nameAr };
           }
         }
-        const [entitlements, branches, memberships] = await Promise.all([
+        const [entitlements, branches, memberships, invoices] = await Promise.all([
           store.listEntitlements(),
           store.listBranches(null),
           listTenantMembers(),
+          billingStore.listInvoices(50),
         ]);
-        return { subscription: subscription ?? null, plan, entitlements, branches, memberships };
+        return { subscription: subscription ?? null, plan, entitlements, branches, memberships, invoices };
       });
       await this.audit.recordPlatform({
         action: "platform.console.tenant_viewed",

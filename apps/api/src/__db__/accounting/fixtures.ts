@@ -41,7 +41,7 @@ export const ACTOR = "aaaaaaaa-0000-4000-8000-00000000000a";
 export const TENANT_A = "33333333-3333-3333-3333-333333333333";
 
 const audit = new AuditService(new DrizzleAuditStore());
-export const posting = new PostingService(audit, new PartnerSubledgerService());
+export const posting = new PostingService(audit, new PartnerSubledgerService(), null);
 export const journals = new JournalService(audit, posting);
 export const coa = new CoaService(audit);
 export const periods = new PeriodService(audit);

@@ -155,6 +155,16 @@ export async function findPlanById(id: string): Promise<PlanRow | undefined> {
   return (rows as PlanRow[])[0];
 }
 
+/** PHASE-014 T7: all active plans (public pricing surface; global table). */
+export async function listPlans(): Promise<PlanRow[]> {
+  const handle = ambientAnyTx() ?? db();
+  const rows = await handle
+    .select()
+    .from(schema.plans)
+    .orderBy(schema.plans.createdAt);
+  return rows as PlanRow[];
+}
+
 export async function findPlanByKey(key: string): Promise<PlanRow | undefined> {
   // RLS: plans reads are tenant-GUC or platform-GUC paths — resolve the
   // ambient scope tx when one exists (console/registration flows).
@@ -449,7 +459,11 @@ export async function currentSubscription(): Promise<SubscriptionRow | undefined
   const rows = await tx.execute(sql`
     SELECT id, tenant_id AS "tenantId", plan_id AS "planId", status,
            period_start AS "periodStart", period_end AS "periodEnd", provider_ref AS "providerRef"
-    FROM subscriptions WHERE status = 'ACTIVE' ORDER BY created_at DESC LIMIT 1
+    FROM subscriptions
+    -- PHASE-014: the live row is the latest non-terminal one (TRIAL/GRACE
+    -- included — the console + reports must see them).
+    WHERE status NOT IN ('CANCELLED', 'SUSPENDED')
+    ORDER BY created_at DESC LIMIT 1
   `);
   return (rows.rows as unknown as SubscriptionRow[])[0];
 }
@@ -459,12 +473,15 @@ export async function insertSubscription(input: {
   periodStart: string;
   periodEnd: string;
   providerRef: string | null;
+  /** PHASE-014: lifecycle status (registration passes TRIAL). */
+  status?: string;
+  trialEndsAt?: string | null;
 }): Promise<SubscriptionRow> {
   const tx = tenantTx();
   const rows = await tx.execute(sql`
-    INSERT INTO subscriptions (id, tenant_id, plan_id, status, period_start, period_end, provider_ref)
-    VALUES (${generateUuidV7()}, erp.current_tenant_id(), ${input.planId}, 'ACTIVE',
-            ${input.periodStart}, ${input.periodEnd}, ${input.providerRef})
+    INSERT INTO subscriptions (id, tenant_id, plan_id, status, period_start, period_end, provider_ref, trial_ends_at)
+    VALUES (${generateUuidV7()}, erp.current_tenant_id(), ${input.planId}, ${input.status ?? "ACTIVE"},
+            ${input.periodStart}, ${input.periodEnd}, ${input.providerRef}, ${input.trialEndsAt ?? null})
     RETURNING id, tenant_id AS "tenantId", plan_id AS "planId", status,
               period_start AS "periodStart", period_end AS "periodEnd", provider_ref AS "providerRef"
   `);
@@ -476,7 +493,7 @@ export async function supersedeSubscriptions(): Promise<void> {
   const tx = tenantTx();
   await tx.execute(sql`
     UPDATE subscriptions SET status = 'CANCELLED', updated_at = now(), version = version + 1
-    WHERE status = 'ACTIVE'
+    WHERE status NOT IN ('CANCELLED', 'SUSPENDED')
   `);
 }
 

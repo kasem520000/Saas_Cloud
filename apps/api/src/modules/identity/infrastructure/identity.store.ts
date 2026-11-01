@@ -255,6 +255,14 @@ export interface MembershipRow {
   createdBy: string | null;
 }
 
+/** PHASE-014 §6: active member count for the users limit counter. */
+export async function countActiveMembers(): Promise<number> {
+  const rows = await tenantTx().execute(sql`
+    SELECT COUNT(*)::int AS n FROM memberships WHERE status = 'ACTIVE'
+  `);
+  return (rows.rows as unknown as { n: number }[])[0]!.n;
+}
+
 export async function findMembershipForUserInTenant(
   userId: string,
   tenantId: string,

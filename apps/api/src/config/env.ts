@@ -43,6 +43,17 @@ const envSchema = z.object({
   SMTP_FROM: z.string().default("no-reply@erp.local"),
   /** Public origin of the web/BFF surface (links inside emails). */
   WEB_BASE_URL: z.string().default("http://localhost:3000"),
+  /** PHASE-014 billing: sandbox payment-provider adapter. The provider choice
+   * is OQ-003 (open decision record); the adapter PORT is normative, the
+   * sandbox implementation is the shipped default. Webhook HMAC secret —
+   * dev/test default is a local value; production MUST set it
+   * (SECRETS_MANAGEMENT). */
+  BILLING_PROVIDER: z.enum(["sandbox"]).default("sandbox"),
+  BILLING_WEBHOOK_SECRET: z.string().min(16).optional(),
+  /** PLACEHOLDER lifecycle durations pending OQ-002 (SUBSCRIPTION_AND_
+   * ENTITLEMENTS §7–§8): trial length and read-only grace length in days. */
+  SUBSCRIPTION_TRIAL_DAYS: z.coerce.number().int().positive().max(365).default(14),
+  SUBSCRIPTION_GRACE_DAYS: z.coerce.number().int().positive().max(90).default(14),
 });
 
 export type Env = z.infer<typeof envSchema>;

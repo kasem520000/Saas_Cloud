@@ -10,6 +10,7 @@ import { ErrorState, Icon } from "../../components/client-ui";
 import type { IconName } from "@erp/ui";
 
 import { AppShell } from "../../components/app-shell";
+import { DashboardWidgets } from "../../components/dashboard-widgets";
 import { Card } from "../../components/card";
 import { DefList } from "../../components/def-list";
 import { RetryButton } from "../../components/retry-button";
@@ -82,6 +83,8 @@ export default async function HomePage({
     <AppShell locale={localeValue} pagePath="" title={formatMessage(d.homeWelcome, { name: displayName })}>
       <div className="flex flex-col gap-6">
         <p className="font-mono text-sm text-gray-600">{session.user.email}</p>
+
+        <DashboardWidgets locale={localeValue} />
 
         <Card ariaLabel={d.homeTenantLabel} className="w-full max-w-xl">
           <DefList

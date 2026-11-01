@@ -219,6 +219,10 @@ export class RegistrationService {
           periodStart,
           periodEnd,
           providerRef: null,
+          // PHASE-014 §7: the registration trial is a first-class TRIAL
+          // subscription (read-only grace follows expiry — never a freeze).
+          status: "TRIAL",
+          trialEndsAt: trialExpiresAt.toISOString(),
         });
         for (const featureKey of plan.featureKeys) {
           await store.insertEntitlement({

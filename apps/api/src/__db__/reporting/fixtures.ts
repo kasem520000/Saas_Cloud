@@ -62,7 +62,7 @@ const DOC = {
 export const UNBALANCED_ENTRY_ID = "46464646-0000-4000-8000-00000000d0a1";
 
 const audit = new AuditService(new DrizzleAuditStore());
-export const rPosting = new PostingService(audit, new PartnerSubledgerService());
+export const rPosting = new PostingService(audit, new PartnerSubledgerService(), null);
 const periods = new PeriodService(audit);
 
 export interface ReportingAccounts {

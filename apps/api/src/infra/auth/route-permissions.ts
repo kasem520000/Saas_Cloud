@@ -189,6 +189,47 @@ export const ROUTE_PERMISSIONS: readonly RoutePermissionRule[] = [
     path: "/api/v1/platform/tenants/:id/support-sessions/:sessionId/tenant-data/:resource",
     permission: "platform.support.access",
   },
+  // -- PHASE-014: subscription, billing, usage (matrix §3.9/§3.10) --------
+  {
+    method: "GET",
+    path: "/api/v1/tenancy/subscription",
+    permission: "tenancy.subscription.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/tenancy/subscriptions/change-plan",
+    permission: "tenancy.subscription.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/tenancy/subscriptions/checkout",
+    permission: "tenancy.subscription.manage",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/tenancy/subscription/billing-history",
+    permission: "tenancy.subscription.manage",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/tenancy/usage",
+    permission: "tenancy.subscription.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/platform/tenants/:id/billing/invoices/:invoiceId/manual-payment",
+    permission: "platform.subscriptions.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/platform/tenants/:id/subscription/suspend",
+    permission: "platform.subscriptions.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/platform/tenants/:id/subscription/restore",
+    permission: "platform.subscriptions.manage",
+  },
   // -- PHASE-006: partners & items master data (matrix §3.6) -------------
   {
     method: "GET",
@@ -1957,4 +1998,14 @@ function pathMatches(pattern: string, path: string): boolean {
 /** Route matching helper shared by guard + checklist test. */
 export function routeMatches(rule: RoutePermissionRule, method: string, path: string): boolean {
   return rule.method === method && pathMatches(rule.path, path);
+}
+
+/** PHASE-014: true when (method, path) is a public route (no session needed). */
+export function isPublicRoute(method: string, path: string): boolean {
+  return PUBLIC_ROUTES.some((route) => route.method === method && pathMatches(route.path, path));
+}
+
+/** PHASE-014: true when (method, path) is a session-authenticated self route. */
+export function isSessionRoute(method: string, path: string): boolean {
+  return SESSION_ROUTES.some((route) => route.method === method && pathMatches(route.path, path));
 }

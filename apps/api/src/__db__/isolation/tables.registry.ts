@@ -38,6 +38,13 @@ export const TENANT_TABLES_REGISTRY: readonly RegisteredTenantTable[] = [
   { table: "subscriptions" },
   { table: "entitlements", deleteGranted: true },
   { table: "support_sessions" },
+  // PHASE-014 billing/usage/notifications cluster (migration 0021).
+  // billing_events is append-only by grants (no UPDATE/DELETE for erp_app).
+  { table: "subscription_invoices" },
+  { table: "billing_events" },
+  { table: "usage_counters" },
+  { table: "notifications" },
+  { table: "notification_preferences", deleteGranted: true },
   { table: "accounts" },
   { table: "account_purposes" },
   // PHASE-006 master-data cluster (migration 0009).

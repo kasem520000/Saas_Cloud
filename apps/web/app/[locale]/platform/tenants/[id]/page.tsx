@@ -19,6 +19,7 @@ import { LinkButton } from "../../../../../components/link-button";
 import { ErrorNotice } from "../../../../../components/notices";
 import { PlatformEntitlementsPanel } from "../../../../../components/platform-entitlements-panel";
 import { PlatformLifecyclePanel } from "../../../../../components/platform-lifecycle-panel";
+import { PlatformManualPayment } from "../../../../../components/platform-manual-payment";
 import { PlatformMembershipsTable } from "../../../../../components/platform-memberships-table";
 import { PlatformPlanForm } from "../../../../../components/platform-plan-form";
 import { PlatformSupportConsole } from "../../../../../components/platform-support-console";
@@ -143,6 +144,12 @@ export default async function PlatformTenantDetailPage({
             <h3 className="mb-3 text-sm font-semibold text-gray-900">{d.platformPlanAssignTitle}</h3>
             <PlatformPlanForm locale={localeValue} tenantId={tenant.id} currentPlanKey={tenant.plan?.key ?? null} />
           </div>
+          {!tenant.isPlatformTenant && (
+            <div className="mt-4 border-t border-subtle pt-4">
+              <h3 className="mb-3 text-sm font-semibold text-gray-900">{d.platformManualPaymentTitle}</h3>
+              <PlatformManualPayment locale={localeValue} tenantId={tenant.id} invoices={tenant.invoices ?? []} />
+            </div>
+          )}
         </Card>
 
         <PlatformEntitlementsPanel

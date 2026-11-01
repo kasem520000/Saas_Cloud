@@ -11,6 +11,11 @@ import {
 } from "../domain/posting-engine/journal-spec";
 import { alreadyReversed, PostingError } from "../domain/posting-engine/posting-errors";
 import { publishLedgerEvent } from "./ledger-events";
+import { Optional } from "@nestjs/common";
+import { childLogger } from "../../../infra/observability/logger";
+
+const log = childLogger({ module: "posting" });
+import { UsageService } from "../../tenancy/api";
 import { JournalStateError, PeriodNotFoundError } from "../domain/accounting-errors";
 import * as store from "../infrastructure/accounting.store";
 import * as journal from "../infrastructure/journal.store";
@@ -48,6 +53,9 @@ export class PostingService {
   constructor(
     @Inject(AuditService) private readonly audit: AuditService,
     @Inject(PARTNER_SUBLEDGER_PORT) private readonly subledger: PartnerSubledgerPort,
+    // PHASE-014 §6: documents/month counter — a read-model incremented BESIDE
+    // the posting; a counter failure can never fail the posting (INV-022).
+    @Optional() @Inject(UsageService) private readonly usage: UsageService | null,
   ) {}
 
   /** SQL-backed read model bound to the ambient transaction. */
@@ -260,6 +268,15 @@ export class PostingService {
         tenantId: ctx.tenantId,
         entryId: entry.id,
       });
+      // PHASE-014 §6: count the posted document (documents/month). Best-effort:
+      // the counter is a read-model — a failure here must never fail the post.
+      if (this.usage !== null && this.usage !== undefined) {
+        try {
+          await this.usage.recordDocument(options.postedBy ?? null);
+        } catch (counterError) {
+          log.warn({ error: counterError }, "usage counter increment failed; posting unaffected");
+        }
+      }
       await tx.execute(sql`RELEASE SAVEPOINT erp_posting`);
       return { entry, replay: false };
     } catch (error) {

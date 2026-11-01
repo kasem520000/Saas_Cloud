@@ -141,6 +141,13 @@
       "when": 1793157000020,
       "tag": "0020_reporting_core",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1793491200021,
+      "tag": "0021_billing_notifications",
+      "breakpoints": true
     }
   ]
 }

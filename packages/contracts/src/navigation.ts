@@ -151,6 +151,20 @@ export const NAV_ITEMS: readonly NavItem[] = [
     shortcut: "g h",
     order: 10,
   },
+  // PHASE-014 T10: the notifications center is a session-scoped inbox (no
+  // permission key — every signed-in member reads their own inbox).
+  {
+    id: "home.notifications",
+    parentGroup: "home",
+    label: { ar: "الإشعارات", en: "Notifications" },
+    icon: "inbox",
+    route: "/notifications",
+    featureKey: "platform.notifications",
+    branchScoped: false,
+    archetype: "generic-detail",
+    shortcut: "g n",
+    order: 20,
+  },
   // sales group — PHASE-012 (T13-UI): the quote-to-cash chain. Quotes and
   // orders share ONE workspace (/sales/quotes); deliveries, invoices and
   // credit notes are separate transaction-entry screens; /sales/ar carries
@@ -298,6 +312,19 @@ export const NAV_ITEMS: readonly NavItem[] = [
     branchScoped: false,
     archetype: "list-search",
     order: 70,
+  },
+  // PHASE-014 T2/T3/T6: subscription & billing (plan, usage, history, checkout).
+  {
+    id: "settings.billing",
+    parentGroup: "settings",
+    label: { ar: "الاشتراك والفوترة", en: "Subscription & billing" },
+    icon: "receipt",
+    route: "/billing",
+    featureKey: "platform.subscriptions",
+    permission: "tenancy.subscription.manage",
+    branchScoped: false,
+    archetype: "settings",
+    order: 80,
   },
   // partners group — PHASE-006 master data (T11): partner directory + the
   // opening-balance DRAFT capture console. Feature keys are the exact

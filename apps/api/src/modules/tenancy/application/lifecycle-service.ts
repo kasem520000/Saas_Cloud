@@ -40,7 +40,7 @@ export class LifecycleService {
   ) {}
 
   async suspend(
-    actorId: string,
+    actorId: string | null,
     tenantId: string,
     reason: string,
   ): Promise<{ tenantId: string; status: string; killedSessions: number }> {
@@ -91,7 +91,7 @@ export class LifecycleService {
   }
 
   async restore(
-    actorId: string,
+    actorId: string | null,
     tenantId: string,
     reason: string,
   ): Promise<{ tenantId: string; status: string }> {

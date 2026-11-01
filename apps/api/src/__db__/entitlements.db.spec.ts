@@ -96,7 +96,7 @@ describe("entitlements.spec (BR-039 — server-side only, derived UI)", () => {
     const plan = await su.query<{ keys: number }>(
       `SELECT cardinality(p.feature_keys)::int AS keys
          FROM plans p JOIN subscriptions s ON s.plan_id = p.id
-        WHERE s.tenant_id = $1 AND s.status = 'ACTIVE'`,
+        WHERE s.tenant_id = $1 AND s.status = 'TRIAL'`,
       [tenantId],
     );
     await su.end();

@@ -1,10 +1,21 @@
 # Next Action
 
-> **Status:** LIVING DOCUMENT — updated at every phase completion · **Updated:** 2026-11-01
+> **Status:** LIVING DOCUMENT — updated at every phase completion · **Updated:** 2026-11-02
 
 ## The single next action
 
-**Execute PHASE-014 — Subscription, Billing, Onboarding & Dashboards — MVP** per
+**Execute PHASE-015** per
+[../implementation/phases/PHASE-015.md](../implementation/phases/PHASE-015.md)
+(identified only — not started). PHASE-014 is COMPLETE (2026-11-02, tag `phase/014`;
+evidence: reports/PHASE-014-COMPLETION.md): subscriptions/billing/lifecycle/usage/
+notifications substrate live, both payment paths identical (A-009), read-only grace
+typed, posting never limit-blocked (INV-022), dashboards report-contract-bound only,
+MVP security review done, gate non-browser steps green (browser-bound probes are
+hosted-CI evidence — Chromium unavailable in the sandbox).
+
+## Completed: PHASE-014
+
+**Executed PHASE-014 — Subscription, Billing, Onboarding & Dashboards — MVP** per
 [../implementation/phases/PHASE-014.md](../implementation/phases/PHASE-014.md):
 plans and the entitlement matrix end-to-end, the payment-provider adapter with
 the sandbox checkout flow **and the mandatory manual-invoicing fallback**

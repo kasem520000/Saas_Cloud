@@ -148,7 +148,7 @@ describe("Landed-cost allocation — remaining-qty constraint (§2.10)", () => {
     const { PostingService: PostingS } = await import("../../modules/accounting/application/posting-service");
     const { PartnerSubledgerService: SubS } = await import("../../modules/partners/application/subledger-service");
     const audit = new AuditS(new DrizzleStore());
-    const stock = new StockService(audit, new PostingS(audit, new SubS()));
+    const stock = new StockService(audit, new PostingS(audit, new SubS(), null));
 
     // Issue down to a REMAINDER below line A's received qty (order-
     // independent: the issue targets on-hand − 50, so prior-suite stock

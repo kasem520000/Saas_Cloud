@@ -28,7 +28,12 @@ Legend: **Phase** = first implementation phase · **OC** = offline-creatable
 | `mfa_factors` | TOTP enrollment | user_id, secret_enc, enrolled_at, last_used_at, recovery_codes_hash | 003 | no |
 | `invitations` | Membership invitations | email, tenant_id, role_id, token_hash, expires_at, accepted_at | 003 | no |
 | `plans` | Subscription plans (seeded + admin) | key, name, price, limits jsonb, feature_keys[] | 004 | no |
-| `subscriptions` | Tenant plan assignment | tenant_id, plan_id, status, period, provider_ref | 014 | no |
+| `subscriptions` | Tenant plan assignment + lifecycle | tenant_id, plan_id, status (TRIAL/ACTIVE/GRACE/PAST_DUE/SUSPENDED/CANCELLED, 014), period, provider_ref, trial_ends_at, grace_ends_at, dunning_step | 004 → 014 (lifecycle) | no |
+| `subscription_invoices` | Billing invoices — sandbox checkout AND manual fallback land here identically (A-009) | tenant_id, subscription_id, number (unique per tenant), amount, currency_code, status (OPEN/PAID/VOID), period, due_date, provider_ref, paid_via (PROVIDER/MANUAL), paid_at, created_by, paid_by | 014 | no |
+| `billing_events` 🔒 | Append-only billing event log (webhook replay protection via unique provider_event_id) | tenant_id, event_type, subscription_id, invoice_id, provider_event_id, payload jsonb, actor_id, via_platform_admin | 014 | no |
+| `usage_counters` | §6 limit-counter read-model (never gates posting — INV-022) | tenant_id, counter_key, period (month), value | 014 | no |
+| `notifications` | In-app inbox (billing-critical subset, PHASE-014) | tenant_id, user_id (null = tenant-wide), type, title jsonb (bilingual), body jsonb, link, read_at | 014 | no |
+| `notification_preferences` | Channel preferences per event (user row wins over tenant-wide) | tenant_id, user_id (null = tenant-wide), event_type, in_app, email | 014 | no |
 | `entitlements` | Effective feature grants (materialized) | tenant_id, feature_key, source, expires_at | 004 | no |
 | `tenant_settings` | Key-value config (typed) | tenant_id, key, value jsonb | 004 | no |
 | `support_sessions` | Time-boxed audited support access (matrix §7) | tenant_id, platform_user_id, opt_in, ticket_ref, reason, opened_at, expires_at, closed_at, closed_by, status | 004 | no |

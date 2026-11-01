@@ -336,6 +336,7 @@ export interface ConsoleMembership {
 /** GET /platform/tenants/:id → data. */
 export interface ConsoleTenantDetail extends ConsoleTenantSummary {
   subscription: ConsoleSubscription | null;
+  invoices: ConsoleInvoiceRow[];
   plan: { key: string; name: string; nameAr: string } | null;
   entitlements: ConsoleEntitlement[];
   branches: BranchRow[];
@@ -2006,4 +2007,142 @@ export interface ReportExportResult {
 export interface ReportPrintPreview {
   html: string;
   footerTemplate: string;
+}
+
+// -- PHASE-014: subscription, billing, usage, notifications, public plans ----
+
+/** GET /public/plans → data.plans[] (marketing pricing — config-driven only). */
+export interface PublicPlan {
+  key: string;
+  name: string;
+  nameAr: string;
+  priceAmount: string;
+  currencyCode: string;
+  billingPeriod: string;
+  limits: Record<string, unknown>;
+  featureKeys: string[];
+  isActive: boolean;
+}
+
+export interface PublicPlansResponse {
+  plans: PublicPlan[];
+}
+
+/** GET /tenancy/subscription → data. */
+export interface TenantSubscriptionRow {
+  id: string;
+  tenantId: string;
+  planId: string;
+  status: string;
+  periodStart: string;
+  periodEnd: string;
+  providerRef: string | null;
+  trialEndsAt: string | null;
+  graceEndsAt: string | null;
+  dunningStep: number;
+}
+
+export interface TenantPlanView {
+  key: string;
+  name: string;
+  nameAr: string;
+  limits: Record<string, unknown>;
+  billingPeriod: string;
+}
+
+export interface UsageEntry {
+  counterKey: string;
+  limit: number | null;
+  current: number;
+  percent: number | null;
+  warn80: boolean;
+  warn100: boolean;
+  hardBlock: boolean;
+}
+
+export interface UsageSnapshot {
+  period: string;
+  entries: UsageEntry[];
+}
+
+export interface SubscriptionView {
+  subscription: TenantSubscriptionRow | null;
+  plan: TenantPlanView | null;
+  readOnly: boolean;
+  usage: UsageSnapshot;
+}
+
+export interface BillingInvoiceRow {
+  id: string;
+  number: string;
+  amount: string;
+  currencyCode: string;
+  status: string;
+  periodStart: string;
+  periodEnd: string;
+  dueDate: string;
+  providerRef: string | null;
+  paidVia: string | null;
+  paidAt: string | null;
+}
+
+export interface BillingEventRow {
+  id: string;
+  eventType: string;
+  invoiceId: string | null;
+  providerEventId: string | null;
+  payload: Record<string, unknown>;
+  viaPlatformAdmin: boolean;
+  createdAt: string;
+}
+
+export interface BillingHistory {
+  invoices: BillingInvoiceRow[];
+  events: BillingEventRow[];
+}
+
+/** POST /tenancy/subscriptions/checkout → data. */
+export interface CheckoutSessionResult {
+  sessionId: string;
+  providerRef: string;
+  checkoutUrl: string;
+  planKey: string;
+  amount: string;
+  currencyCode: string;
+}
+
+/** Notification inbox row (GET /notifications → data[]). */
+export interface NotificationRow {
+  id: string;
+  userId: string | null;
+  type: string;
+  title: { ar: string; en: string };
+  body: { ar: string; en: string };
+  link: string | null;
+  readAt: string | null;
+  createdAt: string;
+}
+
+export interface UnreadCount {
+  count: number;
+}
+
+export interface NotificationPreferenceRow {
+  id: string;
+  userId: string | null;
+  eventType: string;
+  inApp: boolean;
+  email: boolean;
+}
+
+/** Platform console tenant detail gains open invoices (manual-payment UI). */
+export interface ConsoleInvoiceRow {
+  id: string;
+  number: string;
+  amount: string;
+  currencyCode: string;
+  status: string;
+  dueDate: string;
+  paidVia: string | null;
+  paidAt: string | null;
 }

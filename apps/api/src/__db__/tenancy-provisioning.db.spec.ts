@@ -89,7 +89,8 @@ describe("public registration (acceptance 1)", () => {
     // trial subscription (business plan) + full materialized entitlements
     const subscriptions = await countRows(
       `SELECT 1 FROM subscriptions s JOIN plans p ON p.id = s.plan_id
-        WHERE s.tenant_id = $1 AND p.key = 'business' AND s.status = 'ACTIVE'`,
+        WHERE s.tenant_id = $1 AND p.key = 'business' AND s.status = 'TRIAL'
+          AND s.trial_ends_at IS NOT NULL`,
       [result.tenantId],
     );
     expect(subscriptions).toBe(1);
@@ -103,7 +104,7 @@ describe("public registration (acceptance 1)", () => {
          WHERE e.tenant_id = $1 AND e.source = 'TRIAL'
            AND (SELECT cardinality(p.feature_keys) FROM plans p
                  JOIN subscriptions s ON s.plan_id = p.id
-                  AND s.tenant_id = e.tenant_id AND s.status = 'ACTIVE')
+                  AND s.tenant_id = e.tenant_id AND s.status = 'TRIAL')
                = (SELECT count(*) FROM entitlements e2
                    WHERE e2.tenant_id = e.tenant_id AND e2.source = 'TRIAL')`,
       [result.tenantId],

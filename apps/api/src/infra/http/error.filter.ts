@@ -36,18 +36,26 @@ import {
   BranchCodeTakenError,
   BranchNotActiveError,
   BranchScopeViolationError,
+  CheckoutInvalidError,
+  DowngradeBlockedError,
   EmailAlreadyRegisteredError,
   FeatureDependenciesMissingError,
   FeatureNotEntitledError,
   InvalidRegistrationInputError,
+  InvalidSubscriptionTransitionError,
   InvalidTenantTransitionError,
+  LimitExceededError,
   ManualGrantExpiryRequiredError,
   PlanClosureInvalidError,
   PlanNotFoundError,
+  SubscriptionReadOnlyError,
   SupportAccessDeniedError,
   SupportSessionExpiredError,
   SupportSessionNotActiveError,
   UnknownFeatureKeyError,
+  BillingRecordNotFoundError,
+  WebhookSignatureInvalidError,
+  WebhookReplayError,
 } from "../../modules/tenancy/domain/tenancy-errors";
 import {
   InvalidSettingValueError,
@@ -277,7 +285,9 @@ function domainStatus(error: DomainError): number {
     error instanceof FeatureNotEntitledError ||
     error instanceof ForbiddenAtRunError ||
     error instanceof SupportAccessDeniedError ||
-    error instanceof SupportSessionExpiredError
+    error instanceof SupportSessionExpiredError ||
+    // PHASE-014: read-only grace is a first-class 403 product state.
+    error instanceof SubscriptionReadOnlyError
   ) {
     return HttpStatus.FORBIDDEN;
   }
@@ -416,6 +426,17 @@ function domainStatus(error: DomainError): number {
   if (error instanceof TenantSuspendedError) {
     return HttpStatus.SERVICE_UNAVAILABLE;
   }
+  // PHASE-014 billing: webhook signature failure is a 401 (never leaks which
+  // part failed); replay/transition conflicts 409; record-not-found 404.
+  if (error instanceof WebhookSignatureInvalidError) {
+    return HttpStatus.UNAUTHORIZED;
+  }
+  if (error instanceof BillingRecordNotFoundError) {
+    return HttpStatus.NOT_FOUND;
+  }
+  if (error instanceof WebhookReplayError || error instanceof InvalidSubscriptionTransitionError) {
+    return HttpStatus.CONFLICT;
+  }
   if (
     error instanceof InvalidResetTokenError ||
     error instanceof InvalidTotpCodeError ||
@@ -447,7 +468,11 @@ function domainStatus(error: DomainError): number {
   if (
     error instanceof AssertionFailedExportBlockedError ||
     error instanceof ReportParamsInvalidError ||
-    error instanceof ContractVersionMismatchError
+    error instanceof ContractVersionMismatchError ||
+    // PHASE-014: limit ceiling + downgrade blockers + checkout shape (422).
+    error instanceof LimitExceededError ||
+    error instanceof DowngradeBlockedError ||
+    error instanceof CheckoutInvalidError
   ) {
     return HttpStatus.UNPROCESSABLE_ENTITY;
   }

@@ -1,8 +1,27 @@
 # Changelog
 
-> **Status:** LIVING DOCUMENT — append-only, newest first · **Updated:** 2026-11-01
+> **Status:** LIVING DOCUMENT — append-only, newest first · **Updated:** 2026-11-02
 
 Format: `DATE — item — type` where type ∈ {BLUEPRINT, PHASE-NNN, DOCS, BREAKING-ARCH, DECISION}.
+
+- 2026-11-02 — **PHASE-014 — Subscription, Billing, Onboarding & Dashboards — MVP (COMPLETE, tag `phase/014`)**:
+  migration `0021_billing_notifications.sql` (5 RLS'd tenant tables + definer projections
+  `tenant_active_entitlements` / `tenant_subscription_read_only` / `tenant_usage_limits` +
+  platform SELECT policy on `subscriptions` for the sweep); payment-provider adapter port with
+  sandbox checkout and an HMAC signature-verified (`t=,v1=`, 5-min freshness), replay-safe
+  webhook (`billing_events.provider_event_id` unique); the mandatory manual-invoicing fallback
+  (A-009 — `paid_via=MANUAL`, dual audit `via_platform_admin`, identical end state); subscription
+  lifecycle TRIAL→ACTIVE→GRACE(read-only; typed `subscription/read-only`)→SUSPENDED via PHASE-004
+  session-kill semantics with an audited pg-boss sweep; usage counters with 80%/100% warnings and
+  hard blocks on creation ceilings — `documents_per_month` NEVER blocks posting (INV-022
+  property-proven against a real PostingService); notifications center (inbox + unread +
+  preferences + owner email); public pricing page rendering only `GET /api/v1/public/plans`
+  (PLACEHOLDER prices, OQ-002); tenant billing page, dashboard KPI widgets bound to report
+  contracts only (POST report-runs, Money summed via domain-core — never float), Journey A
+  checklist, platform manual-payment console; nav items + AR/EN dictionary parity; MVP security
+  review register (0 criticals in the production runtime closure; route drift 224=224);
+  unit 166 PASS, db 1113 passed (render.spec browser-bound: Chromium unavailable in sandbox),
+  gate non-browser steps green. Evidence: `docs/implementation/phases/reports/PHASE-014-COMPLETION.md`.
 
 - 2026-11-01 — **PHASE-013 — Reporting, Statements & Printing (COMPLETE, tag
   `phase/013`)**: migration `0020_reporting_core.sql` — 2 tenant tables

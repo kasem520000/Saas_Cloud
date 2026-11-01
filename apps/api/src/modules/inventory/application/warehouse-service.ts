@@ -1,4 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, Optional } from "@nestjs/common";
+import { UsageService } from "../../tenancy/api";
 import { Decimal } from "@erp/domain-core";
 
 import { AuditService } from "../../audit/api/audit";
@@ -21,7 +22,11 @@ import {
  */
 @Injectable()
 export class WarehouseService {
-  constructor(@Inject(AuditService) private readonly audit: AuditService) {}
+  constructor(
+    @Inject(AuditService) private readonly audit: AuditService,
+    // PHASE-014 §6: warehouses counter (read-model; best-effort — never blocks).
+    @Optional() @Inject(UsageService) private readonly usage: UsageService | null,
+  ) {}
 
   async list(filter: { activeOnly?: boolean; branchId?: string; limit: number }) {
     return store.listWarehouses(filter);
@@ -65,6 +70,7 @@ export class WarehouseService {
         inventoryAccountId: created.inventoryAccountId,
       },
     });
+    await this.recordCounterDelta("warehouses", 1);
     return created;
   }
 
@@ -99,6 +105,7 @@ export class WarehouseService {
       );
     }
     await store.deactivateWarehouse(id, actorId);
+    await this.recordCounterDelta("warehouses", -1);
     await this.audit.record({
       action: "inventory.warehouse_deactivated",
       entityType: "warehouse",
@@ -111,12 +118,25 @@ export class WarehouseService {
   async reactivate(id: string, actorId: string | null) {
     await this.find(id);
     await store.reactivateWarehouse(id);
+    await this.recordCounterDelta("warehouses", 1);
     await this.audit.record({
       action: "inventory.warehouse_reactivated",
       entityType: "warehouse",
       entityId: id,
       actorId: actorId ?? undefined,
     });
+  }
+
+  /** PHASE-014: best-effort counter delta — a counter failure never fails the action. */
+  private async recordCounterDelta(counterKey: "warehouses", delta: number): Promise<void> {
+    if (this.usage === null || this.usage === undefined) {
+      return;
+    }
+    try {
+      await this.usage.recordResourceDelta(counterKey, delta);
+    } catch {
+      // INV-022: counters are a read-model; never let them gate the action.
+    }
   }
 
   async upsertItemSetting(input: {

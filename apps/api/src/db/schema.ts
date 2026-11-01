@@ -364,6 +364,10 @@ export const subscriptions = pgTable(
     periodStart: date("period_start").notNull(),
     periodEnd: date("period_end").notNull(),
     providerRef: text("provider_ref"),
+    // PHASE-014 (migration 0021): lifecycle window columns + dunning step.
+    trialEndsAt: timestamp("trial_ends_at", { withTimezone: true, mode: "string" }),
+    graceEndsAt: timestamp("grace_ends_at", { withTimezone: true, mode: "string" }),
+    dunningStep: integer("dunning_step").notNull().default(0),
   },
   (table) => [index("ix_subscriptions_tenant").on(table.tenantId)],
 );
@@ -3224,4 +3228,113 @@ export const printTemplates = pgTable(
     uniqueIndex("uq_print_templates_id_tenant").on(table.id, table.tenantId),
     uniqueIndex("uq_print_templates_tenant_key").on(table.tenantId, table.key),
   ],
+);
+
+// ---------------------------------------------------------------------------
+// PHASE-014 · subscription billing, usage counters, notifications
+// (migration 0021_billing_notifications.sql; SUBSCRIPTION_AND_ENTITLEMENTS
+// §6–§10). All tenant-scoped via the macro RLS policy; registered in the
+// isolation A-test registry.
+// ---------------------------------------------------------------------------
+
+/** Subscription invoices — sandbox checkout AND manual fallback land here identically (A-009). */
+export const subscriptionInvoices = pgTable(
+  "subscription_invoices",
+  {
+    ...standardColumns,
+    tenantId: uuid("tenant_id").notNull(),
+    subscriptionId: uuid("subscription_id").notNull(),
+    number: text("number").notNull(),
+    amount: numeric("amount", { precision: 19, scale: 4 }).notNull(),
+    currencyCode: char("currency_code", { length: 3 }).notNull(),
+    status: text("status").notNull().default("OPEN"),
+    periodStart: date("period_start").notNull(),
+    periodEnd: date("period_end").notNull(),
+    dueDate: date("due_date").notNull(),
+    providerRef: text("provider_ref"),
+    paidVia: text("paid_via"),
+    paidAt: timestamp("paid_at", { withTimezone: true, mode: "string" }),
+    createdBy: uuid("created_by"),
+    paidBy: uuid("paid_by"),
+  },
+  (table) => [
+    uniqueIndex("uq_subscription_invoices_id_tenant").on(table.id, table.tenantId),
+    uniqueIndex("uq_subscription_invoices_tenant_number").on(table.tenantId, table.number),
+    index("ix_subscription_invoices_tenant_status").on(table.tenantId, table.status, table.dueDate),
+  ],
+);
+
+/** Append-only billing event log; provider_event_id unique = webhook replay protection. */
+export const billingEvents = pgTable(
+  "billing_events",
+  {
+    id: uuid("id").primaryKey(),
+    tenantId: uuid("tenant_id").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .notNull()
+      .defaultNow(),
+    eventType: text("event_type").notNull(),
+    subscriptionId: uuid("subscription_id"),
+    invoiceId: uuid("invoice_id"),
+    providerEventId: text("provider_event_id"),
+    payload: jsonb("payload").notNull().default({}),
+    actorId: uuid("actor_id"),
+    viaPlatformAdmin: boolean("via_platform_admin").notNull().default(false),
+  },
+  (table) => [
+    uniqueIndex("uq_billing_events_id_tenant").on(table.id, table.tenantId),
+    uniqueIndex("uq_billing_events_provider_event").on(table.tenantId, table.providerEventId),
+    index("ix_billing_events_tenant_created").on(table.tenantId, table.createdAt),
+    index("ix_billing_events_tenant_subscription").on(table.tenantId, table.subscriptionId, table.createdAt),
+  ],
+);
+
+/** §6 limit-counter read-model — never gates posting (INV-022). */
+export const usageCounters = pgTable(
+  "usage_counters",
+  {
+    ...standardColumns,
+    tenantId: uuid("tenant_id").notNull(),
+    counterKey: text("counter_key").notNull(),
+    period: date("period").notNull(),
+    value: bigint("value", { mode: "number" }).notNull().default(0),
+  },
+  (table) => [
+    uniqueIndex("uq_usage_counters_id_tenant").on(table.id, table.tenantId),
+    uniqueIndex("uq_usage_counters_tenant_key_period").on(table.tenantId, table.counterKey, table.period),
+    index("ix_usage_counters_tenant_key").on(table.tenantId, table.counterKey, table.period),
+  ],
+);
+
+/** In-app notification inbox (billing-critical subset, PHASE-014). */
+export const notifications = pgTable(
+  "notifications",
+  {
+    ...standardColumns,
+    tenantId: uuid("tenant_id").notNull(),
+    userId: uuid("user_id"),
+    type: text("type").notNull(),
+    title: jsonb("title").notNull(),
+    body: jsonb("body").notNull(),
+    link: text("link"),
+    readAt: timestamp("read_at", { withTimezone: true, mode: "string" }),
+  },
+  (table) => [
+    uniqueIndex("uq_notifications_id_tenant").on(table.id, table.tenantId),
+    index("ix_notifications_tenant_created").on(table.tenantId, table.createdAt),
+  ],
+);
+
+/** Notification channel preferences (tenant-wide row = user_id NULL). */
+export const notificationPreferences = pgTable(
+  "notification_preferences",
+  {
+    ...standardColumns,
+    tenantId: uuid("tenant_id").notNull(),
+    userId: uuid("user_id"),
+    eventType: text("event_type").notNull(),
+    inApp: boolean("in_app").notNull().default(true),
+    email: boolean("email").notNull().default(false),
+  },
+  (table) => [uniqueIndex("uq_notification_preferences_id_tenant").on(table.id, table.tenantId)],
 );

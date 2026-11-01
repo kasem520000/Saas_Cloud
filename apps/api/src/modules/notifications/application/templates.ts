@@ -19,7 +19,10 @@ export type EmailTemplate =
   | "stock_below_reorder"
   /** PHASE-012 §2.9: the invoice.overdue nightly digest (alert, not
    * dunning — one notification per overdue invoice, exactly once). */
-  | "invoice_overdue";
+  | "invoice_overdue"
+  /** PHASE-014 T10: billing-critical notices (limit warnings, subscription
+   * state changes, assertion/reconciliation failures) to the owner. */
+  | "billing_notice";
 
 export interface EmailPayload {
   template: EmailTemplate;
@@ -110,6 +113,18 @@ const AR = {
       `— فريق المنصة`,
     ].join("\r\n"),
   }),
+  billing_notice: (v: Record<string, string>) => ({
+    subject: `${v.subject} — ${v.tenantName}`,
+    body: [
+      `مرحبًا،`,
+      ``,
+      v.body,
+      ``,
+      v.linkLabel !== "" ? `التفاصيل: ${v.linkUrl}` : "",
+      ``,
+      `— فريق المنصة`,
+    ].filter((line) => line !== "").join("\r\n"),
+  }),
 } as const;
 
 const EN = {
@@ -187,6 +202,18 @@ const EN = {
       `This is an alert only — no documents are created automatically.`,
       `— ${v.tenantName}`,
     ].join("\r\n"),
+  }),
+  billing_notice: (v: Record<string, string>) => ({
+    subject: `${v.subject} — ${v.tenantName}`,
+    body: [
+      `Hello,`,
+      ``,
+      v.body,
+      ``,
+      v.linkLabel !== "" ? `Details: ${v.linkUrl}` : "",
+      ``,
+      `— Platform team`,
+    ].filter((line) => line !== "").join("\r\n"),
   }),
 } as const;
 

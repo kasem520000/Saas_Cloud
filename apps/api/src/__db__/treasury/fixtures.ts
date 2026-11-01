@@ -51,7 +51,7 @@ export const T_SUPERVISOR = "aaaaaaaa-0000-4000-8000-00000000000b";
 export const TENANT_T = "44444444-4444-4444-4444-444444444444";
 
 const audit = new AuditService(new DrizzleAuditStore());
-const posting = new PostingService(audit, new PartnerSubledgerService());
+const posting = new PostingService(audit, new PartnerSubledgerService(), null);
 const numbering = new NumberingService(audit);
 const settlement = new SettlementCore(audit, posting, numbering);
 
