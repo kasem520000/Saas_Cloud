@@ -1,0 +1,30 @@
+{
+  "name": "@erp/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Next.js web client (ADR-0003). PHASE-001 skeleton: app router + [locale] segment + RTL/LTR demo.",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@erp/contracts": "workspace:*",
+    "@erp/domain-core": "workspace:*",
+    "@erp/ui": "workspace:^",
+    "@tailwindcss/postcss": "^4",
+    "next": "^16.1.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "tailwindcss": "^4"
+  },
+  "devDependencies": {
+    "@erp/config": "workspace:*",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^5.9.3"
+  }
+}

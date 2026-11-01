@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# build outputs
+dist/
+.next/
+out/
+coverage/
+
+# tooling caches
+.turbo/
+*.tsbuildinfo
+
+# local environment — never commit real secrets
+.env
+.env.local
+
+# misc
+.DS_Store
+
+# workspace-local (agent sandbox)
+upload/
+download/
+skills/
+agent-ctx/local/
+
+# tool-output artifacts (session-local)
+tool-results/
