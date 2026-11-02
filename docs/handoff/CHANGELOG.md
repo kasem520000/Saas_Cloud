@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-03 — PHASE-034 COMPLETE (final roadmap phase): multi-entity consolidation per ADR-0018 — migration 0037 (4 RLS tables, erp_consolidation SELECT-only reader, §3.15 permissions), G-32 eliminations via the engine in the owner books (BR-056), read-only runs with INV-026 snapshot and zero member writes, closing-rate FX default (OQ-V2-2 closed), 4 report contracts (registry 83), isolation 966/966 real PG, unit 375/375, tsc clean, docs 29/29 — see reports/PHASE-034-COMPLETION.md
+
 2026-11-03 — PHASE-033 COMPLETE: agriculture commercial shell, configuration-only — migration 0036 seeds industry.agriculture, manifest spec 5/5 with zero-agronomy gate, DB 4/4 real PG incl. zero-journal proof, unit 373/373, tsc clean, docs 29/29 — see reports/PHASE-033-COMPLETION.md (v2.0 templates ED-06..ED-09 all shipped)
 
 2026-11-03 — PHASE-032 COMPLETE: education commercial shell, configuration-only — migration 0035 seeds industry.education (stock modules off), manifest spec 5/5 with zero-academic gate, DB 4/4 real PG incl. zero-journal proof, unit 368/368, tsc clean, docs 29/29 — see reports/PHASE-032-COMPLETION.md

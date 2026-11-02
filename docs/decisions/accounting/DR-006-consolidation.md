@@ -45,9 +45,14 @@ This record pins the **accounting policy** on top of that architecture.
    reversible **only by counter-entry** (BR-056) — INV-006 source chain and INV-013
    idempotency apply like any journal.
 4. **FX translation with dated rates** (INV-008 conventions) into the group's base
-   currency; the translation method choice (closing-rate vs temporal) is an explicit
-   open product decision — OQ-V2-2, to be decided before PHASE-034 planning (see
-   [../../ARCHITECTURE_RISKS_AND_OPEN_QUESTIONS.md](../../ARCHITECTURE_RISKS_AND_OPEN_QUESTIONS.md)).
+   currency. **OQ-V2-2 DECIDED (PHASE-034 T1, 2026-11-03): closing-rate is the
+   default method** — the rate dated at the consolidated period's closing date
+   (latest stored rate ≤ as-of) translates the member statements; `temporal`
+   (average/periodic rates by line date) remains available as an explicit
+   per-group `fx_translation_method` override for groups whose statutory regime
+   requires it. The executor reads the method from group config only; rates are
+   always dated stored rates (> 0, never recomputed — INV-008, RATE_MISSING is
+   fail-closed).
 5. **Consolidated statements are derived artifacts** (INV-026): consolidated TB/IS/BS =
    Σ member statements (group currency, dated FX) − eliminations; they never replace
    member statutory books.
@@ -71,8 +76,8 @@ This record pins the **accounting policy** on top of that architecture.
 
 ## Revisit conditions
 
-- The FX translation method decision (closing-rate default proposed — OQ-V2-2) lands via
-  the open question → amend §4 of this record with the chosen method.
+- The FX translation method decision landed at PHASE-034 (closing-rate default, per-group
+  override) — §4 amended above; OQ-V2-2 is CLOSED.
 - Statutory consolidated filings are mandated in a target jurisdiction → compliance-folder
   record with official sources feeding the reports.
 - Demand for intercompany document automation (orders/invoices between members) → new

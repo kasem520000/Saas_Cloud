@@ -86,6 +86,9 @@ export interface Dictionary {
   indHeadLivestock: string;
   indInputPurchases: string;
   indPerFieldProfit: string;
+  conTitle: string;
+  conGroups: string;
+  conEmpty: string;
 
   navHome: string;
   navUsers: string;
@@ -1876,6 +1879,9 @@ const ar: Dictionary = {
   indHeadLivestock: "رأس (الماشية)",
   indInputPurchases: "مشتريات المدخلات",
   indPerFieldProfit: "ربحية الحقل",
+  conTitle: "التوحيد",
+  conGroups: "مجموعات التوحيد",
+  conEmpty: "لا توجد مجموعات توحيد بعد",
   appTitle: "منصة الأعمال الشاملة",
   switchLabel: "English",
   signOut: "تسجيل الخروج",
@@ -3655,6 +3661,9 @@ const en: Dictionary = {
   indHeadLivestock: "Head (livestock)",
   indInputPurchases: "Input purchases",
   indPerFieldProfit: "Per-field profitability",
+  conTitle: "Consolidation",
+  conGroups: "Consolidation groups",
+  conEmpty: "No consolidation groups yet",
   appTitle: "Universal Business ERP",
   switchLabel: "العربية",
   signOut: "Sign out",

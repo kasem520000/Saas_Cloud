@@ -301,6 +301,14 @@ Legend: **Phase** = first implementation phase · **OC** = offline-creatable
 | `salary_components` | Structure lines | structure_id, key, name, name_ar, kind ALLOWANCE/DEDUCTION/EMPLOYER_CONTRIBUTION, calc FIXED/PERCENT_OF_BASIC/PERCENT_OF_GROSS, amount, rate, gl_account_id, is_eos_base | 029 | no |
 | `payroll_runs` | Monthly payroll batches | fiscal_period_id, status DRAFT/PENDING_APPROVAL/POSTED, gross_total, deductions_total, net_total, journal_entry_id | 029 | no |
 | `payroll_run_lines` 🔒 | Per-employee frozen pay lines | run_id, employee_id, component_snapshot jsonb, gross_total, deductions_total, net_total | 029 | no |
+| `loan_schedule_lines` 🔒 | Per-installment loan schedule legs | loan_id, installment_no, due_date, principal, interest, paid_amount, status | 029 | no |
+
+## PHASE-034 — consolidation (ADR-0018, migration 0037)
+
+| `consolidation_groups` | Group configuration in the OWNER tenant | name, name_ar, base_currency, fx_translation_method (CLOSING_RATE/TEMPORAL), status | 034 | no |
+| `group_entities` | Member legal entities (= tenants) per group | group_id, member_tenant_id, ownership_percent, include_from, status | 034 | no |
+| `elimination_entries` | G-32 elimination documents (DRAFT/POSTED/REVERSED, reversal-only BR-056) | group_id, fiscal_period_id, lines jsonb, journal_entry_id, reversal_entry_id | 034 | no |
+| `consolidation_runs` | Read-only run snapshots (INV-026) | group_id, fiscal_period_id, status, snapshot jsonb, snapshot_version, error | 034 | no |
 | `employee_loans` | Employee loans/advances | employee_id, amount, installments_count, start_period_id, status ACTIVE/CLOSED (WRITE_OFF) | 029 | no |
 | `employee_loan_lines` | Per-period loan deductions | loan_id, fiscal_period_id, amount, payroll_run_id?, status PENDING/DEDUCTED/WAIVED | 029 | no |
 

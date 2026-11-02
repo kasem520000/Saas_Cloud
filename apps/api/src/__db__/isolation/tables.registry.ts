@@ -228,6 +228,11 @@ export const TENANT_TABLES_REGISTRY: readonly RegisteredTenantTable[] = [
   { table: "salary_components" },
   { table: "payroll_runs" },
   { table: "payroll_run_lines" },
+  // PHASE-034 (migration 0037): consolidation module (ADR-0018).
+  { table: "consolidation_groups" },
+  { table: "group_entities" },
+  { table: "elimination_entries" },
+  { table: "consolidation_runs" },
   { table: "employee_loans" },
   { table: "loan_schedule_lines" },
 ];

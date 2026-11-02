@@ -20,6 +20,12 @@ import {
   payrollCostSummaryContract,
   payrollEosProvisionContract,
 } from "./payroll/contracts";
+import {
+  consolidatedTbContract,
+  consolidatedIsContract,
+  consolidatedBsContract,
+  eliminationsLogContract,
+} from "./consolidation/contracts";
 
 
 /**
@@ -216,6 +222,12 @@ export const REPORT_CONTRACTS: readonly ReportContract[] = Object.freeze([
   payrollRegisterContract,
   payrollCostSummaryContract,
   payrollEosProvisionContract,
+  // PHASE-034 consolidation reports (INV-026)
+  consolidatedTbContract,
+  consolidatedIsContract,
+  consolidatedBsContract,
+  eliminationsLogContract,
 ]);
 
 export { validateRegistry, registrySnapshot } from "./runtime";
+

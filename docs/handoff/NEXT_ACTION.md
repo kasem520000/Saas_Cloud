@@ -4,7 +4,7 @@
 
 ## The single next action
 
-**Execute PHASE-034** — PHASE-033 COMPLETE (agriculture commercial shell, configuration-only; the five v2.0 templates ED-06..ED-09 are all shipped; evidence: reports/PHASE-033-COMPLETION.md).
+**PHASE-034 COMPLETE — the final roadmap phase is shipped** (multi-entity consolidation per ADR-0018; evidence: reports/PHASE-034-COMPLETION.md). All 34 phases of the master roadmap are delivered; next work starts from the post-gate backlog in IMPLEMENTATION_STATUS / open questions.
 evidence: reports/PHASE-017-COMPLETION.md): automotive & distribution templates seeded via
 the unmodified PHASE-015 engine, domain cores for job cards / settlements / tiers /
 free goods / commissions with unit proof, drift 237=237, unit 195 PASS.

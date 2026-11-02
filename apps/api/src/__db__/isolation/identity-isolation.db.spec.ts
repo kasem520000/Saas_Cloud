@@ -1608,6 +1608,38 @@ async function seedFixtures(superuser: {
      ON CONFLICT (id) DO NOTHING`,
     [TENANT_A, TENANT_B],
   );
+  await superuser.query(
+    `INSERT INTO consolidation_groups (id, tenant_id, name, base_currency)
+     VALUES
+       ('c1c1c1c1-0000-4000-8000-000000000001', $1, 'Group A', 'SAR'),
+       ('c1c1c1c1-0000-4000-8000-000000000002', $2, 'Group B', 'SAR')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO group_entities (id, tenant_id, group_id, member_tenant_id, ownership_percent, include_from)
+     VALUES
+       ('c2c2c2c2-0000-4000-8000-000000000001', $1, 'c1c1c1c1-0000-4000-8000-000000000001', $1, 100, '2026-01-01'),
+       ('c2c2c2c2-0000-4000-8000-000000000002', $2, 'c1c1c1c1-0000-4000-8000-000000000002', $2, 100, '2026-01-01')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO elimination_entries (id, tenant_id, group_id, fiscal_period_id, description, lines)
+     VALUES
+       ('c3c3c3c3-0000-4000-8000-000000000001', $1, 'c1c1c1c1-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000009', 'own A', '[]'::jsonb),
+       ('c3c3c3c3-0000-4000-8000-000000000002', $2, 'c1c1c1c1-0000-4000-8000-000000000002', '00000000-0000-4000-8000-000000000009', 'own B', '[]'::jsonb)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO consolidation_runs (id, tenant_id, group_id, fiscal_period_id, status)
+     VALUES
+       ('c4c4c4c4-0000-4000-8000-000000000001', $1, 'c1c1c1c1-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000009', 'QUEUED'),
+       ('c4c4c4c4-0000-4000-8000-000000000002', $2, 'c1c1c1c1-0000-4000-8000-000000000002', '00000000-0000-4000-8000-000000000009', 'QUEUED')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
   // -- seedFixtures end --
 
 }
@@ -1828,6 +1860,10 @@ const OWN_ROW: Record<string, [string, string]> = {
   payroll_run_lines: ["a5a5a5a5-0000-4000-8000-000000000001", "a5a5a5a5-0000-4000-8000-000000000002"],
   employee_loans: ["a6a6a6a6-0000-4000-8000-000000000001", "a6a6a6a6-0000-4000-8000-000000000002"],
   loan_schedule_lines: ["a7a7a7a7-0000-4000-8000-000000000001", "a7a7a7a7-0000-4000-8000-000000000002"],
+  consolidation_groups: ["c1c1c1c1-0000-4000-8000-000000000001", "c1c1c1c1-0000-4000-8000-000000000002"],
+  group_entities: ["c2c2c2c2-0000-4000-8000-000000000001", "c2c2c2c2-0000-4000-8000-000000000002"],
+  elimination_entries: ["c3c3c3c3-0000-4000-8000-000000000001", "c3c3c3c3-0000-4000-8000-000000000002"],
+  consolidation_runs: ["c4c4c4c4-0000-4000-8000-000000000001", "c4c4c4c4-0000-4000-8000-000000000002"],
 };
 
 
@@ -2263,6 +2299,14 @@ const MISMATCHED_INSERT: Record<string, string> = {
      VALUES ('a6a6a6a6-3000-4000-8000-000000000003', $1, 'a1a1a1a1-0000-4000-8000-000000000001', 1000, 100, '2026-11-01', 'ACTIVE')`,
   loan_schedule_lines: `INSERT INTO loan_schedule_lines (id, tenant_id, loan_id, seq, due_date, amount, status)
      VALUES ('a7a7a7a7-3000-4000-8000-000000000003', $1, 'a6a6a6a6-0000-4000-8000-000000000001', 1, '2026-12-01', 100, 'PENDING')`,
+  consolidation_groups: `INSERT INTO consolidation_groups (id, tenant_id, name, base_currency)
+     VALUES ('c1c1c1c1-3000-4000-8000-000000000003', $1, 'Attack Group', 'SAR')`,
+  group_entities: `INSERT INTO group_entities (id, tenant_id, group_id, member_tenant_id, ownership_percent, include_from)
+     VALUES ('c2c2c2c2-3000-4000-8000-000000000003', $1, 'c1c1c1c1-0000-4000-8000-000000000001', $1, 100, '2026-01-01')`,
+  elimination_entries: `INSERT INTO elimination_entries (id, tenant_id, group_id, fiscal_period_id, description, lines)
+     VALUES ('c3c3c3c3-3000-4000-8000-000000000003', $1, 'c1c1c1c1-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000009', 'attack', '[]'::jsonb)`,
+  consolidation_runs: `INSERT INTO consolidation_runs (id, tenant_id, group_id, fiscal_period_id, status)
+     VALUES ('c4c4c4c4-3000-4000-8000-000000000003', $1, 'c1c1c1c1-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000009', 'QUEUED')`,
 };
 
 beforeAll(async () => {

@@ -26,7 +26,8 @@ export type ReportCategory =
   | "notes"
   | "installments"
   | "budgeting"
-  | "payroll";
+  | "payroll"
+  | "consolidation";
 
 export type DataSourceModule =
   | "accounting"
@@ -47,7 +48,8 @@ export type DataSourceModule =
   | "notes"
   | "installments"
   | "budgeting"
-  | "payroll";
+  | "payroll"
+  | "consolidation";
 
 export interface DataSourceDecl {
   readonly module: DataSourceModule;
