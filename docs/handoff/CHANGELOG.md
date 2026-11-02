@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-03 — PHASE-030 COMPLETE: wholesale & electronics v2.0 templates, configuration-only — migration 0032 seeds both manifests (schema_version 32), manifest spec 4/4, DB suite 4/4 on real PG16 (idempotent audited apply, BR-038 additive-only switch, zero-journal negative ledger proof), T11 UI presets config-only, api unit 358/358, api+web tsc clean, docs 29/29 — see reports/PHASE-030-COMPLETION.md
+
 2026-11-02 — PHASE-029 COMPLETE: payroll (financial scope) — migration 0031 (7 RLS tables, INV-025 row CHECK), G-29/30/31 goldens, BR-052..055, run SoD flows, 3 report contracts (registry 79), 942/942 isolation on real PG — see reports/PHASE-029-COMPLETION.md
 
 2026-11-02 — PHASE-028 COMPLETE: budgeting & variance — migration 0030 (BR-050 DB-level single-ACTIVE), lifecycle/SoD/supersede, advisory controls (BR-051, POSTED never blocked), variance engine read-only, 2 report contracts (registry 76), 900/900 isolation on real PG — see reports/PHASE-028-COMPLETION.md

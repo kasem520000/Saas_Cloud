@@ -518,6 +518,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-029 (2026-11-02):** payroll delivered in financial scope — G-29/30/31 goldens (worked example exact), BR-052…055, INV-025 row-level, 942/944 DB green, isolation 942/942 on real PG (`reports/PHASE-029-COMPLETION.md`).
 
+- **PHASE-030 (2026-11-03):** wholesale & electronics v2.0 templates seeded configuration-only via migration 0032 over the unmodified PHASE-015 engine — manifest spec 4/4, DB suite 4/4 on real PG incl. BR-038 additive switch and zero-journal negative ledger proof, UI presets config-only, unit 358/358, tsc clean, docs 29/29 (`reports/PHASE-030-COMPLETION.md`).
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

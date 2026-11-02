@@ -56,6 +56,16 @@ export interface Dictionary {
   prStatus: string;
   prRuns: string;
 
+  // -- PHASE-030: industry template presets (wholesale / electronics) --
+  indWholesaleTitle: string;
+  indElectronicsTitle: string;
+  indQuickOrder: string;
+  indTradeInIntake: string;
+  indImeiRegister: string;
+  indRepairCard: string;
+  indPdcCustody: string;
+  indMaturityCalendar: string;
+
   navHome: string;
   navUsers: string;
   navSessions: string;
@@ -1816,6 +1826,14 @@ const ar: Dictionary = {
   prSalary: "الراتب الأساسي",
   prStatus: "الحالة",
   prRuns: " مسيرات الرواتب",
+  indWholesaleTitle: "الجملة والتجارة",
+  indElectronicsTitle: "الجوالات والإلكترونيات",
+  indQuickOrder: "إدخال طلب سريع",
+  indTradeInIntake: "استلام المقايضة",
+  indImeiRegister: "سجل IMEI",
+  indRepairCard: "بطاقة إصلاح",
+  indPdcCustody: "عهدة الشيكات المؤجلة",
+  indMaturityCalendar: "تقويم الاستحقاق",
   appTitle: "منصة الأعمال الشاملة",
   switchLabel: "English",
   signOut: "تسجيل الخروج",
@@ -3566,6 +3584,14 @@ const en: Dictionary = {
   prSalary: "Basic salary",
   prStatus: "Status",
   prRuns: "Payroll runs",
+  indWholesaleTitle: "Wholesale & Trade",
+  indElectronicsTitle: "Mobile & Electronics",
+  indQuickOrder: "Bulk quick order",
+  indTradeInIntake: "Trade-in intake",
+  indImeiRegister: "IMEI register",
+  indRepairCard: "Repair card",
+  indPdcCustody: "PDC custody",
+  indMaturityCalendar: "Maturity calendar",
   appTitle: "Universal Business ERP",
   switchLabel: "العربية",
   signOut: "Sign out",

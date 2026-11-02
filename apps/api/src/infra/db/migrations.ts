@@ -45,6 +45,7 @@ export const MIGRATIONS: readonly string[] = [
   "0029_notes_installments_027",
   "0030_budgeting_028",
   "0031_payroll_029",
+  "0032_industry_wholesale_electronics_030",
 ];
 
 /**

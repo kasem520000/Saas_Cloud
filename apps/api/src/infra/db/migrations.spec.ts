@@ -10,7 +10,7 @@ describe("migration manifest (MIGRATION_STRATEGY §1)", () => {
     const files = readMigrationFiles();
     expect(files.map((file) => file.tag)).toEqual([...MIGRATIONS]);
     expect(files[0]?.tag).toBe("0001_core_infra");
-    expect(files.at(-1)?.tag).toBe("0031_payroll_029");
+    expect(files.at(-1)?.tag).toBe("0032_industry_wholesale_electronics_030");
   });
 
   it("journal entries mirror the manifest order (drizzle-kit manifest)", () => {

@@ -1,10 +1,10 @@
 # Next Action
 
-> **Status:** LIVING DOCUMENT — updated at every phase completion · **Updated:** 2026-11-02
+> **Status:** LIVING DOCUMENT — updated at every phase completion · **Updated:** 2026-11-03
 
 ## The single next action
 
-**Execute PHASE-030** — PHASE-029 COMPLETE (payroll; evidence: reports/PHASE-029-COMPLETION.md).
+**Execute PHASE-031** — PHASE-030 COMPLETE (wholesale & electronics templates, configuration-only; evidence: reports/PHASE-030-COMPLETION.md).
 evidence: reports/PHASE-017-COMPLETION.md): automotive & distribution templates seeded via
 the unmodified PHASE-015 engine, domain cores for job cards / settlements / tiers /
 free goods / commissions with unit proof, drift 237=237, unit 195 PASS.
