@@ -189,6 +189,18 @@ export const ROUTE_PERMISSIONS: readonly RoutePermissionRule[] = [
     path: "/api/v1/platform/tenants/:id/support-sessions/:sessionId/tenant-data/:resource",
     permission: "platform.support.access",
   },
+  // -- PHASE-018: manufacturing (matrix §3.8) --
+  { method: "GET", path: "/api/v1/manufacturing/orders", permission: "manufacturing.production_orders.view" },
+  { method: "GET", path: "/api/v1/manufacturing/boms", permission: "manufacturing.boms.manage" },
+  { method: "GET", path: "/api/v1/manufacturing/inspections", permission: "manufacturing.qc.manage" },
+  { method: "GET", path: "/api/v1/manufacturing/genealogy/:batchId", permission: "manufacturing.genealogy.read" },
+  { method: "POST", path: "/api/v1/manufacturing/orders/:id/release", permission: "manufacturing.production_orders.approve" },
+  { method: "POST", path: "/api/v1/manufacturing/orders/:id/consume", permission: "manufacturing.production_orders.post" },
+  { method: "POST", path: "/api/v1/manufacturing/orders/:id/scrap", permission: "manufacturing.scrap.post" },
+  { method: "POST", path: "/api/v1/manufacturing/orders/:id/complete", permission: "manufacturing.production_orders.post" },
+  { method: "POST", path: "/api/v1/manufacturing/orders/:id/cancel", permission: "manufacturing.production_orders.approve" },
+  { method: "POST", path: "/api/v1/manufacturing/inspections", permission: "manufacturing.qc.manage" },
+  { method: "POST", path: "/api/v1/manufacturing/inspections/release/:batchId", permission: "manufacturing.qc.manage" },
   // -- PHASE-016: POS terminals, counter sale, narrow sync slice (matrix §3.2/§3.8) --
   {
     method: "GET",

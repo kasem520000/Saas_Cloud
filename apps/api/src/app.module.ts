@@ -16,6 +16,7 @@ import { IdentityModule } from "./modules/identity/identity.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
 import { ConfigurationModule } from "./modules/configuration/configuration.module";
 import { PosModule } from "./modules/pos/pos.module";
+import { ManufacturingModule } from "./modules/manufacturing/manufacturing.module";
 import { TenancyModule } from "./modules/tenancy/tenancy.module";
 import { PartnersModule } from "./modules/partners/partners.module";
 import { ItemsModule } from "./modules/items/items.module";
@@ -48,6 +49,7 @@ import { UsageLimitsGuard } from "./infra/auth/usage-limits.guard";
     NotificationsModule,
     ConfigurationModule,
     PosModule,
+    ManufacturingModule,
     TenancyModule,
     PartnersModule,
     ItemsModule,

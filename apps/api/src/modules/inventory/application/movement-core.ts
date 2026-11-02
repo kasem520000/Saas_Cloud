@@ -646,6 +646,9 @@ async function resolveIssueSlices(
     if (batch === undefined || batch.itemId !== item.id) {
       throw new BatchNotFoundError(input.batchId);
     }
+    if (batch.status === "QUARANTINED") {
+      throw new BatchNotOnHandError({ batchNo: batch.batchNo, onHand: "0", requested: qty });
+    }
     const onHandBatch = await store.batchOnHand(batch.id);
     if (compareExact(onHandBatch, qty) < 0) {
       throw new BatchNotOnHandError({

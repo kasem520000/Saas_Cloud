@@ -268,6 +268,13 @@ export interface Dictionary {
   // -- PHASE-016 POS UI ---------------------------------------------------------
   navPosCounter: string;
   navPosTerminals: string;
+  navManufacturing: string;
+  navMfgOrders: string;
+  navMfgBoms: string;
+  navMfgGenealogy: string;
+  mfgOrdersTitle: string;
+  mfgBomsTitle: string;
+  mfgGenealogyTitle: string;
   posTerminalsTitle: string;
   posTerminalsDescription: string;
   posTerminalCode: string;
@@ -1971,6 +1978,13 @@ const ar: Dictionary = {
   // -- PHASE-016 POS UI ---------------------------------------------------------
   navPosCounter: "نقطة البيع",
   navPosTerminals: "أجهزة نقاط البيع",
+  navManufacturing: "التصنيع",
+  navMfgOrders: "أوامر الإنتاج",
+  navMfgBoms: "قوائم المواد",
+  navMfgGenealogy: "تتبع الدفعات",
+  mfgOrdersTitle: "أوامر الإنتاج",
+  mfgBomsTitle: "قوائم المواد (BOM)",
+  mfgGenealogyTitle: "شجرة نسب الدفعات",
   posTerminalsTitle: "أجهزة نقاط البيع",
   posTerminalsDescription: "سجّل الأجهزة ربطه بالفرع والصندوق وحجم الإيصال",
   posTerminalCode: "كود الجهاز",
@@ -3661,6 +3675,13 @@ const en: Dictionary = {
   // -- PHASE-016 POS UI ---------------------------------------------------------
   navPosCounter: "POS counter",
   navPosTerminals: "POS terminals",
+  navManufacturing: "Manufacturing",
+  navMfgOrders: "Production orders",
+  navMfgBoms: "Bills of materials",
+  navMfgGenealogy: "Batch genealogy",
+  mfgOrdersTitle: "Production orders",
+  mfgBomsTitle: "Bills of materials (BOM)",
+  mfgGenealogyTitle: "Batch genealogy",
   posTerminalsTitle: "POS terminals",
   posTerminalsDescription: "Register terminals bound to a branch, till cash account and receipt size",
   posTerminalCode: "Terminal code",

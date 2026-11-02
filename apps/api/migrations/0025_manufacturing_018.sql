@@ -196,6 +196,17 @@ ON CONFLICT ("key") DO UPDATE SET
   "name" = EXCLUDED."name", "name_ar" = EXCLUDED."name_ar",
   "version" = EXCLUDED."version", "manifest" = EXCLUDED."manifest", "is_active" = true;
 --> statement-breakpoint
+-- stock_moves source types for production (same expansion pattern as PHASE-012).
+ALTER TABLE "stock_moves" DROP CONSTRAINT IF EXISTS ck_stock_moves_source_shape;
+--> statement-breakpoint
+ALTER TABLE "stock_moves" ADD CONSTRAINT ck_stock_moves_source_shape CHECK ("source_type" IN (
+  'manual_receipt', 'manual_issue', 'stock_adjustment', 'stock_count',
+  'stock_transfer', 'opening_balance_doc', 'method_switch',
+  'goods_receipt', 'supplier_invoice', 'landed_cost',
+  'delivery_note', 'sales_invoice', 'credit_note',
+  'production_order', 'production_scrap'
+));
+--> statement-breakpoint
 -- Schema-state marker for /health/ready (mirrors the migration manifest).
 INSERT INTO erp._schema_state (key, value) VALUES ('schema_version', 25)
 ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;

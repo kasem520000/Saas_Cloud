@@ -22,11 +22,12 @@ export class ManufacturingQueriesService {
   /** manufacturing.batch_genealogy — upstream: batches consumed by this batch's order. */
   async genealogyUpstream(batchId: string): Promise<{ key: string; values: Record<string, string> }[]> {
     const rows = await tenantTx().execute(sql`
-      SELECT b.batch_no AS "batchNo", i.name AS "itemName", c.qty::text AS qty, c.unit_cost::text AS "unitCost"
+      SELECT cb.batch_no AS "batchNo", i.name AS "itemName", c.qty::text AS qty, c.unit_cost::text AS "unitCost"
       FROM item_batches b
       JOIN production_orders po ON po.fg_batch_id = b.id
       JOIN production_consumptions c ON c.production_order_id = po.id
       JOIN items i ON i.id = c.item_id
+      LEFT JOIN item_batches cb ON cb.id = c.batch_id
       WHERE b.id = ${batchId}
       ORDER BY i.name
     `);
@@ -39,10 +40,10 @@ export class ManufacturingQueriesService {
   /** manufacturing.batch_genealogy — downstream: sales lines that sold this batch. */
   async genealogyDownstream(batchId: string): Promise<{ key: string; values: Record<string, string> }[]> {
     const rows = await tenantTx().execute(sql`
-      SELECT i.document_no AS "docNo", l.qty::text AS qty, l.unit_price::text AS "unitPrice"
+      SELECT i.invoice_no AS "docNo", l.qty::text AS qty, l.unit_price::text AS "unitPrice"
       FROM item_batches b
       JOIN sales_invoice_lines l ON l.batch_id = b.id
-      JOIN sales_invoices i ON i.id = l.sales_invoice_id
+      JOIN sales_invoices i ON i.id = l.invoice_id
       WHERE b.id = ${batchId}
       ORDER BY i.invoice_date DESC LIMIT 1000
     `);
