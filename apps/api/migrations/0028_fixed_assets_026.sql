@@ -182,7 +182,8 @@ INSERT INTO "permissions" ("key", "module", "description") VALUES
 ('fixed_assets.assets.manage', 'fixed_assets', 'Manage categories and capitalization (PHASE-026)'),
 ('fixed_assets.depreciation_runs.run', 'fixed_assets', 'Assemble depreciation runs (PHASE-026)'),
 ('fixed_assets.depreciation_runs.post', 'fixed_assets', 'Post depreciation runs (PHASE-026)'),
-('fixed_assets.disposals.approve', 'fixed_assets', 'Approve disposals, second user SoD (PHASE-026)')
+('fixed_assets.disposals.approve', 'fixed_assets', 'Approve disposals, second user SoD (PHASE-026)'),
+('reports.fixed-assets.register.read', 'fixed_assets', 'Run fixed-assets reports (PHASE-026)')
 ON CONFLICT ("key") DO NOTHING;
 --> statement-breakpoint
 INSERT INTO erp._schema_state (key, value) VALUES ('schema_version', 28) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;

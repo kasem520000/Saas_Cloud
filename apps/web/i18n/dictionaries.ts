@@ -24,6 +24,17 @@ export interface Dictionary {
   loading: string;
   phaseNote: string;
 
+  faTitle: string;
+  faCode: string;
+  faName: string;
+  faStatus: string;
+  faCost: string;
+  faNbv: string;
+  faNewAsset: string;
+  faCategory: string;
+  faSalvage: string;
+  faLifeMonths: string;
+
   navHome: string;
   navUsers: string;
   navSessions: string;
@@ -1753,6 +1764,16 @@ export interface Dictionary {
 }
 
 const ar: Dictionary = {
+  faTitle: "الأصول الثابتة",
+  faCode: "الرمز",
+  faName: "الاسم",
+  faStatus: "الحالة",
+  faCost: "التكلفة",
+  faNbv: "صافي القيمة الدفترية",
+  faNewAsset: "أصل جديد",
+  faCategory: "الفئة",
+  faSalvage: "قيمة Residual",
+  faLifeMonths: "العمر الإنتاجي (أشهر)",
   appTitle: "منصة الأعمال الشاملة",
   switchLabel: "English",
   signOut: "تسجيل الخروج",
@@ -3472,6 +3493,16 @@ const ar: Dictionary = {
 };
 
 const en: Dictionary = {
+  faTitle: "Fixed assets",
+  faCode: "Code",
+  faName: "Name",
+  faStatus: "Status",
+  faCost: "Cost",
+  faNbv: "NBV",
+  faNewAsset: "New asset",
+  faCategory: "Category",
+  faSalvage: "Salvage value",
+  faLifeMonths: "Useful life (months)",
   appTitle: "Universal Business ERP",
   switchLabel: "العربية",
   signOut: "Sign out",

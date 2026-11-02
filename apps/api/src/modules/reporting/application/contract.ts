@@ -21,7 +21,8 @@ export type ReportCategory =
   | "tax"
   | "platform"
   | "industry"
-  | "services";
+  | "services"
+  | "fixed-assets";
 
 export type DataSourceModule =
   | "accounting"
@@ -37,7 +38,8 @@ export type DataSourceModule =
   | "reporting"
   | "distribution"
   | "manufacturing"
-  | "crm";
+  | "crm"
+  | "fixed_assets";
 
 export interface DataSourceDecl {
   readonly module: DataSourceModule;

@@ -12,6 +12,8 @@ import { DistributionQueriesService } from "../../distribution/application/distr
 import { ManufacturingQueriesService } from "../../manufacturing/application/manufacturing-queries";
 import { CrmQueriesService } from "../../crm/application/crm-queries";
 import { UserQueriesService } from "../../identity/application/user-queries";
+import { FixedAssetsQueriesService } from "../../fixed_assets/application/asset-queries";
+import { DrizzleFixedAssetsReadPort } from "../../fixed_assets/infrastructure/fixed-assets.store";
 import { AuditService } from "../../audit/api/audit";
 import { DrizzleAuditStore } from "../../audit/infrastructure/drizzle-audit.store";
 
@@ -38,6 +40,7 @@ export interface ReportingServices {
   manufacturing: ManufacturingQueriesService;
   crm: CrmQueriesService;
   users: UserQueriesService;
+  fixedAssets: FixedAssetsQueriesService;
   audit: AuditService;
 }
 
@@ -60,6 +63,7 @@ export function reportingServices(): ReportingServices {
       manufacturing: new ManufacturingQueriesService(),
       crm: new CrmQueriesService(),
       users: new UserQueriesService(),
+      fixedAssets: new FixedAssetsQueriesService(new DrizzleFixedAssetsReadPort()),
       audit: new AuditService(new DrizzleAuditStore()),
     };
   }

@@ -1,4 +1,10 @@
 import type { ReportContract } from "../application/contract";
+import {
+  faAssetRegisterContract,
+  faDepreciationScheduleContract,
+  faMovementsContract,
+} from "./fixed-assets/contracts";
+
 
 /**
  * PHASE-013 · the report-contract registry (REPORTING_ARCHITECTURE §2):
@@ -177,6 +183,10 @@ export const REPORT_CONTRACTS: readonly ReportContract[] = Object.freeze([
   platformUserActivityContract,
   platformReportRunsContract,
   platformSubscriptionUsageContract,
+  // PHASE-026 §J fixed-assets reports
+  faAssetRegisterContract,
+  faDepreciationScheduleContract,
+  faMovementsContract,
 ]);
 
 export { validateRegistry, registrySnapshot } from "./runtime";

@@ -35,6 +35,44 @@ export class ReconciliationService {
   constructor(@Inject(AuditService) private readonly audit: AuditService) {}
 
   /**
+   * RC-10 (PHASE-026): fixed-asset register ↔ GL tie per category —
+   * Σ gross = FIXED_ASSET balance, Σ accumulated = ACCUM_DEPRECIATION
+   * balance (RECONCILIATION §1 row 10). BROKEN blocks period LOCK (PC-04).
+   */
+  async runFixedAssetsCheck(input: {
+    asOf: string;
+    runMode: "NIGHTLY" | "ON_DEMAND";
+    checkedBy: string | null;
+    register: Array<{ categoryId: string; gross: string; accumulated: string }>;
+    glBalances: Array<{ purposeKey: string; balance: string }>;
+  }) {
+    const { rc10Check } = await import("../../fixed_assets/domain/reconcile");
+    const byPurpose = new Map(input.glBalances.map((b) => [b.purposeKey, b.balance]));
+    const results = input.register.map((r) => ({
+      categoryId: r.categoryId,
+      ...rc10Check({
+        registerGross: r.gross,
+        registerAccumulated: r.accumulated,
+        glFixedAssetBalance: byPurpose.get("FIXED_ASSET") ?? "0.0000",
+        glAccumBalance: byPurpose.get("ACCUM_DEPRECIATION") ?? "0.0000",
+      }),
+    }));
+    const broken = results.filter((r) => r.state === "BROKEN");
+    if (broken.length > 0) {
+      await this.audit.record({
+        action: "reconciliation.broken",
+        entityType: "fixed_assets",
+        entityId: broken[0]!.categoryId,
+        details: { check: "RC-10", broken },
+      } as never);
+      throw new ReconciliationBrokenError({ kind: "RC-10", diffCount: broken.length });
+    }
+    return { check: "RC-10", state: "OK" as const, categories: results.length };
+  }
+
+
+
+  /**
    * AR check (RC-01): Σ partner subledger (base) on the AR control account
    * = AR control account balance. Exact, 0 tolerance (RECONCILIATION §2).
    */
