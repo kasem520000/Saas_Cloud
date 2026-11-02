@@ -202,6 +202,11 @@ export const TENANT_TABLES_REGISTRY: readonly RegisteredTenantTable[] = [
   { table: "service_orders" },
   { table: "service_order_lines" },
   { table: "time_entries" },
+
+  // PHASE-020 (migration 0027): sync foundation cluster.
+  { table: "tombstones" },
+  // carries DELETE only for the audited retention job (A5: policy-confined, 0 foreign rows)
+  { table: "inbox_commands", deleteGranted: true },
 ];
 
 export const TENANT_TABLE_NAMES: readonly string[] = TENANT_TABLES_REGISTRY.map(

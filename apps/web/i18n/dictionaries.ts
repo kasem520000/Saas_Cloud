@@ -279,6 +279,8 @@ export interface Dictionary {
   crmContractsTitle: string;
   projectsTitle: string;
   posTerminalsTitle: string;
+  syncDevicesTitle: string;
+  syncHealthTitle: string;
   posTerminalsDescription: string;
   posTerminalCode: string;
   posTerminalName: string;
@@ -1992,6 +1994,8 @@ const ar: Dictionary = {
   crmContractsTitle: "عقود الخدمات",
   projectsTitle: "المشاريع / القضايا",
   posTerminalsTitle: "أجهزة نقاط البيع",
+  syncDevicesTitle: "سجل الأجهزة",
+  syncHealthTitle: "صحة المزامنة",
   posTerminalsDescription: "سجّل الأجهزة ربطه بالفرع والصندوق وحجم الإيصال",
   posTerminalCode: "كود الجهاز",
   posTerminalName: "الاسم",
@@ -3692,6 +3696,8 @@ const en: Dictionary = {
   crmContractsTitle: "Service contracts",
   projectsTitle: "Projects / cases",
   posTerminalsTitle: "POS terminals",
+  syncDevicesTitle: "Device registry",
+  syncHealthTitle: "Sync health",
   posTerminalsDescription: "Register terminals bound to a branch, till cash account and receipt size",
   posTerminalCode: "Terminal code",
   posTerminalName: "Name",

@@ -222,6 +222,16 @@ export const ROUTE_PERMISSIONS: readonly RoutePermissionRule[] = [
   { method: "GET", path: "/api/v1/accounting/projects", permission: "accounting.projects.manage" },
   { method: "POST", path: "/api/v1/accounting/projects", permission: "accounting.projects.manage" },
   { method: "POST", path: "/api/v1/accounting/projects/:id/close", permission: "accounting.projects.manage" },
+  // -- PHASE-020: sync (matrix §3.x) --
+  { method: "GET", path: "/api/v1/sync/status", permission: "sync.pull" },
+  { method: "GET", path: "/api/v1/sync/pull", permission: "sync.pull" },
+  { method: "POST", path: "/api/v1/sync/pull/ack", permission: "sync.pull" },
+  { method: "POST", path: "/api/v1/sync/push", permission: "sync.push" },
+  { method: "GET", path: "/api/v1/sync/devices", permission: "identity.devices.manage" },
+  { method: "POST", path: "/api/v1/sync/devices/:id/attest/challenge", permission: "sync.devices.register" },
+  { method: "POST", path: "/api/v1/sync/devices/:id/attest", permission: "sync.devices.register" },
+  { method: "POST", path: "/api/v1/sync/devices/:id/revoke", permission: "sync.devices.revoke" },
+  { method: "POST", path: "/api/v1/sync/inbox/retention", permission: "sync.health.read" },
   // -- PHASE-016: POS terminals, counter sale, narrow sync slice (matrix §3.2/§3.8) --
   {
     method: "GET",

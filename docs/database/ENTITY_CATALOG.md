@@ -227,6 +227,18 @@ Legend: **Phase** = first implementation phase · **OC** = offline-creatable
 | `service_order_lines` | SERVICE (labor) / PARTS lines; parts consume stock through the inventory service |
 | `time_entries` | Recorded hours per project + fee item; billable requires narrative (CHECK) unless already billed; feeds billing only |
 
+## sync foundation (PHASE-020)
+
+| Table | Purpose |
+|---|---|
+| `change_log` | Append-only change feed (PHASE-016 POS slice, generalized PHASE-020): per-tenant `seq` bigserial, entity_type/entity_id/op/payload; `ix_change_log_tenant_entity_seq` serves per-entity cursor windows |
+| `tombstones` | Soft-delete markers pulled as tombstone items (append-only by grants) |
+| `sync_cursors` | Per-(device, entity) server-side cursor ack — monitoring hint only; the client advances its own cursor after local commit |
+| `sync_commands` | PHASE-016 POS per-command idempotency + stored-result replay (second dedupe layer for financial intents, INV-013) |
+| `inbox_commands` | Generalized inbox (PHASE-020): durable dedupe by (device, commandId) + idempotency key, stored-result replay with `duplicate: true`, ≥ 30-day retention enforced by the audited `sync.inbox.retention` job |
+
+`devices` gains sync-state columns: `capabilities`, `contract_version`, `trust_flags`, `attested_at`.
+
 ## industry configuration (PHASE-004/015)
 
 | Entity | Purpose | Key fields | Phase | OC |

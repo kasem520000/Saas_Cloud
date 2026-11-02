@@ -1,0 +1,27 @@
+{
+  "name": "@erp/sync-core",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "PHASE-020 v1: offline sync client kernel — outbox/inbox machinery, full-jitter retry scheduler, cycle engine, contract-version gate, recovery. Storage-agnostic (reference in-memory store included); SQLite/SQLCipher binding lands with the device apps (PHASE-021/022).",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@erp/config": "workspace:*",
+    "vitest": "^3.2.4"
+  },
+  "turbo": {
+    "build": {
+      "outputs": []
+    }
+  },
+  "main": "./src/index.ts"
+}

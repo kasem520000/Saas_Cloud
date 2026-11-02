@@ -63,6 +63,8 @@ const NO_UPDATE_GRANT = new Set([
   // PHASE-014 (migration 0021): the billing event log is append-only by
   // grants (SELECT + INSERT only — replay-protected webhook ingestion).
   "billing_events",
+  // PHASE-020 (migration 0027): the tombstone feed is append-only by grants.
+  "tombstones",
 ]);
 
 /** Fixture rows seeded per tenant (A2's total-count expectation). The
@@ -1406,6 +1408,21 @@ async function seedFixtures(superuser: {
      ON CONFLICT (id) DO NOTHING`,
     [TENANT_A, TENANT_B],
   );
+  // PHASE-020 (migration 0027): sync foundation fixtures.
+  await superuser.query(
+    `INSERT INTO tombstones (seq, tenant_id, entity_type, entity_id)
+     VALUES (1, $1, 'partners_lite', 'd1d1d1d1-0000-4000-8000-000000000001'),
+            (2, $2, 'partners_lite', 'd1d1d1d1-0000-4000-8000-000000000002')
+     ON CONFLICT DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO inbox_commands (id, tenant_id, device_id, command_id, intent, idempotency_key, status, result)
+     VALUES ('d2d2d2d2-0000-4000-8000-000000000001', $1, 'e9e9e9e9-0000-4000-8000-000000000001', 'd3d3d3d3-0000-4000-8000-000000000001', 'pos_sale', 'iso-key-a', 'ACCEPTED', '{}'),
+            ('d2d2d2d2-0000-4000-8000-000000000002', $2, 'e9e9e9e9-0000-4000-8000-000000000001', 'd3d3d3d3-0000-4000-8000-000000000002', 'pos_sale', 'iso-key-b', 'ACCEPTED', '{}')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
   await superuser.query(
     `INSERT INTO change_log (tenant_id, entity_type, entity_id, op, payload)
      VALUES
@@ -1625,6 +1642,8 @@ const OWN_ROW: Record<string, [string, string]> = {
   service_orders: ["c7c7c7c7-0000-4000-8000-000000000001", "c7c7c7c7-0000-4000-8000-000000000002"],
   service_order_lines: ["c8c8c8c8-0000-4000-8000-000000000001", "c8c8c8c8-0000-4000-8000-000000000002"],
   time_entries: ["c9c9c9c9-0000-4000-8000-000000000001", "c9c9c9c9-0000-4000-8000-000000000002"],
+  tombstones: ["d1d1d1d1-0000-4000-8000-000000000001", "d1d1d1d1-0000-4000-8000-000000000002"],
+  inbox_commands: ["d2d2d2d2-0000-4000-8000-000000000001", "d2d2d2d2-0000-4000-8000-000000000002"],
 };
 
 
@@ -2007,6 +2026,10 @@ const MISMATCHED_INSERT: Record<string, string> = {
      VALUES ('c8c8c8c8-3000-4000-8000-000000000003', $1, 'c7c7c7c7-0000-4000-8000-000000000001', 'SERVICE', 'attack line')`,
   time_entries: `INSERT INTO time_entries (id, tenant_id, project_id, fee_item_id, hours, entry_date)
      VALUES ('c9c9c9c9-3000-4000-8000-000000000003', $1, 'c1c1c1c1-0000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 1, '2026-11-02')`,
+  tombstones: `INSERT INTO tombstones (seq, tenant_id, entity_type, entity_id)
+     VALUES (99, $1, 'partners_lite', 'd1d1d1d1-0000-4000-8000-000000000001')`,
+  inbox_commands: `INSERT INTO inbox_commands (id, tenant_id, device_id, command_id, intent, idempotency_key, status, result)
+     VALUES ('d2d2d2d2-3000-4000-8000-000000000003', $1, 'e9e9e9e9-0000-4000-8000-000000000001', 'd3d3d3d3-3000-4000-8000-000000000003', 'pos_sale', 'iso-attack', 'ACCEPTED', '{}')`,
 };
 
 beforeAll(async () => {
@@ -2089,7 +2112,9 @@ describe("generated attack suite A1–A10 — as erp_app", () => {
               ? "idempotency_key"
               : table === "van_stocks"
                 ? "warehouse_id"
-                : "id";
+                : table === "tombstones"
+                  ? "entity_id"
+                  : "id";
 
     it(`A1 ${table}: SELECT without GUC → 0 tenant rows`, async () => {
       const app = await appClient();
@@ -2171,9 +2196,12 @@ describe("generated attack suite A1–A10 — as erp_app", () => {
                             ? "amount"
                             : table === "billing_events"
                               ? "event_type"
-                              : "updated_at";
+                              : table === "tombstones"
+                                ? "deleted_at"
+                                : "updated_at";
+        const whereCol = table === "tombstones" ? "entity_id" : "id";
         await expect(
-          app.query(`UPDATE ${table} SET ${column} = ${column} WHERE id = $1`, [foreignRow]),
+          app.query(`UPDATE ${table} SET ${column} = ${column} WHERE ${whereCol} = $1`, [foreignRow]),
         ).rejects.toMatchObject({ code: "42501" });
       } else if (table === "role_permissions") {
         // Association table: no UPDATE grant by design (grants change via
@@ -2201,7 +2229,11 @@ describe("generated attack suite A1–A10 — as erp_app", () => {
                 ? "status"
                 : table === "sync_cursors"
                   ? "cursor"
-                  : "updated_at";
+                  : table === "tombstones"
+                    ? "deleted_at"
+                    : table === "inbox_commands"
+                      ? "processed_at"
+                      : "updated_at";
         const touched = await app.query(
           `UPDATE ${table} SET ${probeColumn} = ${probeColumn} WHERE ${idColumn} = $1`,
           [foreignRow],

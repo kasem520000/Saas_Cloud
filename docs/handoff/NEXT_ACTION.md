@@ -4,9 +4,9 @@
 
 ## The single next action
 
-**Execute PHASE-020 (Offline Sync Foundation)** per
-[../implementation/phases/PHASE-020.md](../implementation/phases/PHASE-020.md)
-(identified only — not started). PHASE-019 is COMPLETE (2026-11-02; evidence: reports/PHASE-019-COMPLETION.md): crm module (leads→partner conversion, contracts + idempotent recurring billing through the posting engine, tasks/activities/time entries, service orders), projects analytical dimension stamped on journal lines, `industry.professional_services` template live via the unmodified engine, 2 services report contracts (registry 64→66), drift 242=242. PHASE-018 is COMPLETE (2026-11-02; evidence: reports/PHASE-018-COMPLETION.md): manufacturing module + food_manufacturing template live via the unmodified engine. PHASE-017 is COMPLETE (2026-11-02, tag `phase/017`;
+**Execute PHASE-021 (Desktop Application)** per
+[../implementation/phases/PHASE-021.md](../implementation/phases/PHASE-021.md)
+(identified only — not started; PHASE-022/023 also eligible per the dependency graph). PHASE-020 is COMPLETE (2026-11-02; evidence: reports/PHASE-020-COMPLETION.md): the generalized sync protocol + `packages/sync-core` v1 are live — the PHASE-016 POS slice runs unchanged on the same wire contracts; chaos-critical paths (C-01/C-06/C-12/C-13) proven on embedded PG. PHASE-019 is COMPLETE (2026-11-02; evidence: reports/PHASE-019-COMPLETION.md): crm module (leads→partner conversion, contracts + idempotent recurring billing through the posting engine, tasks/activities/time entries, service orders), projects analytical dimension stamped on journal lines, `industry.professional_services` template live via the unmodified engine, 2 services report contracts (registry 64→66), drift 242=242. PHASE-018 is COMPLETE (2026-11-02; evidence: reports/PHASE-018-COMPLETION.md): manufacturing module + food_manufacturing template live via the unmodified engine. PHASE-017 is COMPLETE (2026-11-02, tag `phase/017`;
 evidence: reports/PHASE-017-COMPLETION.md): automotive & distribution templates seeded via
 the unmodified PHASE-015 engine, domain cores for job cards / settlements / tiers /
 free goods / commissions with unit proof, drift 237=237, unit 195 PASS.

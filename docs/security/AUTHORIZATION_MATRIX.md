@@ -191,6 +191,9 @@ permissions cannot be granted to `viewer`-derived templates).
 | `pos.sales.sell` | POS sale screen (PHASE-016) / شاشة البيع السريع | cashier, owner | tenant, terminal-scoped | no |
 | `pos.shifts.manage` | POS shift open/close with variance (PHASE-016) / ورديات نقاط البيع | cashier, owner | tenant, terminal-scoped | no |
 | `pos.receipts.print` | Print POS receipts (PHASE-016) / طباعة الإيصالات | cashier, owner | tenant | no (audited) |
+| `sync.pull` | Pull change-feed pages with signed cursors (PHASE-020) / سحب صفحات التغييرات | any authenticated user | tenant, device-scoped | no |
+| `sync.push` | Push offline command batches, per-item results (PHASE-020) / دفع دفعات الأوامر غير المتصلة | any authenticated user | tenant, device-scoped | no (audited) |
+| `sync.health.read` | Sync health dashboard + monitoring (PHASE-020) / لوحة صحة المزامنة | owner, accountant | tenant | no |
 | `sync.devices.register` / `sync.devices.revoke` | Register/revoke offline devices / تسجيل وإلغاء الأجهزة | owner (register delegated to device enrollment) | tenant | `revoke` **yes** (kills device data flow) |
 | `sync.settings.manage` | Sync policies per entity / إعدادات المزامنة | owner | tenant | no |
 | `crm.leads.manage` / `crm.tasks.manage` / `crm.activities.manage` | CRM basics (PHASE-019) / إدارة علاقات العملاء | sales, owner | branch | no |
