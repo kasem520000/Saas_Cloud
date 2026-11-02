@@ -118,3 +118,15 @@ Alerts: `EInvoiceRejectSpike`, `CertExpiry`. Full design:
 Any incident involving **ledger data integrity** (posting, reconciliation, sync
 duplicates) is **Sev-1 by definition** (RISK-009/RISK-011) — do not downgrade it because
 only one tenant is affected. Post-incident reviews: [DISASTER_RECOVERY.md](DISASTER_RECOVERY.md) §6.
+
+## 9. Desktop app (PHASE-021)
+
+| Symptom | Diagnosis | Remediation | Runbook |
+|---------|-----------|-------------|---------|
+| App shows system-requirements path on boot | WebView2 runtime missing or < 120.0.0.0 (probe: `webview2_runtime_version` → sync-core `probeWebView2`) | Install the WebView2 runtime (Evergreen bootstrapper) and relaunch; installer guidance in DEVELOPMENT_SETUP §11 | [../architecture/ADR/ADR-0013-tauri-desktop.md](../architecture/ADR/ADR-0013-tauri-desktop.md) |
+| App stuck read-only with "update required" | Contract-version gate: server contract newer than client (CONTRACT_VERSION) | Install the latest signed update via the staged updater channel; below minimum-version clients are force-updated (D-06) | [../offline/SYNC_PROTOCOL.md](../offline/SYNC_PROTOCOL.md) §contract |
+| Writes blocked after 7 days offline | Permission-snapshot watermark expired | Reconnect once to refresh the snapshot; until then the app is read-only + online-required for writes (OFFLINE_CAPABILITIES_MATRIX desktop column) | [../offline/OFFLINE_CAPABILITIES_MATRIX.md](../offline/OFFLINE_CAPABILITIES_MATRIX.md) |
+| Outbox grows, never drains after crash | `IN_FLIGHT` rows from the dead session | Automatic on next start: `recoverInFlight()` → QUEUED (SyncHost.start); verify `outbox` empties and cursors advance | [../offline/LOCAL_DATABASE.md](../offline/LOCAL_DATABASE.md) §6 |
+| Local DB corruption suspected | `PRAGMA integrity_check` ≠ ok at start | Automatic: stage outbox/inbox → reset → re-import → full pull; if staging fails, wipe local cache (server is source of truth) and full-pull | [../offline/LOCAL_DATABASE.md](../offline/LOCAL_DATABASE.md) §6.4 |
+| Receipt reprint shows wrong/duplicate number | Must NEVER happen: reprint renders stored POSTED bytes only | Sev-1 (RISK-011 class) — collect device logs (redacted), freeze sync for the tenant, incident | [../offline/OFFLINE_CAPABILITIES_MATRIX.md](../offline/OFFLINE_CAPABILITIES_MATRIX.md) row 32 |
+| Update prompt loops / unsigned update offered | Updater manifest signature invalid or version ≤ current | Fails closed by design (D-06): `UNSIGNED`/`DOWNGRADE` rejected in `evaluateUpdate`; check CI signing + channel manifest | [../planning/RELEASE_STRATEGY.md](../planning/RELEASE_STRATEGY.md) §Rollout |

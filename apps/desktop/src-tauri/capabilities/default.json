@@ -1,0 +1,16 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "PHASE-021 default shell capabilities: local SQL, keychain, updater check, printer, store. Least privilege — no shell/exec/fs scope.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "sql:default",
+    "sql:allow-load",
+    "keyring:default",
+    "store:default",
+    "updater:default",
+    "updater:allow-check",
+    "process:default"
+  ]
+}

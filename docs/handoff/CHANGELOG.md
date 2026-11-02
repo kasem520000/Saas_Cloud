@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-02 — PHASE-021 Desktop Application (Tauri v2, Windows): shell scaffold `apps/desktop`, web static-export target + guard, sync-core desktop modules (SQLite store on real better-sqlite3, sync host, keychain lifecycle, updater gate, WebView2 probe, ESC/POS printer) 28/28 tests, ci-desktop.yml (signing/SBOM/CalVer), offline badge UI, docs — PHASE-NNN
+
 > **Status:** LIVING DOCUMENT — append-only, newest first · **Updated:** 2026-11-02
 
 Format: `DATE — item — type` where type ∈ {BLUEPRINT, PHASE-NNN, DOCS, BREAKING-ARCH, DECISION}.

@@ -1,0 +1,25 @@
+{
+  "name": "@erp/desktop",
+  "version": "2026.11.0",
+  "private": true,
+  "type": "module",
+  "description": "PHASE-021: Tauri v2 Windows shell wrapping the static web-ERP export (ADR-0013). Windows-only this phase.",
+  "scripts": {
+    "dev": "tauri dev",
+    "build:web": "pnpm --filter @erp/web build:tauri",
+    "build": "tauri build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@erp/sync-core": "workspace:*",
+    "@tauri-apps/api": "^2.5.0"
+  },
+  "devDependencies": {
+    "@erp/config": "workspace:*",
+    "@tauri-apps/cli": "^2.5.0",
+    "typescript": "^5.6.0",
+    "vitest": "^3.2.4"
+  }
+}

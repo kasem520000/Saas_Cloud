@@ -281,6 +281,12 @@ export interface Dictionary {
   posTerminalsTitle: string;
   syncDevicesTitle: string;
   syncHealthTitle: string;
+  offlineBadgeOnline: string;
+  offlineBadgeOffline: string;
+  offlineBadgeSyncing: string;
+  offlineBadgeReadOnly: string;
+  offlineAsOf: string;
+  offlineQueuedCount: string;
   posTerminalsDescription: string;
   posTerminalCode: string;
   posTerminalName: string;
@@ -1996,6 +2002,12 @@ const ar: Dictionary = {
   posTerminalsTitle: "أجهزة نقاط البيع",
   syncDevicesTitle: "سجل الأجهزة",
   syncHealthTitle: "صحة المزامنة",
+  offlineBadgeOnline: "متصل",
+  offlineBadgeOffline: "دون اتصال",
+  offlineBadgeSyncing: "جارٍ المزامنة…",
+  offlineBadgeReadOnly: "قراءة فقط",
+  offlineAsOf: "آخر بيانات: {ts}",
+  offlineQueuedCount: "{count} عملية بانتظار الإرسال",
   posTerminalsDescription: "سجّل الأجهزة ربطه بالفرع والصندوق وحجم الإيصال",
   posTerminalCode: "كود الجهاز",
   posTerminalName: "الاسم",
@@ -3698,6 +3710,12 @@ const en: Dictionary = {
   posTerminalsTitle: "POS terminals",
   syncDevicesTitle: "Device registry",
   syncHealthTitle: "Sync health",
+  offlineBadgeOnline: "Online",
+  offlineBadgeOffline: "Offline",
+  offlineBadgeSyncing: "Syncing…",
+  offlineBadgeReadOnly: "Read-only",
+  offlineAsOf: "Data as of {ts}",
+  offlineQueuedCount: "{count} pending to send",
   posTerminalsDescription: "Register terminals bound to a branch, till cash account and receipt size",
   posTerminalCode: "Terminal code",
   posTerminalName: "Name",

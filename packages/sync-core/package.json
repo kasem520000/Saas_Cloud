@@ -16,7 +16,9 @@
   },
   "devDependencies": {
     "@erp/config": "workspace:*",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "better-sqlite3": "^13.0.3",
+    "@types/better-sqlite3": "^7.6.13"
   },
   "turbo": {
     "build": {

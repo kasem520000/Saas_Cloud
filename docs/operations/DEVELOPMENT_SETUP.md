@@ -314,3 +314,31 @@ never hand-edited; changes ship with a changeset naming the cause). The
 AA variance under contention; 5-day SLA from 2026-10-29). The 10k-row 60fps
 gate isolates component overhead from the environment floor and enforces the
 absolute budget on capable hardware (floor < 15ms).
+
+## §11 PHASE-021 — Desktop app (Tauri v2, Windows-only this phase)
+
+System requirements (client PCs): Windows 10 1809+ with the **WebView2
+Runtime ≥ 120.0.0.0** (below minimum → installer shows the system-requirements
+path; 120–130 → degraded-capability notice). No macOS/Linux this phase
+(decision record required, PHASE-021 §7).
+
+```bash
+# static export of the web ERP (BFF routes excluded — the shell calls the
+# API directly over HTTP):
+pnpm --filter @erp/web check:tauri-export   # guard: no server-only code in export
+pnpm --filter @erp/web build:tauri          # TAURI_BUILD=1 next build → apps/web/out
+
+# shell (needs Rust + WiX/NSIS on Windows; CI does the signed build):
+pnpm --filter @erp/desktop install
+pnpm --filter @erp/desktop dev              # tauri dev (web dev server on :3000)
+pnpm --filter @erp/desktop test             # shell glue tests (fake keychain/store)
+pnpm --filter @erp/sync-core test           # sync host / sqlite store / updater gate
+```
+
+Local DB: `erp_local.db` opened through the Tauri SQL plugin **encrypted with
+SQLCipher**; the key lives only in the OS keychain (Windows Credential
+Manager) — never in SQLite, logs, or preferences (D-02/D-04). Access tokens
+are memory-only; refresh token + device private key are one-time-use in the
+keychain. Corruption path: stage outbox/inbox → reset machinery → re-import →
+full pull (LOCAL_DATABASE §6.4; implemented in
+`@erp/sync-core` `SqliteLocalStore.stageAndResetMachinery`).

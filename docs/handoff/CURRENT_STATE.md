@@ -500,6 +500,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 - **Production-ready / compliant / secure:** no such claims are made anywhere, and
   none may be made until phases complete with evidence.
 
+- **PHASE-021 (2026-11-02):** desktop app foundation landed in sandbox-provable scope — Tauri v2 shell scaffold (`apps/desktop`), static web export target with guard, and `@erp/sync-core` desktop modules (SQLite local store on real better-sqlite3 with WAL + migrations + corruption path, sync host, keychain credential lifecycle with memory-only access tokens, D-06 updater gate, WebView2 probe, ESC/POS reprint builder) — 28/28 unit tests green; CI release workflow added. Native Windows signing / SQLCipher key wiring / chaos matrix / Playwright smoke are recorded as CI-class deferrals in the completion report.
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

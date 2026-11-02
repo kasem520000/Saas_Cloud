@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "ERP Desktop",
+  "version": "2026.11.0",
+  "identifier": "com.erp.desktop",
+  "build": {
+    "beforeDevCommand": "pnpm --filter @erp/web dev",
+    "beforeBuildCommand": "pnpm --filter @erp/web build:tauri",
+    "devUrl": "http://localhost:3000",
+    "frontendDist": "../web/out"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "ERP Desktop",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 1024,
+        "minHeight": 640,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": ["icons/icon.ico"],
+    "windows": {
+      "nsis": {
+        "installerHooks": "windows/hooks.nsh"
+      }
+    }
+  },
+  "plugins": {
+    "sql": {
+      "preload": ["sqlite:erp_local.db"]
+    },
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "https://updates.erp.example/stable/{{target}}/{{arch}}/{{current_version}}"
+      ],
+      "pubkey": "REPLACE_IN_CI_SECRETS_STORE_BACKED_KEY"
+    },
+    "process": {}
+  }
+}

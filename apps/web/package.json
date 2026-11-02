@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
+    "build:tauri": "node scripts/build-tauri.mjs",
+    "check:tauri-export": "tsx scripts/check-tauri-export.ts",
     "start": "next start -p 3000",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint ."
@@ -25,6 +27,7 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "tsx": "^4.19.0"
   }
 }

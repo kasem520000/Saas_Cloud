@@ -309,7 +309,7 @@ General sync foundation and native clients (PHASE-020…022) —
 |---|---|---|---|---|---|---|
 | `offline.sync_protocol` | Sync protocol · بروتوكول المزامنة | Outbox/inbox, idempotency keys, per-entity cursors, tombstones, per-entity conflict policies; server authoritative for postings | 2 | 020 | (device-scoped) | `platform.users_roles` |
 | `offline.device_management` | Device management · إدارة الأجهزة | Device registry, activation, revocation, last-seen, per-device sync state | 2 | 020 | `platform.devices.manage` | `offline.sync_protocol` |
-| `offline.desktop_app` | Desktop application · تطبيق سطح المكتب | Tauri shell (Windows first): offline web-ERP cache, auto-update, keychain, printer integration | 2 | 021 | (app install) | `offline.sync_protocol` |
+| `offline.desktop_app` | Desktop application · تطبيق سطح المكتب | Tauri shell (Windows first): offline web-ERP cache, auto-update, keychain, printer integration — **implemented (PHASE-021)**: Tauri v2 scaffold + static web export + sync-core SQLite/host/keychain/updater/printer modules; native signing + chaos E2E run in CI (see PHASE-021-COMPLETION) | 2 | 021 | (app install) | `offline.sync_protocol` |
 | `offline.android_app` | Android application · تطبيق أندرويد | Expo app: personal accounts + field sales with offline cache and push | 2 | 022 | (app install) | `offline.sync_protocol`, `distribution.van_stock` |
 | `offline.mobile_accounts` | Mobile account views · الحسابات على الجوال | Cached, authorized, shareable-only partner data on Android | 2 | 022 | customer-scoped token | `partners.personal_accounts`, `offline.android_app` |
 
