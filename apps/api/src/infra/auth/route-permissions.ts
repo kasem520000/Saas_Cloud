@@ -189,6 +189,52 @@ export const ROUTE_PERMISSIONS: readonly RoutePermissionRule[] = [
     path: "/api/v1/platform/tenants/:id/support-sessions/:sessionId/tenant-data/:resource",
     permission: "platform.support.access",
   },
+  // -- PHASE-016: POS terminals, counter sale, narrow sync slice (matrix §3.2/§3.8) --
+  {
+    method: "GET",
+    path: "/api/v1/pos/terminals",
+    permission: "pos.terminals.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/pos/terminals",
+    permission: "pos.terminals.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/pos/terminals/:id/activate",
+    permission: "pos.terminals.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/pos/terminals/:id/deactivate",
+    permission: "pos.terminals.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/pos/terminals/:id/bind-device",
+    permission: "pos.terminals.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/pos/sale",
+    permission: "pos.sales.sell",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/pos/sync/pull",
+    permission: "sales.pos_session.post",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/pos/sync/push",
+    permission: "sales.pos_session.post",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/pos/sync/status",
+    permission: "sales.pos_session.post",
+  },
   // -- PHASE-015: configuration engine + template apply/switch (matrix §3.8) --
   {
     method: "GET",

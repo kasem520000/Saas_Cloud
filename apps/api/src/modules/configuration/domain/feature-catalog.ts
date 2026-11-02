@@ -144,6 +144,8 @@ export const FEATURE_DEPS: Readonly<Record<string, readonly string[]>> = Object.
   "pos.receipts": ["pos.sales", "reporting.print_templates"],
   "pos.barcode_scanning": ["items.barcodes"],
   "pos.offline_queue": ["pos.sales", "pos.shifts"],
+  "pos.table_service": ["pos.sales"],
+  "pos.kitchen_display": ["pos.sales"],
   // offline
   "offline.sync_protocol": ["platform.users_roles"],
   "offline.device_management": ["offline.sync_protocol"],

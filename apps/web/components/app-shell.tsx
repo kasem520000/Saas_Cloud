@@ -46,6 +46,8 @@ const FALLBACK_CRUMBS: Record<string, { group?: keyof Dictionary; label: keyof D
   mfa: { group: "navSettings", label: "navMfa" },
   onboarding: { group: "navSettings", label: "navOnboarding" },
   "configuration/templates": { group: "navSettings", label: "navTemplates" },
+  "pos/terminals": { group: "navSettings", label: "navPosTerminals" },
+  "pos/counter": { group: "navSettings", label: "navPosCounter" },
   "support-sessions": { group: "navSettings", label: "navSupport" },
   platform: { group: "navPlatformSection", label: "navPlatformConsole" },
   "platform/audit": { group: "navPlatformSection", label: "navPlatformAudit" },

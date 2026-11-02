@@ -54,6 +54,24 @@ export interface ShiftReportRow {
   closedAt: string | null;
 }
 
+export interface ShiftCashReconRow {
+  shiftId: string;
+  shiftNo: string | null;
+  cashAccountCode: string;
+  terminalCode: string;
+  status: string;
+  openingAmount: string;
+  capturedIn: string;
+  capturedOut: string;
+  expectedAmount: string | null;
+  countedAmount: string | null;
+  difference: string | null;
+  varianceJournalId: string | null;
+  supervisorId: string | null;
+  openedAt: string;
+  closedAt: string | null;
+}
+
 export interface BankReconRow {
   statementId: string;
   cashAccountCode: string;
@@ -216,6 +234,32 @@ export class TreasuryQueriesService {
       LIMIT 1000
     `);
     return rows.rows as unknown as ShiftReportRow[];
+  }
+
+  /** PHASE-016 T12 — expected vs counted cash per shift (Z-close reconciliation, BR-021). */
+  async shiftCashReconciliation(input: {
+    fromDate: string;
+    toDate: string;
+  }): Promise<ShiftCashReconRow[]> {
+    const rows = await tenantTx().execute(sql`
+      SELECT s.id AS "shiftId", s.shift_no AS "shiftNo", a.code AS "cashAccountCode",
+             COALESCE(t.code, '—') AS "terminalCode",
+             s.status, s.opening_amount::text AS "openingAmount",
+             s.captured_in::text AS "capturedIn", s.captured_out::text AS "capturedOut",
+             s.expected_amount::text AS "expectedAmount",
+             s.counted_amount::text AS "countedAmount", s.difference::text AS difference,
+             s.variance_posted_journal_id::text AS "varianceJournalId",
+             s.supervisor_id::text AS "supervisorId",
+             s.opened_at::text AS "openedAt", s.closed_at::text AS "closedAt"
+      FROM cashier_shifts s
+      JOIN cash_accounts ca ON ca.id = s.cash_account_id
+      JOIN accounts a ON a.id = ca.account_id
+      LEFT JOIN pos_terminals t ON t.id = s.pos_terminal_id
+      WHERE s.opened_at::date BETWEEN ${input.fromDate} AND ${input.toDate}
+      ORDER BY s.opened_at DESC
+      LIMIT 1000
+    `);
+    return rows.rows as unknown as ShiftCashReconRow[];
   }
 
   /** Bank reconciliation status per statement. */

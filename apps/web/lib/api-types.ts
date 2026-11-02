@@ -2194,3 +2194,15 @@ export interface TemplateApplyView {
   version: string;
   manifestHash: string;
 }
+
+/** PHASE-016 — POS terminal registry row. */
+export interface PosTerminal {
+  id: string;
+  branchId: string;
+  deviceId: string | null;
+  code: string;
+  name: string;
+  cashAccountId: string;
+  receiptSizeMm: number;
+  status: "ACTIVE" | "INACTIVE";
+}

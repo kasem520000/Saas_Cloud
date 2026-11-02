@@ -52,7 +52,7 @@ describe("GL index-driven plans (EXPLAIN)", () => {
     const plan = await withTenant(TENANT_A, () =>
       journal.explainAccountMovements(accounts.cash),
     );
-    expect(plan).toMatch(/Index Scan using ix_journal_entries_tenant_|Index Scan using ix_journal_lines_tenant_/);
+    expect(plan).toMatch(/(Bitmap )?Index Scan (using|on) ix_journal_entries_tenant_|(Bitmap )?Index Scan (using|on) ix_journal_lines_tenant_/);
     expect(plan).not.toMatch(/Seq Scan on journal_lines/);
     expect(plan).not.toMatch(/Seq Scan on journal_entries/);
   });

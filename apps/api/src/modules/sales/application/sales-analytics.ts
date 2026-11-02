@@ -78,6 +78,20 @@ export interface SalesGlTie {
   glSide: string;
 };
 
+export interface PosTerminalRow2 {
+  terminalCode: string;
+  saleCount: number;
+  totalNet: string;
+  totalTax: string;
+  totalGross: string;
+}
+
+export interface PosHourRow2 {
+  hour: number;
+  saleCount: number;
+  totalGross: string;
+}
+
 @Injectable()
 export class SalesAnalyticsService {
   /** Revenue + COGS by item over POSTED invoices minus POSTED credit notes. */
@@ -230,6 +244,37 @@ export class SalesAnalyticsService {
       ) u GROUP BY kind ORDER BY kind
     `);
     return rows.rows as unknown as PaymentMethodRow[];
+  }
+
+  /** PHASE-016 T12 — POS sales by terminal (Z-report building block). */
+  async posByTerminal(input: { fromDate: string; toDate: string }): Promise<PosTerminalRow2[]> {
+    const rows = await tenantTx().execute(sql`
+      SELECT COALESCE(t.code, '—') AS "terminalCode",
+             COUNT(i.id)::int AS "saleCount",
+             COALESCE(SUM(i.total_net * i.exchange_rate), 0)::text AS "totalNet",
+             COALESCE(SUM(i.total_tax * i.exchange_rate), 0)::text AS "totalTax",
+             COALESCE(SUM(i.total_gross * i.exchange_rate), 0)::text AS "totalGross"
+      FROM sales_invoices i
+      LEFT JOIN pos_terminals t ON t.id = i.pos_terminal_id
+      WHERE i.status = 'POSTED' AND i.pos_terminal_id IS NOT NULL
+        AND i.invoice_date BETWEEN ${input.fromDate} AND ${input.toDate}
+      GROUP BY t.code ORDER BY t.code
+    `);
+    return rows.rows as unknown as PosTerminalRow2[];
+  }
+
+  /** PHASE-016 T12 — POS sales by hour of day (counter load profile). */
+  async posByHour(input: { fromDate: string; toDate: string }): Promise<PosHourRow2[]> {
+    const rows = await tenantTx().execute(sql`
+      SELECT EXTRACT(HOUR FROM i.posted_at)::int AS hour,
+             COUNT(i.id)::int AS "saleCount",
+             COALESCE(SUM(i.total_gross * i.exchange_rate), 0)::text AS "totalGross"
+      FROM sales_invoices i
+      WHERE i.status = 'POSTED' AND i.pos_terminal_id IS NOT NULL
+        AND i.invoice_date BETWEEN ${input.fromDate} AND ${input.toDate}
+      GROUP BY hour ORDER BY hour
+    `);
+    return rows.rows as unknown as PosHourRow2[];
   }
 
   /** The quote→order→delivery→invoice pipeline conversion counts. */

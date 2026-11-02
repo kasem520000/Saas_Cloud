@@ -281,6 +281,32 @@ export const NAV_ITEMS: readonly NavItem[] = [
     order: 40,
   },
   {
+    // PHASE-016 — POS counter (cashier-facing, feature + permission gated).
+    id: "pos.counter",
+    parentGroup: "sales",
+    label: { ar: "نقطة البيع", en: "POS counter" },
+    icon: "banknote",
+    route: "/pos/counter",
+    featureKey: "pos.sales",
+    permission: "pos.sales.sell",
+    branchScoped: true,
+    archetype: "point-of-sale",
+    order: 5,
+  },
+  {
+    // PHASE-016 — terminal registry admin.
+    id: "pos.terminals",
+    parentGroup: "settings",
+    label: { ar: "أجهزة نقاط البيع", en: "POS terminals" },
+    icon: "building",
+    route: "/pos/terminals",
+    featureKey: "pos.terminals",
+    permission: "pos.terminals.manage",
+    branchScoped: false,
+    archetype: "list-search",
+    order: 47,
+  },
+  {
     // PHASE-015 T11 — industry templates (list/preview/apply/switch); read-gated,
     // manage actions enforce industry.templates.manage server-side (403).
     id: "settings.templates",

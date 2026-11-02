@@ -1220,6 +1220,43 @@ async function seedFixtures(superuser: {
      ON CONFLICT (tenant_id) DO NOTHING`,
     [TENANT_A, TENANT_B],
   );
+  // PHASE-016 (migration 0023): POS terminals + narrow sync slice fixtures.
+  await superuser.query(
+    `INSERT INTO devices (id, user_id, platform, name, device_key_hash)
+     VALUES ('e9e9e9e9-0000-4000-8000-000000000001', 'eeeeeeee-0000-4000-8000-000000000001', 'POS_TERMINAL', 'POS A', 'hash-iso-a')
+     ON CONFLICT (id) DO NOTHING`,
+  );
+  await superuser.query(
+    `INSERT INTO pos_terminals (id, tenant_id, branch_id, device_id, code, name, cash_account_id, receipt_size_mm, status)
+     VALUES
+       ('e0e0e0e0-0000-4000-8000-000000000001', $1, 'abababab-0000-4000-8000-000000000001', 'e9e9e9e9-0000-4000-8000-000000000001', 'POS-01', 'Counter A', 'd0d0d0d0-0000-4000-8000-000000000001', 80, 'ACTIVE'),
+       ('e0e0e0e0-0000-4000-8000-000000000002', $2, 'abababab-0000-4000-8000-000000000002', NULL, 'POS-01', 'Counter B', 'd0d0d0d0-0000-4000-8000-000000000002', 58, 'ACTIVE')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO change_log (tenant_id, entity_type, entity_id, op, payload)
+     VALUES
+       ($1, 'pos_terminal', 'e0e0e0e0-0000-4000-8000-000000000001', 'INSERT', '{}'::jsonb),
+       ($2, 'pos_terminal', 'e0e0e0e0-0000-4000-8000-000000000002', 'INSERT', '{}'::jsonb)`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO sync_cursors (id, tenant_id, device_id, entity_type, cursor)
+     VALUES
+       ('e1e1e1e1-0000-4000-8000-000000000001', $1, 'e9e9e9e9-0000-4000-8000-000000000001', 'items', 0),
+       ('e1e1e1e1-0000-4000-8000-000000000002', $2, 'e9e9e9e9-0000-4000-8000-000000000001', 'items', 0)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO sync_commands (idempotency_key, tenant_id, device_id, command_type, client_id, status, result)
+     VALUES
+       ('iso-cmd-a', $1, 'e9e9e9e9-0000-4000-8000-000000000001', 'pos_sale', 'e2e2e2e2-0000-4000-8000-000000000001', 'ACCEPTED', '{}'::jsonb),
+       ('iso-cmd-b', $2, NULL, 'pos_sale', 'e2e2e2e2-0000-4000-8000-000000000002', 'REJECTED', '{}'::jsonb)`,
+    [TENANT_A, TENANT_B],
+  );
+
 
   // -- seedFixtures end --
 
@@ -1385,6 +1422,12 @@ const OWN_ROW: Record<string, [string, string]> = {
   notification_preferences: ["d9d9d9d9-0000-4000-8000-000000000001", "d9d9d9d9-0000-4000-8000-000000000002"],
   // PK is tenant_id itself (migration 0022).
   tenant_industry_config: [TENANT_A, TENANT_B],
+  // PHASE-016: pos_terminals keyed by id; change_log by entity_id (PK = tenant_id+seq);
+  // sync_cursors by id; sync_commands by idempotency_key (PK = tenant_id+key).
+  pos_terminals: ["e0e0e0e0-0000-4000-8000-000000000001", "e0e0e0e0-0000-4000-8000-000000000002"],
+  change_log: ["e0e0e0e0-0000-4000-8000-000000000001", "e0e0e0e0-0000-4000-8000-000000000002"],
+  sync_cursors: ["e1e1e1e1-0000-4000-8000-000000000001", "e1e1e1e1-0000-4000-8000-000000000002"],
+  sync_commands: ["iso-cmd-a", "iso-cmd-b"],
 };
 
 /** Mismatched-tenant INSERT shapes per table (A3) — explicit columns so the
@@ -1710,6 +1753,14 @@ const MISMATCHED_INSERT: Record<string, string> = {
      VALUES ('d9d9d9d9-3000-4000-8000-000000000003', $1, 'limit.warning', false, false)`,
   tenant_industry_config: `INSERT INTO tenant_industry_config (tenant_id, template_key, applied_version, applied_manifest_hash)
      VALUES ($1, 'industry.grocery', '1.0.0', 'sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')`,
+  pos_terminals: `INSERT INTO pos_terminals (id, tenant_id, branch_id, code, name, cash_account_id)
+     VALUES ('e0e0e0e0-3000-4000-8000-000000000003', $1, 'abababab-0000-4000-8000-000000000001', 'POS-XX', 'X', 'd0d0d0d0-0000-4000-8000-000000000001')`,
+  change_log: `INSERT INTO change_log (tenant_id, entity_type, entity_id, op)
+     VALUES ($1, 'pos_terminal', 'e0e0e0e0-3000-4000-8000-000000000003', 'INSERT')`,
+  sync_cursors: `INSERT INTO sync_cursors (id, tenant_id, device_id, entity_type, cursor)
+     VALUES ('e1e1e1e1-3000-4000-8000-000000000003', $1, 'e9e9e9e9-0000-4000-8000-000000000001', 'items', 0)`,
+  sync_commands: `INSERT INTO sync_commands (idempotency_key, tenant_id, command_type, client_id, status)
+     VALUES ('iso-cmd-x', $1, 'pos_sale', 'e2e2e2e2-3000-4000-8000-000000000003', 'ACCEPTED')`,
 };
 
 beforeAll(async () => {
@@ -1786,7 +1837,11 @@ describe("generated attack suite A1–A10 — as erp_app", () => {
         ? "role_id"
         : table === "tenant_industry_config"
           ? "tenant_id"
-          : "id";
+          : table === "change_log"
+            ? "entity_id"
+            : table === "sync_commands"
+              ? "idempotency_key"
+              : "id";
 
     it(`A1 ${table}: SELECT without GUC → 0 tenant rows`, async () => {
       const app = await appClient();
@@ -1889,7 +1944,16 @@ describe("generated attack suite A1–A10 — as erp_app", () => {
         );
         expect(touched.rowCount).toBe(0);
       } else {
-        const probeColumn = table === "tenant_industry_config" ? "applied_version" : "updated_at";
+        const probeColumn =
+          table === "tenant_industry_config"
+            ? "applied_version"
+            : table === "change_log"
+              ? "op"
+              : table === "sync_commands"
+                ? "status"
+                : table === "sync_cursors"
+                  ? "cursor"
+                  : "updated_at";
         const touched = await app.query(
           `UPDATE ${table} SET ${probeColumn} = ${probeColumn} WHERE ${idColumn} = $1`,
           [foreignRow],

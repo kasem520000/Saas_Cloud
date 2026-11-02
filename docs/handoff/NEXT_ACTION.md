@@ -4,9 +4,12 @@
 
 ## The single next action
 
-**Execute PHASE-016** per
-[../implementation/phases/PHASE-016.md](../implementation/phases/PHASE-016.md)
-(identified only — not started). PHASE-015 is COMPLETE (2026-11-02, tag `phase/015`;
+**Execute PHASE-017** per
+[../implementation/phases/PHASE-017.md](../implementation/phases/PHASE-017.md)
+(identified only — not started). PHASE-016 is COMPLETE (2026-11-02, tag `phase/016`;
+evidence: reports/PHASE-016-COMPLETION.md): POS module live — terminals, counter sale
+through the sales chain, narrow offline sync slice with INV-013 dedupe, POS reports,
+template POS entries un-gated. PHASE-015 is COMPLETE (2026-11-02, tag `phase/015`;
 evidence: reports/PHASE-015-COMPLETION.md): industry configuration framework live — ten-layer
 fail-closed resolution with stable `resolved_hash`, 3 priority templates (retail/grocery/restaurant)
 with idempotent audited additive-only apply/switch, phase-gated POS keys labeled PHASE-016,

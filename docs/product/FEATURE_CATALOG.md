@@ -296,6 +296,8 @@ Point of sale (PHASE-016; offline sale queue is the scoped precursor of general 
 | `pos.receipts` | Receipt printing · طباعة الإيصالات | 80 mm / 58 mm RTL-correct receipts with offline number when offline (BR-030) | 1 | 016 | `pos.receipts.print` | `pos.sales`, `reporting.print_templates` |
 | `pos.barcode_scanning` | Barcode scanning · مسح الباركود | Keyboard-wedge and camera scanning; scale-barcode parsing for weighted goods | 1 | 016 | (capability of `pos.sales`) | `items.barcodes` |
 | `pos.offline_queue` | Offline sale queue · قائمة البيع دون اتصال | Local completion of sales with `OFF-` numbering, honest pending-sync state, server-side reconciliation | 1 | 016 | (device capability) | `pos.sales`, `pos.shifts` |
+| `pos.table_service` | Table service · خدمة الطاولات | Floor plan, tables/zones, order types, guest check with no ledger until payment (restaurant template) | 1 | 016 | `pos.sales.sell` | `pos.sales` |
+| `pos.kitchen_display` | Kitchen tickets · تذاكر المطبخ | Kitchen ticket printing for sent items; screen KDS is a roadmap extension | 1 | 016 | `pos.sales.sell` | `pos.sales`, `pos.receipts` |
 
 ## 17. Module: offline
 

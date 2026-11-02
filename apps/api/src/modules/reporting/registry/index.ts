@@ -54,6 +54,11 @@ import {
   inventorySlowMovingContract,
 } from "./operational/inventory";
 import {
+  posSalesByTerminalContract,
+  posSalesByHourContract,
+  treasuryShiftCashReconciliationContract,
+} from "./operational/pos";
+import {
   inventoryExpiryListContract,
   groceryExpiryWriteoffContract,
   retailImeiRegisterContract,
@@ -118,6 +123,10 @@ export const REPORT_CONTRACTS: readonly ReportContract[] = Object.freeze([
   inventoryExpiryListContract,
   groceryExpiryWriteoffContract,
   retailImeiRegisterContract,
+  // PHASE-016 T12 POS end-of-day reports
+  posSalesByTerminalContract,
+  posSalesByHourContract,
+  treasuryShiftCashReconciliationContract,
   // §5 treasury
   treasuryDailyCashContract,
   treasuryReceiptsRegisterContract,

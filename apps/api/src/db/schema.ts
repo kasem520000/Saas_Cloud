@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   bigint,
+  bigserial,
   boolean,
   char,
   date,
@@ -9,6 +10,7 @@ import {
   jsonb,
   numeric,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uniqueIndex,
@@ -1451,6 +1453,7 @@ export const cashierShifts = pgTable(
     openedAt: timestamp("opened_at", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
     closedAt: timestamp("closed_at", { withTimezone: true, mode: "string" }),
     closedBy: uuid("closed_by"),
+    posTerminalId: uuid("pos_terminal_id"),
   },
   (table) => [
     uniqueIndex("uq_cashier_shifts_one_open_per_account").on(table.tenantId, table.cashAccountId),
@@ -2968,6 +2971,10 @@ export const salesInvoices = pgTable(
     taxSummary: jsonb("tax_summary"),
     creditCheck: jsonb("credit_check"),
     offlineReceiptNo: text("offline_receipt_no"),
+    posTerminalId: uuid("pos_terminal_id"),
+    orderType: text("order_type"),
+    tableRef: text("table_ref"),
+    syncState: text("sync_state").notNull().default("SYNCED"),
     einvoiceStatus: text("einvoice_status"),
     note: text("note"),
     noteAr: text("note_ar"),
@@ -3364,4 +3371,74 @@ export const notificationPreferences = pgTable(
     email: boolean("email").notNull().default(false),
   },
   (table) => [uniqueIndex("uq_notification_preferences_id_tenant").on(table.id, table.tenantId)],
+);
+
+/** PHASE-016 — POS terminal registry (one terminal = one device, per branch). */
+export const posTerminals = pgTable(
+  "pos_terminals",
+  {
+    ...standardColumns,
+    tenantId: uuid("tenant_id").notNull(),
+    branchId: uuid("branch_id").notNull(),
+    deviceId: uuid("device_id"),
+    code: text("code").notNull(),
+    name: text("name").notNull(),
+    cashAccountId: uuid("cash_account_id").notNull(),
+    receiptSizeMm: integer("receipt_size_mm").notNull().default(80),
+    status: text("status").notNull().default("ACTIVE"),
+    activatedAt: timestamp("activated_at", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
+    deactivatedAt: timestamp("deactivated_at", { withTimezone: true, mode: "string" }),
+  },
+  (table) => [
+    uniqueIndex("uq_pos_terminals_tenant_code").on(table.tenantId, table.code),
+    index("ix_pos_terminals_tenant_branch").on(table.tenantId, table.branchId),
+  ],
+);
+
+/** PHASE-016 narrow sync slice — POS feed-group change log (SYNC_PROTOCOL §11). */
+export const changeLog = pgTable(
+  "change_log",
+  {
+    seq: bigserial("seq", { mode: "number" }).notNull(),
+    tenantId: uuid("tenant_id").notNull(),
+    entityType: text("entity_type").notNull(),
+    entityId: uuid("entity_id").notNull(),
+    op: text("op").notNull(),
+    payload: jsonb("payload").notNull().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.tenantId, table.seq] }),
+    index("ix_change_log_tenant_seq").on(table.tenantId, table.seq),
+  ],
+);
+
+/** PHASE-016 — per-device pull cursors for the POS feed group. */
+export const syncCursors = pgTable(
+  "sync_cursors",
+  {
+    ...standardColumns,
+    tenantId: uuid("tenant_id").notNull(),
+    deviceId: uuid("device_id").notNull(),
+    entityType: text("entity_type").notNull(),
+    cursor: bigint("cursor", { mode: "number" }).notNull().default(0),
+    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex("uq_sync_cursors").on(table.tenantId, table.deviceId, table.entityType)],
+);
+
+/** PHASE-016 — per-command idempotency + result replay (INV-013 second layer). */
+export const syncCommands = pgTable(
+  "sync_commands",
+  {
+    idempotencyKey: text("idempotency_key").notNull(),
+    tenantId: uuid("tenant_id").notNull(),
+    deviceId: uuid("device_id"),
+    commandType: text("command_type").notNull(),
+    clientId: uuid("client_id").notNull(),
+    status: text("status").notNull(),
+    result: jsonb("result").notNull().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.tenantId, table.idempotencyKey] })],
 );

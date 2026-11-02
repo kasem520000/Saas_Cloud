@@ -45,6 +45,11 @@ export const TENANT_TABLES_REGISTRY: readonly RegisteredTenantTable[] = [
   { table: "usage_counters" },
   // PHASE-015 (migration 0022): the applied-template row (PK = tenant_id).
   { table: "tenant_industry_config" },
+  // PHASE-016 (migration 0023): POS module + narrow sync slice.
+  { table: "pos_terminals" },
+  { table: "change_log" },
+  { table: "sync_cursors" },
+  { table: "sync_commands" },
   { table: "notifications" },
   { table: "notification_preferences", deleteGranted: true },
   { table: "accounts" },

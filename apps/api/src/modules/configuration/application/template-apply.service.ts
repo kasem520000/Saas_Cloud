@@ -105,7 +105,7 @@ export class TemplateApplyService {
     const phaseGated = new Map<string, string>();
     for (const prereq of Object.values(manifest.capability_prerequisites)) {
       // Later-phase prerequisites gate their keys (degrade, not block).
-      if (prereq.available_from_phase > "PHASE-015") {
+      if (prereq.available_from_phase > "PHASE-016") {
         for (const key of prereq.feature_keys) {
           phaseGated.set(key, prereq.available_from_phase);
         }
@@ -119,7 +119,7 @@ export class TemplateApplyService {
       }
     }
     for (const prereq of Object.values(manifest.capability_prerequisites)) {
-      if (prereq.level !== "REQUIRED" || prereq.available_from_phase > "PHASE-015") continue;
+      if (prereq.level !== "REQUIRED" || prereq.available_from_phase > "PHASE-016") continue;
       for (const key of prereq.feature_keys) {
         if (!activeKeys.has(key) && !phaseGated.has(key) && !missing.includes(key)) {
           missing.push(key);

@@ -265,6 +265,33 @@ export interface Dictionary {
   onboardingIndustrySkip: string;
   onboardingIndustryApplied: string;
 
+  // -- PHASE-016 POS UI ---------------------------------------------------------
+  navPosCounter: string;
+  navPosTerminals: string;
+  posTerminalsTitle: string;
+  posTerminalsDescription: string;
+  posTerminalCode: string;
+  posTerminalName: string;
+  posTerminalBranch: string;
+  posTerminalCashAccount: string;
+  posTerminalReceiptSize: string;
+  posTerminalStatus: string;
+  posTerminalRegister: string;
+  posTerminalActivate: string;
+  posTerminalDeactivate: string;
+  posTerminalNone: string;
+  posCounterTitle: string;
+  posCounterScanPlaceholder: string;
+  posCounterCart: string;
+  posCounterTotal: string;
+  posCounterPay: string;
+  posCounterClear: string;
+  posCounterSalePosted: string;
+  posCounterSaleFailed: string;
+  posCounterOfflineBanner: string;
+  posCounterQueued: string;
+  posCounterEmpty: string;
+
   // -- P4-T12a: shared labels -------------------------------------------------
   statusInactive: string;
   statusClosed: string;
@@ -1941,6 +1968,33 @@ const ar: Dictionary = {
   onboardingIndustrySkip: "تخطَ",
   onboardingIndustryApplied: "تم تطبيق قالب الصناعة",
 
+  // -- PHASE-016 POS UI ---------------------------------------------------------
+  navPosCounter: "نقطة البيع",
+  navPosTerminals: "أجهزة نقاط البيع",
+  posTerminalsTitle: "أجهزة نقاط البيع",
+  posTerminalsDescription: "سجّل الأجهزة ربطه بالفرع والصندوق وحجم الإيصال",
+  posTerminalCode: "كود الجهاز",
+  posTerminalName: "الاسم",
+  posTerminalBranch: "الفرع",
+  posTerminalCashAccount: "الصندوق",
+  posTerminalReceiptSize: "حجم الإيصال (mm)",
+  posTerminalStatus: "الحالة",
+  posTerminalRegister: "تسجيل جهاز",
+  posTerminalActivate: "تفعيل",
+  posTerminalDeactivate: "إيقاف",
+  posTerminalNone: "لا توجد أجهزة مسجلة",
+  posCounterTitle: "شاشة البيع",
+  posCounterScanPlaceholder: "امسح الباركود أو اسم الصنف",
+  posCounterCart: "السلة",
+  posCounterTotal: "الإجمالي",
+  posCounterPay: "دفع",
+  posCounterClear: "إلغاء",
+  posCounterSalePosted: "تمت البيع ورقم الفاتورة",
+  posCounterSaleFailed: "فشل البيع",
+  posCounterOfflineBanner: "غير متصل — المبيعات تُحفظ محليًا وتُزنمل بع2f الاتصال",
+  posCounterQueued: "عدد المبيعات المؤجلة",
+  posCounterEmpty: "السلة فارغة",
+
   statusInactive: "غير نشط",
   statusClosed: "مغلقة",
   statusIssued: "مُصدر",
@@ -3603,6 +3657,33 @@ const en: Dictionary = {
   onboardingIndustrySelect: "Choose a template",
   onboardingIndustrySkip: "Skip",
   onboardingIndustryApplied: "Industry template applied",
+
+  // -- PHASE-016 POS UI ---------------------------------------------------------
+  navPosCounter: "POS counter",
+  navPosTerminals: "POS terminals",
+  posTerminalsTitle: "POS terminals",
+  posTerminalsDescription: "Register terminals bound to a branch, till cash account and receipt size",
+  posTerminalCode: "Terminal code",
+  posTerminalName: "Name",
+  posTerminalBranch: "Branch",
+  posTerminalCashAccount: "Till",
+  posTerminalReceiptSize: "Receipt size (mm)",
+  posTerminalStatus: "Status",
+  posTerminalRegister: "Register terminal",
+  posTerminalActivate: "Activate",
+  posTerminalDeactivate: "Deactivate",
+  posTerminalNone: "No terminals registered",
+  posCounterTitle: "Counter sale",
+  posCounterScanPlaceholder: "Scan barcode or type item name",
+  posCounterCart: "Cart",
+  posCounterTotal: "Total",
+  posCounterPay: "Pay",
+  posCounterClear: "Clear",
+  posCounterSalePosted: "Sale posted, invoice",
+  posCounterSaleFailed: "Sale failed",
+  posCounterOfflineBanner: "Offline — sales are saved locally and sync when reconnected",
+  posCounterQueued: "Queued sales",
+  posCounterEmpty: "Cart is empty",
 
   statusInactive: "Inactive",
   statusClosed: "Closed",
