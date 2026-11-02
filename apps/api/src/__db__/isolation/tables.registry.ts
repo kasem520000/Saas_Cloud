@@ -60,6 +60,13 @@ export const TENANT_TABLES_REGISTRY: readonly RegisteredTenantTable[] = [
   { table: "van_stocks" },
   { table: "commission_rules" },
   { table: "commission_runs" },
+  // PHASE-018 (migration 0025): manufacturing cluster.
+  { table: "bills_of_materials" },
+  { table: "bom_versions" },
+  { table: "bom_lines" },
+  { table: "production_orders" },
+  { table: "production_consumptions" },
+  { table: "inspections" },
   { table: "notifications" },
   { table: "notification_preferences", deleteGranted: true },
   { table: "accounts" },

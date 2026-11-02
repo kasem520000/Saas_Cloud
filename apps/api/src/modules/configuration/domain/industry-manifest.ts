@@ -19,9 +19,6 @@ import { FEATURE_KEYS, isKnownFeatureKey } from "./feature-catalog";
 
 /** CAPABILITY_MATRIX §3 — proposed keys pending FEATURE_CATALOG intake. */
 export const INTAKE_FEATURE_KEYS: readonly string[] = Object.freeze([
-  "pos.table_service",
-  "pos.kitchen_display",
-  "sales.job_cards",
   "crm.rental_contracts",
   "crm.contract_deposits",
   "crm.late_fees",

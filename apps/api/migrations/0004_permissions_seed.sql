@@ -201,6 +201,10 @@ INSERT INTO "permissions" ("key", "module", "description") VALUES
 ('manufacturing.production_orders.create', 'manufacturing', 'Production lifecycle (PHASE-018) / دورة أوامر الإنتاج'),
 ('manufacturing.production_orders.approve', 'manufacturing', 'Production lifecycle (PHASE-018) / دورة أوامر الإنتاج'),
 ('manufacturing.production_orders.post', 'manufacturing', 'Production lifecycle (PHASE-018) / دورة أوامر الإنتاج'),
+('manufacturing.scrap.post', 'manufacturing', 'Post scrap with reason codes (PHASE-018) / ترحيل الهالك بأسباب'),
+('manufacturing.qc.manage', 'manufacturing', 'QC inspections & gates (PHASE-018) / فحوصات الجودة والبوابات'),
+('manufacturing.genealogy.read', 'manufacturing', 'Batch genealogy trace (PHASE-018) / تتبع أنساب الدفعات'),
+('manufacturing.costing.read', 'manufacturing', 'Production cost reports (PHASE-018) / تقارير كلفة الإنتاج'),
 -- §3.9 identity & tenancy (tenant-admin plane; PHASE-003)
 ('identity.users.invite', 'identity', 'User lifecycle / إدارة المستخدمين'),
 ('identity.users.view', 'identity', 'User lifecycle / إدارة المستخدمين'),

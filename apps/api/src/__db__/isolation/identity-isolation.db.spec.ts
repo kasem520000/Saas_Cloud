@@ -1285,6 +1285,49 @@ async function seedFixtures(superuser: {
      ON CONFLICT (id) DO NOTHING`,
     [TENANT_A, TENANT_B],
   );
+  // PHASE-018 (migration 0025): manufacturing fixtures.
+  await superuser.query(
+    `INSERT INTO bills_of_materials (id, tenant_id, item_id, name, current_version)
+     VALUES ('c90c90c9-0000-4000-8000-000000000001', $1, 'babababa-0000-4000-8000-000000000001', 'Bread BOM', 1),
+            ('c90c90c9-0000-4000-8000-000000000002', $2, 'babababa-0000-4000-8000-000000000002', 'Bread BOM', 1)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO bom_versions (id, tenant_id, bom_id, version, effective_from, yield_qty)
+     VALUES ('d90d90d9-0000-4000-8000-000000000001', $1, 'c90c90c9-0000-4000-8000-000000000001', 1, '2026-11-01', 950),
+            ('d90d90d9-0000-4000-8000-000000000002', $2, 'c90c90c9-0000-4000-8000-000000000002', 1, '2026-11-01', 950)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO bom_lines (id, tenant_id, bom_version_id, component_item_id, qty_per_output, scrap_factor_pct)
+     VALUES ('e90e90e9-0000-4000-8000-000000000001', $1, 'd90d90d9-0000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 0.5, 2),
+            ('e90e90e9-0000-4000-8000-000000000002', $2, 'd90d90d9-0000-4000-8000-000000000002', 'babababa-0000-4000-8000-000000000002', 0.5, 2)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO production_orders (id, tenant_id, branch_id, order_no, bom_version_id, fg_item_id, materials_warehouse_id, fg_warehouse_id, planned_qty, status)
+     VALUES ('a90a90a9-0000-4000-8000-000000000001', $1, 'abababab-0000-4000-8000-000000000001', 'PRD-2026-00001', 'd90d90d9-0000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 'f0f0f0f0-1000-4000-8000-000000000001', 'f0f0f0f0-1000-4000-8000-000000000001', 1000, 'RELEASED'),
+            ('a90a90a9-0000-4000-8000-000000000002', $2, 'abababab-0000-4000-8000-000000000002', 'PRD-2026-00001', 'd90d90d9-0000-4000-8000-000000000002', 'babababa-0000-4000-8000-000000000002', 'f0f0f0f0-1000-4000-8000-000000000002', 'f0f0f0f0-1000-4000-8000-000000000002', 1000, 'RELEASED')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO production_consumptions (id, tenant_id, production_order_id, item_id, qty, unit_cost, planned_qty)
+     VALUES ('b90b90b9-0000-4000-8000-000000000001', $1, 'a90a90a9-0000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 500, 2.5, 526.316),
+            ('b90b90b9-0000-4000-8000-000000000002', $2, 'a90a90a9-0000-4000-8000-000000000002', 'babababa-0000-4000-8000-000000000002', 500, 2.5, 526.316)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO inspections (id, tenant_id, inspection_no, target_type, target_id, result, disposition)
+     VALUES ('c80c80c8-0000-4000-8000-000000000001', $1, 'QC-0001', 'PRODUCTION_ORDER', 'a90a90a9-0000-4000-8000-000000000001', 'PASS', 'ACCEPT'),
+            ('c80c80c8-0000-4000-8000-000000000002', $2, 'QC-0001', 'PRODUCTION_ORDER', 'a90a90a9-0000-4000-8000-000000000002', 'PASS', 'ACCEPT')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
   // PHASE-016 (migration 0023): POS terminals + narrow sync slice fixtures.
   await superuser.query(
     `INSERT INTO devices (id, user_id, platform, name, device_key_hash)
@@ -1503,6 +1546,12 @@ const OWN_ROW: Record<string, [string, string]> = {
   van_stocks: ["f0f0f0f0-1000-4000-8000-000000000001", "f0f0f0f0-1000-4000-8000-000000000002"],
   commission_rules: ["a70a70a7-0000-4000-8000-000000000001", "a70a70a7-0000-4000-8000-000000000002"],
   commission_runs: ["b80b80b8-0000-4000-8000-000000000001", "b80b80b8-0000-4000-8000-000000000002"],
+  bills_of_materials: ["c90c90c9-0000-4000-8000-000000000001", "c90c90c9-0000-4000-8000-000000000002"],
+  bom_versions: ["d90d90d9-0000-4000-8000-000000000001", "d90d90d9-0000-4000-8000-000000000002"],
+  bom_lines: ["e90e90e9-0000-4000-8000-000000000001", "e90e90e9-0000-4000-8000-000000000002"],
+  production_orders: ["a90a90a9-0000-4000-8000-000000000001", "a90a90a9-0000-4000-8000-000000000002"],
+  production_consumptions: ["b90b90b9-0000-4000-8000-000000000001", "b90b90b9-0000-4000-8000-000000000002"],
+  inspections: ["c80c80c8-0000-4000-8000-000000000001", "c80c80c8-0000-4000-8000-000000000002"],
 };
 
 
@@ -1855,6 +1904,18 @@ const MISMATCHED_INSERT: Record<string, string> = {
      VALUES ('e1e1e1e1-3000-4000-8000-000000000003', $1, 'e9e9e9e9-0000-4000-8000-000000000001', 'items', 0)`,
   sync_commands: `INSERT INTO sync_commands (idempotency_key, tenant_id, command_type, client_id, status)
      VALUES ('iso-cmd-x', $1, 'pos_sale', 'e2e2e2e2-3000-4000-8000-000000000003', 'ACCEPTED')`,
+  bills_of_materials: `INSERT INTO bills_of_materials (id, tenant_id, item_id, name, current_version)
+     VALUES ('c90c90c9-3000-4000-8000-000000000003', $1, 'babababa-0000-4000-8000-000000000001', 'ISO-BOM', 1)`,
+  bom_versions: `INSERT INTO bom_versions (id, tenant_id, bom_id, version, effective_from, yield_qty)
+     VALUES ('d90d90d9-3000-4000-8000-000000000003', $1, 'c90c90c9-0000-4000-8000-000000000001', 9, '2026-11-03', 1)`,
+  bom_lines: `INSERT INTO bom_lines (id, tenant_id, bom_version_id, component_item_id, qty_per_output, scrap_factor_pct)
+     VALUES ('e90e90e9-3000-4000-8000-000000000003', $1, 'd90d90d9-0000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 1, 0)`,
+  production_orders: `INSERT INTO production_orders (id, tenant_id, branch_id, order_no, bom_version_id, fg_item_id, materials_warehouse_id, fg_warehouse_id, planned_qty, status)
+     VALUES ('a90a90a9-3000-4000-8000-000000000003', $1, 'abababab-0000-4000-8000-000000000001', 'PRD-ISO-1', 'd90d90d9-0000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 'f0f0f0f0-1000-4000-8000-000000000001', 'f0f0f0f0-1000-4000-8000-000000000001', 10, 'DRAFT')`,
+  production_consumptions: `INSERT INTO production_consumptions (id, tenant_id, production_order_id, item_id, qty, unit_cost)
+     VALUES ('b90b90b9-3000-4000-8000-000000000003', $1, 'a90a90a9-0000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 1, 1)`,
+  inspections: `INSERT INTO inspections (id, tenant_id, inspection_no, target_type, target_id, result, disposition)
+     VALUES ('c80c80c8-3000-4000-8000-000000000003', $1, 'QC-ISO', 'PRODUCTION_ORDER', 'a90a90a9-0000-4000-8000-000000000001', 'FAIL', 'SCRAP')`,
 };
 
 beforeAll(async () => {

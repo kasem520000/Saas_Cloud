@@ -64,6 +64,11 @@ import {
   retailImeiRegisterContract,
 } from "./operational/industry";
 import {
+  manufacturingProductionCostContract,
+  manufacturingBatchGenealogyContract,
+  manufacturingQcInspectionLogContract,
+} from "./operational/industry-018";
+import {
   automotiveJobCardProfitabilityContract,
   automotiveVehicleServiceHistoryContract,
   distributionRepSettlementContract,
@@ -140,6 +145,10 @@ export const REPORT_CONTRACTS: readonly ReportContract[] = Object.freeze([
   distributionVanStockBalancesContract,
   salesCommissionsDueContract,
   salesDiscountEffectivenessContract,
+  // PHASE-018 manufacturing reports
+  manufacturingProductionCostContract,
+  manufacturingBatchGenealogyContract,
+  manufacturingQcInspectionLogContract,
   // PHASE-016 T12 POS end-of-day reports
   posSalesByTerminalContract,
   posSalesByHourContract,

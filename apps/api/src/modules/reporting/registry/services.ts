@@ -9,6 +9,7 @@ import { TreasuryQueriesService } from "../../treasury/application/treasury-quer
 import { PartnerQueriesService } from "../../partners/application/partner-queries";
 import { TaxQueriesService } from "../../tax/application/tax-queries";
 import { DistributionQueriesService } from "../../distribution/application/distribution-queries";
+import { ManufacturingQueriesService } from "../../manufacturing/application/manufacturing-queries";
 import { UserQueriesService } from "../../identity/application/user-queries";
 import { AuditService } from "../../audit/api/audit";
 import { DrizzleAuditStore } from "../../audit/infrastructure/drizzle-audit.store";
@@ -33,6 +34,7 @@ export interface ReportingServices {
   partners: PartnerQueriesService;
   tax: TaxQueriesService;
   distribution: DistributionQueriesService;
+  manufacturing: ManufacturingQueriesService;
   users: UserQueriesService;
   audit: AuditService;
 }
@@ -53,6 +55,7 @@ export function reportingServices(): ReportingServices {
       partners: new PartnerQueriesService(),
       tax: new TaxQueriesService(),
       distribution: new DistributionQueriesService(),
+      manufacturing: new ManufacturingQueriesService(),
       users: new UserQueriesService(),
       audit: new AuditService(new DrizzleAuditStore()),
     };

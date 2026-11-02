@@ -38,6 +38,7 @@ export const MIGRATIONS: readonly string[] = [
   "0022_industry_configuration",
   "0023_pos_offline_slice",
   "0024_industry_templates_017",
+  "0025_manufacturing_018",
 ];
 
 /**

@@ -6,7 +6,7 @@
 
 **Execute PHASE-018** per
 [../implementation/phases/PHASE-018.md](../implementation/phases/PHASE-018.md)
-(identified only — not started). PHASE-017 is COMPLETE (2026-11-02, tag `phase/017`;
+(identified only — not started). PHASE-018 is COMPLETE (2026-11-02; evidence: reports/PHASE-018-COMPLETION.md): manufacturing module + food_manufacturing template live via the unmodified engine. PHASE-017 is COMPLETE (2026-11-02, tag `phase/017`;
 evidence: reports/PHASE-017-COMPLETION.md): automotive & distribution templates seeded via
 the unmodified PHASE-015 engine, domain cores for job cards / settlements / tiers /
 free goods / commissions with unit proof, drift 237=237, unit 195 PASS.

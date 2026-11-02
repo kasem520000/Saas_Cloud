@@ -95,6 +95,9 @@ INSERT INTO "plans" ("id", "key", "name", "name_ar", "price_amount", "currency_c
      'reporting.engine', 'reporting.financial_statements', 'reporting.operational_reports',
      'reporting.print_templates', 'reporting.exports', 'reporting.dashboards',
      'pos.terminals', 'pos.sales', 'pos.shifts', 'pos.receipts',
+     'pos.table_service', 'pos.kitchen_display', 'sales.job_cards', 'sales.commissions', 'items.composite_products',
+     'manufacturing.bom', 'manufacturing.production_orders', 'manufacturing.wip', 'manufacturing.costing',
+     'manufacturing.scrap', 'manufacturing.batch_genealogy', 'manufacturing.qc', 'distribution.customer_tiers',
      'pos.barcode_scanning', 'pos.offline_queue',
      'industry.template_engine', 'industry.terminology'
    ]),

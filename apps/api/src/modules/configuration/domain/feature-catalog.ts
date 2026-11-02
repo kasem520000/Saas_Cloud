@@ -124,6 +124,7 @@ export const FEATURE_DEPS: Readonly<Record<string, readonly string[]>> = Object.
   "crm.recurring_billing": ["crm.service_contracts", "sales.invoices"],
   "crm.service_orders": ["crm.service_contracts", "inventory.stock_ledger"],
   // manufacturing
+  "sales.job_cards": ["sales.quotations", "sales.reps"],
   "manufacturing.bom": ["items.item_master"],
   "manufacturing.production_orders": ["manufacturing.bom", "inventory.stock_ledger"],
   "manufacturing.wip": ["manufacturing.production_orders"],

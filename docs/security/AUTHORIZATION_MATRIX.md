@@ -197,6 +197,8 @@ permissions cannot be granted to `viewer`-derived templates).
 | `crm.contracts.manage` / `crm.service_orders.manage` | Service contracts & orders / العقود وأوامر الخدمة | owner | tenant | no |
 | `manufacturing.boms.manage` | BOM maintenance / إدارة قوائم المواد | owner | tenant | no |
 | `manufacturing.production_orders.view` / `.create` / `.approve` / `.post` | Production lifecycle (PHASE-018) / دورة أوامر الإنتاج | warehouse (create), owner | branch | `.approve`/`.post` **yes** |
+| `manufacturing.scrap.post` / `manufacturing.qc.manage` | Scrap posting & QC inspections (PHASE-018) / ترحيل الهالك وفحوصات الجودة | owner | tenant | **yes** |
+| `manufacturing.genealogy.read` / `manufacturing.costing.read` | Genealogy trace & cost reports (PHASE-018) / تتبع الأنساب وتقارير الكلفة | owner, warehouse | tenant | no |
 | `distribution.routes.manage` / `distribution.van_stock.view` | Van-sales operations (PHASE-017) / المبيعات الميدانية | sales, owner | branch | no |
 | `distribution.settlements.approve` | Rep settlement approval / اعتماد تسويات المناديب | owner | tenant | **yes** |
 

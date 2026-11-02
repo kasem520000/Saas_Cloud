@@ -126,14 +126,14 @@ beforeAll(() => {
 });
 
 describe("seeds (acceptance 9)", () => {
-  it("permissions catalog = 237 keys matching AUTHORIZATION_MATRIX (drift green)", async () => {
+  it("permissions catalog = 241 keys matching AUTHORIZATION_MATRIX (drift green)", async () => {
     const su = await superuserClient();
     const result = await su.query<{ n: number }>("SELECT count(*)::int AS n FROM permissions");
     await su.end();
     // 199 pre-PHASE-013 + 25 reporting keys (0004 seed §3.8: the 24
     // viewer-tier reports.*.read / reporting.reports.run grants +
     // platform.reporting.read on the platform-admin template).
-    expect(result.rows[0]?.n).toBe(237);
+    expect(result.rows[0]?.n).toBe(241);
   });
 
   it("nine system templates with template grants; owner carries identity keys", async () => {

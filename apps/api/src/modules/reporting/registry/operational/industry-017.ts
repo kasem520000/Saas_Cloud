@@ -17,7 +17,7 @@ export const automotiveJobCardProfitabilityContract = defineReport({
   title: bilingual("ربحية بطاقة العمل", "Job Card Profitability"),
   category: "sales",
   description: bilingual(
-    "إيراد قطع الغيار مقابل الأجور لكل بطاقة عمل (تكلفة العمالة غير متتبعة —blouse limitation)",
+    "إيراد قطع الغيار مقابل الأجور لكل بطاقة عمل (تكلفة العمالة غير متتبعة — documented limitation)",
     "Parts vs labor revenue per job card (labor cost not tracked — documented limitation)",
   ),
   parameters: z.object({ locale: LOCALE }),

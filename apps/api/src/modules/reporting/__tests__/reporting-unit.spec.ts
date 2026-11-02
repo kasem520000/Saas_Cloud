@@ -84,6 +84,15 @@ const KNOWN_PERMISSIONS: ReadonlySet<string> = new Set([
   "distribution.tiers.manage",
   "distribution.free_goods.manage",
   "sales.invoices.read",
+  "manufacturing.boms.manage",
+  "manufacturing.production_orders.view",
+  "manufacturing.production_orders.create",
+  "manufacturing.production_orders.approve",
+  "manufacturing.production_orders.post",
+  "manufacturing.scrap.post",
+  "manufacturing.qc.manage",
+  "manufacturing.genealogy.read",
+  "manufacturing.costing.read",
   "partners.view",
   "treasury.cash.read",
   "treasury.receipts.read",
@@ -146,16 +155,16 @@ function fakeResult(overrides: Partial<ReportResult> = {}): ReportResult {
 }
 
 describe("registry meta-tests (boot validation, §2)", () => {
-  it("the 61 frozen contracts validate against the known-permission catalog", () => {
+  it("the 64 frozen contracts validate against the known-permission catalog", () => {
     const result = validateRegistry([...REPORT_CONTRACTS], { knownPermissions: KNOWN_PERMISSIONS });
     expect(result.ok).toBe(true);
     expect(result.errors).toEqual([]);
-    expect(result.count).toBe(61);
+    expect(result.count).toBe(64);
   });
 
   it("snapshot exposes id + permission for navigation and includes the trial balance", () => {
     const snapshot = registrySnapshot(REPORT_CONTRACTS);
-    expect(snapshot).toHaveLength(61);
+    expect(snapshot).toHaveLength(64);
     const tb = snapshot.find((row) => row.id === "financial.trial-balance");
     expect(tb).toBeDefined();
     expect(tb!.requiredPermission).toBe("reports.financial.tb.read");

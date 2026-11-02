@@ -200,6 +200,19 @@ Legend: **Phase** = first implementation phase · **OC** = offline-creatable
 | `sync_cursors` | Per-device pull positions | device_id, entity_type, last_seq | 020 | no |
 | `inbox_commands` | Processed sync commands (dedupe) | tenant_id, device_id, command_id, processed_at | 020 | no |
 
+## manufacturing (PHASE-018)
+
+| Table | Purpose |
+|---|---|
+| `bills_of_materials` | Versioned BOM per finished/semi-finished item (one active current_version) |
+| `bom_versions` | BOM version with effective_from + yield_qty; bound by a production order at release |
+| `bom_lines` | Components per version: qty_per_output + scrap_factor_pct (explosion math) |
+| `production_orders` | Lifecycle DRAFT/RELEASED/IN_PROGRESS/COMPLETED/CANCELLED; PRD- number at release; planned vs actual qty; labor/overhead rates; journal refs |
+| `production_consumptions` | Batch-tracked material issues (genealogy upstream edges) with unit cost + journal ref |
+| `inspections` | QC inspections (GRN / production order) with pass/fail/sampled result + disposition + quarantined batch |
+
+`item_batches` gains `production_order_id` provenance and a `QUARANTINED` stock status (stock flag, not a ledger state).
+
 ## industry configuration (PHASE-004/015)
 
 | Entity | Purpose | Key fields | Phase | OC |

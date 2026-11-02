@@ -148,9 +148,8 @@ describe("T6 — additive-only switch (BR-038)", () => {
       expect(preview.archivedCapabilities).toContain("inventory.serial_tracking");
       expect(preview.terminologyArchived).toContain("pos.terminal");
       expect(preview.terminologyAdded).toContain("batch.expiry");
-      // POS keys are phase-gated to PHASE-016 — labeled, not blocking
-      expect(preview.phaseGated.length).toBeGreaterThan(0);
-      expect(preview.phaseGated.every((g) => g.phase > "PHASE-015")).toBe(true);
+      // Phase gate is PHASE-018: only later-phase keys remain gated (labeled, not blocking)
+      expect(preview.phaseGated.every((g) => g.phase > "PHASE-018")).toBe(true);
 
       const switched = await applyService.switch(userId, "industry.grocery");
       expect(switched.applied).toBe(true);
@@ -233,6 +232,43 @@ describe("PHASE-017 T2 — automotive & distribution templates via the unmodifie
       expect(config.resolvedHash).toMatch(/^sha256:[0-9a-f]{64}$/);
       // automotive terminology override present (بطاقة عمل family)
       expect(Object.keys(config.ui.terminology).length).toBeGreaterThan(0);
+    });
+  });
+
+  it("PHASE-018: industry.food_manufacturing seeds, validates, and applies idempotently with stable hash", async () => {
+    const su = await superuserClient();
+    const row = await su.query<{ manifest: string }>(
+      `SELECT manifest::text AS manifest FROM industry_templates WHERE key = 'industry.food_manufacturing'`,
+    );
+    await su.end();
+    expect(row.rows).toHaveLength(1);
+    const manifest = validateManifest(JSON.parse(row.rows[0]?.manifest ?? "{}"));
+    expect(manifest.id).toBe("industry.food_manufacturing");
+    expect(manifest.version).toBe("1.0.0");
+
+    const { tenantId, userId } = await registerTenant("food");
+    await withTenant(tenantId, async () => {
+      const result = await applyService.apply(userId, "industry.food_manufacturing");
+      expect(result.applied).toBe(true);
+      const again = await applyService.apply(userId, "industry.food_manufacturing");
+      expect(again.alreadyApplied).toBe(true);
+      expect(again.manifestHash).toBe(result.manifestHash);
+      const config = await configuration.resolveEffectiveConfig();
+      expect(config.layers.l1Template?.key).toBe("industry.food_manufacturing");
+      expect(config.resolvedHash).toMatch(/^sha256:[0-9a-f]{64}$/);
+    });
+  });
+
+  it("PHASE-018: restaurant → food_manufacturing switch is additive-only (BR-038)", async () => {
+    const { tenantId, userId } = await registerTenant("switch018");
+    await withTenant(tenantId, async () => {
+      await applyService.apply(userId, "industry.restaurant");
+      const before = await configuration.resolveEffectiveConfig();
+      const switched = await applyService.switch(userId, "industry.food_manufacturing");
+      expect(switched.templateKey).toBe("industry.food_manufacturing");
+      const after = await configuration.resolveEffectiveConfig();
+      expect(after.layers.l1Template?.key).toBe("industry.food_manufacturing");
+      expect({ ...after.layers, l1Template: null }).toEqual({ ...before.layers, l1Template: null });
     });
   });
 
