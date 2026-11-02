@@ -7,3 +7,4 @@ export * from "./keychain";
 export * from "./updater";
 export * from "./webview2";
 export * from "./printer";
+export * from "./permission-snapshot";

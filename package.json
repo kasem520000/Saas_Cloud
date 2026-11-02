@@ -50,5 +50,10 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.48.0"
   },
-  "prettier": "./packages/config/prettier/index.mjs"
+  "prettier": "./packages/config/prettier/index.mjs",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
+  }
 }

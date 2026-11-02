@@ -126,6 +126,9 @@ importers:
       '@erp/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@erp/sync-core':
+        specifier: workspace:*
+        version: link:../../packages/sync-core
       '@nestjs/testing':
         specifier: ^11.1.6
         version: 11.2.8(@nestjs/common@11.2.8(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.8)(@nestjs/platform-express@11.2.8)
@@ -135,6 +138,9 @@ importers:
       '@types/argon2':
         specifier: ^0.15.4
         version: 0.15.4
+      '@types/better-sqlite3':
+        specifier: ^7.6.13
+        version: 7.6.13
       '@types/express':
         specifier: ^5.0.3
         version: 5.0.6
@@ -144,6 +150,9 @@ importers:
       '@types/pg':
         specifier: ^8.23.1
         version: 8.23.1
+      better-sqlite3:
+        specifier: ^13.0.3
+        version: 13.0.3
       drizzle-kit:
         specifier: ^0.31.11
         version: 0.31.11

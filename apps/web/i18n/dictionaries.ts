@@ -287,6 +287,18 @@ export interface Dictionary {
   offlineBadgeReadOnly: string;
   offlineAsOf: string;
   offlineQueuedCount: string;
+  syncRejectionTitle: string;
+  syncRejectionReason: string;
+  syncRejectionAdministrative: string;
+  syncRejectionClose: string;
+  syncAction_edit_and_resend: string;
+  syncAction_cancel: string;
+  syncAction_accept_server_price: string;
+  syncAction_accept_partial: string;
+  syncAction_request_approval_online: string;
+  syncAction_review_and_merge: string;
+  syncAction_discard_local_edit: string;
+  syncAction_substitute_and_resend: string;
   posTerminalsDescription: string;
   posTerminalCode: string;
   posTerminalName: string;
@@ -2008,6 +2020,18 @@ const ar: Dictionary = {
   offlineBadgeReadOnly: "قراءة فقط",
   offlineAsOf: "آخر بيانات: {ts}",
   offlineQueuedCount: "{count} عملية بانتظار الإرسال",
+  syncRejectionTitle: "تم رفض العملية أثناء المزامنة",
+  syncRejectionReason: "سبب الرفض",
+  syncRejectionAdministrative: "حالة إدارية — لا يمكن إعادة الإرسال؛ تم إيقاف المزامنة.",
+  syncRejectionClose: "إغلاق",
+  syncAction_edit_and_resend: "تعديل وإعادة الإرسال",
+  syncAction_cancel: "إلغاء (إبطال المستند مع keeping السجل)",
+  syncAction_accept_server_price: "قبول سعر الخادم",
+  syncAction_accept_partial: "قبول التنفيذ الجزئي",
+  syncAction_request_approval_online: "طلب مسار الموافقة عبر الإنترنت",
+  syncAction_review_and_merge: "مراجعة ودمج",
+  syncAction_discard_local_edit: "تجاهل التعديل المحلي",
+  syncAction_substitute_and_resend: "استبدال وإعادة الإرسال",
   posTerminalsDescription: "سجّل الأجهزة ربطه بالفرع والصندوق وحجم الإيصال",
   posTerminalCode: "كود الجهاز",
   posTerminalName: "الاسم",
@@ -3716,6 +3740,18 @@ const en: Dictionary = {
   offlineBadgeReadOnly: "Read-only",
   offlineAsOf: "Data as of {ts}",
   offlineQueuedCount: "{count} pending to send",
+  syncRejectionTitle: "Operation rejected during sync",
+  syncRejectionReason: "Rejection reason",
+  syncRejectionAdministrative: "حالة إدارية — لا يمكن إعادة الإرسال؛ تم إيقاف المزامنة.",
+  syncRejectionClose: "Close",
+  syncAction_edit_and_resend: "Edit and resend",
+  syncAction_cancel: "Cancel (void pending document, keep audit)",
+  syncAction_accept_server_price: "Accept server price",
+  syncAction_accept_partial: "Accept partial fulfillment",
+  syncAction_request_approval_online: "Request online approval path",
+  syncAction_review_and_merge: "Review and merge",
+  syncAction_discard_local_edit: "Discard local edit",
+  syncAction_substitute_and_resend: "Substitute and resend",
   posTerminalsDescription: "Register terminals bound to a branch, till cash account and receipt size",
   posTerminalCode: "Terminal code",
   posTerminalName: "Name",

@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-02 — PHASE-021 follow-up: chaos desktop kill-matrix + 7-day watermark gate + rejection UX (CONFLICT_RESOLUTION §3) + desktop profile on real PG (D-01/D-02/D-03, 3/3) + dynamic-route static-export fixes (162 pages generate) + sync-core 35/35 — PHASE-NNN
+
 2026-11-02 — PHASE-021 Desktop Application (Tauri v2, Windows): shell scaffold `apps/desktop`, web static-export target + guard, sync-core desktop modules (SQLite store on real better-sqlite3, sync host, keychain lifecycle, updater gate, WebView2 probe, ESC/POS printer) 28/28 tests, ci-desktop.yml (signing/SBOM/CalVer), offline badge UI, docs — PHASE-NNN
 
 > **Status:** LIVING DOCUMENT — append-only, newest first · **Updated:** 2026-11-02

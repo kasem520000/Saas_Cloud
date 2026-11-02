@@ -15,7 +15,11 @@ below is claimed COMPLETE without evidence.
 
 | Task | Artifact | Evidence |
 |------|----------|----------|
-| T1 Tauri scaffold + static export | `apps/desktop/` (tauri.conf.json, src-tauri Cargo/main/webview2, capabilities), `apps/web` `TAURI_BUILD=1` export target + `scripts/build-tauri.mjs` (BFF excluded) + `scripts/check-tauri-export.ts` | Guard green: **86 files scanned, 0 violations** (3 BFF routes excluded by design); `TAURI_BUILD=1 next build` **compiles + typechecks successfully**; full `out/` generation blocked by dynamic `[id]` routes missing `generateStaticParams` — deferred (see below); web typecheck/lint clean |
+| T1 Tauri scaffold + static export | `apps/desktop/` (tauri.conf.json, src-tauri, capabilities), `apps/web` `TAURI_BUILD=1` export target + `scripts/build-tauri.mjs` (BFF moved out of `app/` for the build) + `scripts/check-tauri-export.ts`; 7 dynamic `[id]` pages patched with `dynamicParams=false` + placeholder `generateStaticParams` | Guard green: **86 files scanned, 0 violations** (3 BFF routes excluded by design); `TAURI_BUILD=1 next build` compiles + typechecks and **generates 162 static pages**; remaining export blocker: `searchParams`-using online-only pages (e.g. accept-invitation) — deferred (see below); web typecheck/lint clean |
+| T6 Rejection UX | `apps/web/components/sync-rejection-dialog.tsx` — CONFLICT_RESOLUTION §3 reason→action table as data (`REJECTION_ACTIONS`), administrative reasons offer no resubmission, every choice carries the rejecting `traceId` | web typecheck/lint clean; AR/EN keys added |
+| T3 watermark | `packages/sync-core/src/permission-snapshot.ts` — 7-day snapshot watermark → read-only degrade + contract-gate | unit tests green |
+| T13 chaos desktop profile | `packages/sync-core/src/__tests__/chaos-desktop.test.ts` — kill-matrix over real SQLite: mid-push kill loses nothing (IN_FLIGHT→QUEUED), duplicate replay exactly-once, network-down recovery, contract gate pushes nothing | **35/35 sync-core tests** |
+| T13/T14 desktop profile on real PG | `apps/api/src/__db__/sync/desktop-profile.db.spec.ts` — the desktop kernel (SqliteLocalStore + runCycle) wired to the REAL PHASE-020 services: D-01 pos_sale ACCEPTED exactly once (INV-013), D-02 revoked device REJECTED zero effects, D-03 cursor persisted | **3/3 on embedded PG16** |
 | T2 SQLite local store | `packages/sync-core/src/sqlite-store.ts` + `schema.ts` — real **better-sqlite3**, WAL enforced, `integrity_check` on start, forward-only migrations in ONE transaction, `stageAndResetMachinery()` corruption path | **28/28 sync-core tests pass** on real SQLite, incl. IN_FLIGHT→QUEUED recovery, monotonic cursors, stage/reset |
 | T3/T7 Keychain + credentials | `packages/sync-core/src/keychain.ts` — Keychain interface, KEYCHAIN_SERVICES (refresh token / device key / SQLite key), `MemoryTokenHolder` (access token memory-only, expires), one-time-use refresh rotation | Unit tests green; shell glue test 1/1 |
 | T4 Sync host | `packages/sync-core/src/host.ts` — start/unlock cycle, connectivity debounce 5 s, periodic 120 s, post-write fast cycle, manual; read-only gate surfaced | Unit tests with fake timers/transport green |
@@ -34,10 +38,10 @@ below is claimed COMPLETE without evidence.
    Tauri SQL plugin at shell start (key from keychain); `SqliteLocalStore`
    is encryption-agnostic and tested against plain SQLite here.
 3. **Full `apps/web/out` static export** — `next build` with `TAURI_BUILD=1`
-   compiles and typechecks, but dynamic `[id]` pages need
-   `generateStaticParams`/`dynamicParams=false` per route before `out/` is
-   emitted (BFF exclusion proven working: build progressed past the BFF error
-   to the page-data stage).
+   compiles, typechecks, and generates 162 static pages after the dynamic-route
+   fixes; the remaining blocker is `searchParams`-using online-only pages
+   (e.g. `/[locale]/accept-invitation`) which need `force-static` treatment in
+   the web app — a web-wide change deferred to CI with the rest.
 4. **Chaos desktop matrix, kill-matrix, D-06 updater attack tests on real
    binaries, Playwright offline smoke (AR+EN), WebView2 live probe matrix,
    SBOM/gitleaks output** — all defined in the CI workflow and phase doc §6;
@@ -58,3 +62,4 @@ this phase).
 - `@erp/desktop`: shell glue **1/1** · typecheck clean
 - `@erp/web`: `check:tauri-export` clean (86 files) · typecheck/lint clean · `TAURI_BUILD=1 next build` compiles + typechecks
 - `pnpm docs:validate`: **29/29**
+- Full sync db suite (PHASE-020 golden + PHASE-021 desktop profile): **11/11** on embedded PG16

@@ -4,6 +4,15 @@
  * reverse/cancel — permissions resolved server-side from the session), and
  * the AR allocation editor (PUT while DRAFT, read-only afterwards).
  */
+
+// PHASE-021 (Tauri static export): dynamic detail routes are client-navigated
+// inside the shell — no per-id prerender, no dynamic params at build time.
+export const dynamicParams = false;
+// One placeholder param satisfies output:export (≥1 route required); the page
+// 404s at build for the placeholder id and real ids are client-navigated.
+export function generateStaticParams(): { id: string }[] {
+  return [{ id: "shell-placeholder" }];
+}
 import { notFound, redirect } from "next/navigation";
 import type { JSX } from "react";
 

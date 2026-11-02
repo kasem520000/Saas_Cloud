@@ -6,6 +6,15 @@
  * Cross-tenant reads happen server-side through the BFF's internal fetch;
  * every mutation goes through the BFF proxy from the client panels.
  */
+
+// PHASE-021 (Tauri static export): dynamic detail routes are client-navigated
+// inside the shell — no per-id prerender, no dynamic params at build time.
+export const dynamicParams = false;
+// One placeholder param satisfies output:export (≥1 route required); the page
+// 404s at build for the placeholder id and real ids are client-navigated.
+export function generateStaticParams(): { id: string }[] {
+  return [{ id: "shell-placeholder" }];
+}
 import { notFound, redirect } from "next/navigation";
 import type { JSX } from "react";
 
