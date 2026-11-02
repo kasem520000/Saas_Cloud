@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-02 — PHASE-027 COMPLETE: notes & installments modules — custody machine (INV-024), G-24..G-28, installment plans (BR-048/049 flat fees), RC-11, 5 report contracts, 888/888 isolation on real PG — see reports/PHASE-027-COMPLETION.md
+
 2026-11-02 — PHASE-026 COMPLETE (full sandbox scope): fixed-assets module — service layer (G-21/22/23 flows, BR-041..044), RC-10 reconciliation, 3 report contracts (registry now 69), purchasing GRN hook, UI scaffold, 864/864 isolation attacks on real PG — see reports/PHASE-026-COMPLETION.md
 
 2026-11-02 — PHASE-026 (sandbox scope): fixed-assets foundation — migration 0028 (6 RLS tables, append-only depreciation_lines), depreciation math + INV-023 property suite, G-21/22/23 + revaluation goldens, BR-041..044 guards, 864/864 isolation attacks on real PG — UI/reports/RC-10/purchasing-hook INCOMPLETE per reports/PHASE-026-COMPLETION.md

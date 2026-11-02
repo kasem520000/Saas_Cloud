@@ -33,6 +33,31 @@ export interface ChecklistItem {
 @Injectable()
 export class ReconciliationService {
   constructor(@Inject(AuditService) private readonly audit: AuditService) {}
+  /**
+   * RC-11 (PHASE-027): notes subledger ↔ GL tie — Σ open received notes =
+   * NOTES_RECEIVABLE balance; issued mirror on NOTES_PAYABLE (INV-024).
+   */
+  async runNotesCheck(input: {
+    asOf: string;
+    openReceivedSum: string;
+    openIssuedSum: string;
+    glNotesReceivable: string;
+    glNotesPayable: string;
+  }) {
+    const { rc11Check } = await import("../../notes/domain/reconcile");
+    const result = rc11Check(input);
+    if (result.state === "BROKEN") {
+      await this.audit.record({
+        action: "reconciliation.broken",
+        entityType: "notes",
+        entityId: null,
+        details: { check: "RC-11", ...result },
+      } as never);
+      throw new ReconciliationBrokenError({ kind: "RC-11", diffCount: 1 });
+    }
+    return { check: "RC-11", state: "OK" as const };
+  }
+
 
   /**
    * RC-10 (PHASE-026): fixed-asset register ↔ GL tie per category —

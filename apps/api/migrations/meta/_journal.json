@@ -197,6 +197,13 @@
       "when": 1793200000000,
       "tag": "0028_fixed_assets_026",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1793210000000,
+      "tag": "0029_notes_installments_027",
+      "breakpoints": true
     }
   ]
 }

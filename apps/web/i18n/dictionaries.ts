@@ -34,6 +34,16 @@ export interface Dictionary {
   faCategory: string;
   faSalvage: string;
   faLifeMonths: string;
+  ntTitle: string;
+  ntNumber: string;
+  ntPartner: string;
+  ntMaturity: string;
+  ntStatus: string;
+  ntAmount: string;
+  ipTitle: string;
+  ipPlan: string;
+  ipTotal: string;
+  ipStatus: string;
 
   navHome: string;
   navUsers: string;
@@ -1774,6 +1784,16 @@ const ar: Dictionary = {
   faCategory: "الفئة",
   faSalvage: "قيمة Residual",
   faLifeMonths: "العمر الإنتاجي (أشهر)",
+  ntTitle: "الشيكات والأوراق التجارية",
+  ntNumber: "الرقم",
+  ntPartner: "الطرف",
+  ntMaturity: "تاريخ الاستحقاق",
+  ntStatus: "الحالة",
+  ntAmount: "المبلغ",
+  ipTitle: "خطط الأقساط",
+  ipPlan: "الخطة",
+  ipTotal: "الإجمالي",
+  ipStatus: "الحالة",
   appTitle: "منصة الأعمال الشاملة",
   switchLabel: "English",
   signOut: "تسجيل الخروج",
@@ -3503,6 +3523,16 @@ const en: Dictionary = {
   faCategory: "Category",
   faSalvage: "Salvage value",
   faLifeMonths: "Useful life (months)",
+  ntTitle: "Cheques & notes",
+  ntNumber: "Number",
+  ntPartner: "Partner",
+  ntMaturity: "Maturity",
+  ntStatus: "Status",
+  ntAmount: "Amount",
+  ipTitle: "Installment plans",
+  ipPlan: "Plan",
+  ipTotal: "Total",
+  ipStatus: "Status",
   appTitle: "Universal Business ERP",
   switchLabel: "العربية",
   signOut: "Sign out",

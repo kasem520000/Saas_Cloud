@@ -4,6 +4,13 @@ import {
   faDepreciationScheduleContract,
   faMovementsContract,
 } from "./fixed-assets/contracts";
+import {
+  notesMaturityCalendarContract,
+  notesAgingContract,
+  notesDishonoredContract,
+  installmentsScheduleContract,
+  installmentsAgingContract,
+} from "./notes-installments/contracts";
 
 
 /**
@@ -187,6 +194,12 @@ export const REPORT_CONTRACTS: readonly ReportContract[] = Object.freeze([
   faAssetRegisterContract,
   faDepreciationScheduleContract,
   faMovementsContract,
+  // PHASE-027 notes + installments reports
+  notesMaturityCalendarContract,
+  notesAgingContract,
+  notesDishonoredContract,
+  installmentsScheduleContract,
+  installmentsAgingContract,
 ]);
 
 export { validateRegistry, registrySnapshot } from "./runtime";

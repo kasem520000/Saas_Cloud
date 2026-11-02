@@ -214,6 +214,11 @@ export const TENANT_TABLES_REGISTRY: readonly RegisteredTenantTable[] = [
   { table: "depreciation_lines" },
   { table: "asset_disposals" },
   { table: "asset_revaluations" },
+  // PHASE-027 (migration 0029): notes + installments cluster. note_events is append-only.
+  { table: "notes" },
+  { table: "note_events" },
+  { table: "installment_plans" },
+  { table: "installment_lines" },
 ];
 
 export const TENANT_TABLE_NAMES: readonly string[] = TENANT_TABLES_REGISTRY.map(

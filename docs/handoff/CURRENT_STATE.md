@@ -512,6 +512,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-026 (2026-11-02):** fixed-assets foundation landed — migration 0028 with 6 RLS tables (isolation suite 864/864 on real PG), depreciation math with INV-023 property tests, G-21/22/23 goldens, BR-041…044 guards. Pending: UI screens, report contracts, RC-10, purchasing GRN hook (`docs/implementation/phases/reports/PHASE-026-COMPLETION.md`).
 
+- **PHASE-027 (2026-11-02):** cheques/notes + installments delivered — custody machine with INV-024, G-24…G-28 goldens and flows, BR-045…049, RC-11, 5 report contracts (registry 74), isolation 888/888 on real PG (`reports/PHASE-027-COMPLETION.md`).
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

@@ -44,6 +44,7 @@ const DELETE_GRANTED = new Set(
 const NO_UPDATE_GRANT = new Set([
   "audit_events",
   "depreciation_lines", // PHASE-026: append-only (INV-003 pattern)
+  "note_events", // PHASE-027: append-only custody log (INV-003/INV-024)
   "journal_lines",
   "partner_subledger_entries",
   "cash_movements",
@@ -1499,6 +1500,39 @@ async function seedFixtures(superuser: {
   );
 
 
+  // PHASE-027 fixtures (migration 0029): FK-consistent rows per tenant.
+  await superuser.query(
+    `INSERT INTO notes (id, tenant_id, kind, direction, number, partner_id, maturity_date, amount, currency, issue_date, status)
+     VALUES
+       ('e1e1e1e1-0000-4000-8000-000000000001', $1, 'CHEQUE', 'RECEIVED', 'CH-1', 'b5b5b5b5-0000-4000-8000-000000000001', '2026-12-01', 1000, 'YER', '2026-11-01', 'IN_CUSTODY'),
+       ('e1e1e1e1-0000-4000-8000-000000000002', $2, 'CHEQUE', 'RECEIVED', 'CH-1', 'b5b5b5b5-0000-4000-8000-000000000002', '2026-12-01', 1000, 'YER', '2026-11-01', 'IN_CUSTODY')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO note_events (id, tenant_id, note_id, event_kind, event_date)
+     VALUES
+       ('e2e2e2e2-0000-4000-8000-000000000001', $1, 'e1e1e1e1-0000-4000-8000-000000000001', 'DEPOSIT', '2026-11-02'),
+       ('e2e2e2e2-0000-4000-8000-000000000002', $2, 'e1e1e1e1-0000-4000-8000-000000000002', 'DEPOSIT', '2026-11-02')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO installment_plans (id, tenant_id, partner_id, source_type, source_id, total_amount, count, start_date, frequency, status)
+     VALUES
+       ('e3e3e3e3-0000-4000-8000-000000000001', $1, 'b5b5b5b5-0000-4000-8000-000000000001', 'sales_invoice', 'c0c0c0c0-0000-4000-8000-000000000001', 1000, 4, '2026-11-01', 'MONTHLY', 'ACTIVE'),
+       ('e3e3e3e3-0000-4000-8000-000000000002', $2, 'b5b5b5b5-0000-4000-8000-000000000002', 'sales_invoice', 'c0c0c0c0-0000-4000-8000-000000000002', 1000, 4, '2026-11-01', 'MONTHLY', 'ACTIVE')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO installment_lines (id, tenant_id, plan_id, seq, due_date, amount, status)
+     VALUES
+       ('e4e4e4e4-0000-4000-8000-000000000001', $1, 'e3e3e3e3-0000-4000-8000-000000000001', 1, '2026-12-01', 250, 'PENDING'),
+       ('e4e4e4e4-0000-4000-8000-000000000002', $2, 'e3e3e3e3-0000-4000-8000-000000000002', 1, '2026-12-01', 250, 'PENDING')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
   // -- seedFixtures end --
 
 }
@@ -1703,6 +1737,11 @@ const OWN_ROW: Record<string, [string, string]> = {
   depreciation_lines: ["d7d7d7d7-0000-4000-8000-000000000001", "d7d7d7d7-0000-4000-8000-000000000002"],
   asset_disposals: ["d8d8d8d8-0000-4000-8000-000000000001", "d8d8d8d8-0000-4000-8000-000000000002"],
   asset_revaluations: ["d9d9d9d9-0000-4000-8000-000000000001", "d9d9d9d9-0000-4000-8000-000000000002"],
+
+  notes: ["e1e1e1e1-0000-4000-8000-000000000001", "e1e1e1e1-0000-4000-8000-000000000002"],
+  note_events: ["e2e2e2e2-0000-4000-8000-000000000001", "e2e2e2e2-0000-4000-8000-000000000002"],
+  installment_plans: ["e3e3e3e3-0000-4000-8000-000000000001", "e3e3e3e3-0000-4000-8000-000000000002"],
+  installment_lines: ["e4e4e4e4-0000-4000-8000-000000000001", "e4e4e4e4-0000-4000-8000-000000000002"],
 };
 
 
@@ -2106,6 +2145,17 @@ const MISMATCHED_INSERT: Record<string, string> = {
   asset_revaluations: `INSERT INTO asset_revaluations (id, tenant_id, asset_id, revaluation_date, new_gross_value, new_accumulated, delta)
      VALUES ('d9d9d9d9-3000-4000-8000-000000000003', $1, 'd5d5d5d5-0000-4000-8000-000000000001',
              '2026-11-02', 2000, 0, 2000)`,
+
+  notes: `INSERT INTO notes (id, tenant_id, kind, direction, number, partner_id, maturity_date, amount, currency, issue_date, status)
+     VALUES ('e1e1e1e1-3000-4000-8000-000000000003', $1, 'CHEQUE', 'RECEIVED', 'ATK-1',
+             'b5b5b5b5-0000-4000-8000-000000000001', '2026-12-01', 100, 'YER', '2026-11-01', 'IN_CUSTODY')`,
+  note_events: `INSERT INTO note_events (id, tenant_id, note_id, event_kind, event_date)
+     VALUES ('e2e2e2e2-3000-4000-8000-000000000003', $1, 'e1e1e1e1-0000-4000-8000-000000000001', 'DEPOSIT', '2026-11-02')`,
+  installment_plans: `INSERT INTO installment_plans (id, tenant_id, partner_id, source_type, source_id, total_amount, count, start_date, frequency)
+     VALUES ('e3e3e3e3-3000-4000-8000-000000000003', $1, 'b5b5b5b5-0000-4000-8000-000000000001', 'sales_invoice',
+             'c0c0c0c0-0000-4000-8000-000000000001', 1000, 4, '2026-11-01', 'MONTHLY')`,
+  installment_lines: `INSERT INTO installment_lines (id, tenant_id, plan_id, seq, due_date, amount)
+     VALUES ('e4e4e4e4-3000-4000-8000-000000000003', $1, 'e3e3e3e3-0000-4000-8000-000000000001', 1, '2026-12-01', 250)`,
 };
 
 beforeAll(async () => {
@@ -2276,7 +2326,9 @@ describe("generated attack suite A1–A10 — as erp_app", () => {
                                 ? "deleted_at"
                                 : table === "depreciation_lines"
                                   ? "period_amount"
-                                  : "updated_at";
+                                  : table === "note_events"
+                                    ? "reason"
+                                    : "updated_at";
         const whereCol = table === "tombstones" ? "entity_id" : "id";
         await expect(
           app.query(`UPDATE ${table} SET ${column} = ${column} WHERE ${whereCol} = $1`, [foreignRow]),
