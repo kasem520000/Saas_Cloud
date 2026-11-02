@@ -244,6 +244,7 @@ export class PostingEngine {
         partnerId: line.partnerId,
         itemId: line.itemId,
         costCenterId: line.costCenterId,
+        projectId: line.projectId,
         taxCodeId: line.taxCodeId,
         memo: line.memo,
         isArApControl,
@@ -320,6 +321,7 @@ export function lineOf(partial: Partial<JournalLineSpec> & { direction: Directio
     partnerId: partial.partnerId,
     itemId: partial.itemId,
     costCenterId: partial.costCenterId,
+    projectId: partial.projectId,
     taxCodeId: partial.taxCodeId,
     memo: partial.memo,
   };

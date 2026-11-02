@@ -69,6 +69,10 @@ import {
   manufacturingQcInspectionLogContract,
 } from "./operational/industry-018";
 import {
+  servicesContractRevenueScheduleContract,
+  servicesTimeBillingSummaryContract,
+} from "./operational/industry-019";
+import {
   automotiveJobCardProfitabilityContract,
   automotiveVehicleServiceHistoryContract,
   distributionRepSettlementContract,
@@ -149,6 +153,9 @@ export const REPORT_CONTRACTS: readonly ReportContract[] = Object.freeze([
   manufacturingProductionCostContract,
   manufacturingBatchGenealogyContract,
   manufacturingQcInspectionLogContract,
+  // PHASE-019 services reports
+  servicesContractRevenueScheduleContract,
+  servicesTimeBillingSummaryContract,
   // PHASE-016 T12 POS end-of-day reports
   posSalesByTerminalContract,
   posSalesByHourContract,

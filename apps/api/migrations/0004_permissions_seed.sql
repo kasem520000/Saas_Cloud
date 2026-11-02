@@ -196,6 +196,7 @@ INSERT INTO "permissions" ("key", "module", "description") VALUES
 ('crm.activities.manage', 'crm', 'CRM basics (PHASE-019) / إدارة علاقات العملاء'),
 ('crm.contracts.manage', 'crm', 'Service contracts & orders / العقود وأوامر الخدمة'),
 ('crm.service_orders.manage', 'crm', 'Service contracts & orders / العقود وأوامر الخدمة'),
+('accounting.projects.manage', 'accounting', 'Projects dimension (PHASE-019) /dimension المشاريع'),
 ('manufacturing.boms.manage', 'manufacturing', 'BOM maintenance / إدارة قوائم المواد'),
 ('manufacturing.production_orders.view', 'manufacturing', 'Production lifecycle (PHASE-018) / دورة أوامر الإنتاج'),
 ('manufacturing.production_orders.create', 'manufacturing', 'Production lifecycle (PHASE-018) / دورة أوامر الإنتاج'),

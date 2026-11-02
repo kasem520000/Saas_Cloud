@@ -286,3 +286,58 @@ describe("PHASE-017 T2 — automotive & distribution templates via the unmodifie
     });
   });
 });
+
+describe("PHASE-019 T11 — industry.professional_services via the unmodified engine", () => {
+  it("seeds industry.professional_services v1.0.0 and validates; stock modules absent from its enabled set", async () => {
+    const su = await superuserClient();
+    const row = await su.query<{ manifest: string }>(
+      `SELECT manifest::text AS manifest FROM industry_templates WHERE key = 'industry.professional_services'`,
+    );
+    await su.end();
+    expect(row.rows).toHaveLength(1);
+    const manifest = validateManifest(JSON.parse(row.rows[0]?.manifest ?? "{}"));
+    expect(manifest.id).toBe("industry.professional_services");
+    expect(manifest.version).toBe("1.0.0");
+    for (const stockModule of ["inventory", "manufacturing", "purchasing", "pos", "distribution"]) {
+      expect(manifest.default_modules_enabled).not.toContain(stockModule);
+    }
+    expect(manifest.default_modules_enabled).toContain("crm");
+  });
+
+  it("applies to a fresh tenant idempotently with stable hash; L1 terminology + report pins land", async () => {
+    const { tenantId, userId } = await registerTenant("prof");
+    await withTenant(tenantId, async () => {
+      // a professional-services plan carries the crm feature keys as entitlements
+      const tenancyStore = await import("../../modules/tenancy/infrastructure/tenancy.store");
+      for (const key of ["crm.service_contracts", "crm.recurring_billing", "crm.service_orders", "accounting.projects"]) {
+        await tenancyStore.insertEntitlement({ featureKey: key, source: "PLAN", expiresAt: null });
+      }
+      const result = await applyService.apply(userId, "industry.professional_services");
+      expect(result.applied).toBe(true);
+      const again = await applyService.apply(userId, "industry.professional_services");
+      expect(again.alreadyApplied).toBe(true);
+      expect(again.manifestHash).toBe(result.manifestHash);
+      const config = await configuration.resolveEffectiveConfig();
+      expect(config.layers.l1Template?.key).toBe("industry.professional_services");
+      expect(config.resolvedHash).toMatch(/^sha256:[0-9a-f]{64}$/);
+      expect(Object.keys(config.ui.terminology).length).toBeGreaterThan(0);
+    });
+  });
+
+  it("restaurant → professional_services switch is additive-only (BR-038)", async () => {
+    const { tenantId, userId } = await registerTenant("switch019");
+    await withTenant(tenantId, async () => {
+      const tenancyStore = await import("../../modules/tenancy/infrastructure/tenancy.store");
+      for (const key of ["crm.service_contracts", "crm.recurring_billing", "crm.service_orders", "accounting.projects"]) {
+        await tenancyStore.insertEntitlement({ featureKey: key, source: "PLAN", expiresAt: null });
+      }
+      await applyService.apply(userId, "industry.restaurant");
+      const before = await configuration.resolveEffectiveConfig();
+      const switched = await applyService.switch(userId, "industry.professional_services");
+      expect(switched.templateKey).toBe("industry.professional_services");
+      const after = await configuration.resolveEffectiveConfig();
+      expect(after.layers.l1Template?.key).toBe("industry.professional_services");
+      expect({ ...after.layers, l1Template: null }).toEqual({ ...before.layers, l1Template: null });
+    });
+  });
+});

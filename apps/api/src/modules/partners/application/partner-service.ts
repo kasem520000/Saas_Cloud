@@ -51,6 +51,13 @@ export class PartnerService {
     return partner;
   }
 
+  /** Published lookup for cross-module consumers (crm lead merge path). */
+  async findActiveByCode(code: string): Promise<store.PartnerRow | undefined> {
+    const partner = await store.findPartnerByCode(code);
+    if (partner === undefined || partner.deletedAt !== null) return undefined;
+    return partner;
+  }
+
   async create(actorId: string, input: CreatePartnerInput): Promise<store.PartnerRow> {
     // BR-025: codes auto-number tenant-wide by default (partners.code_autogenerate
     // posture — manual codes must be unique).

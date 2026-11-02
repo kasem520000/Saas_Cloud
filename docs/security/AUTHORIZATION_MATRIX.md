@@ -195,6 +195,7 @@ permissions cannot be granted to `viewer`-derived templates).
 | `sync.settings.manage` | Sync policies per entity / إعدادات المزامنة | owner | tenant | no |
 | `crm.leads.manage` / `crm.tasks.manage` / `crm.activities.manage` | CRM basics (PHASE-019) / إدارة علاقات العملاء | sales, owner | branch | no |
 | `crm.contracts.manage` / `crm.service_orders.manage` | Service contracts & orders / العقود وأوامر الخدمة | owner | tenant | no |
+| `accounting.projects.manage` | Projects analytical dimension (PHASE-019) / أبعاد Projects | owner | tenant | no |
 | `manufacturing.boms.manage` | BOM maintenance / إدارة قوائم المواد | owner | tenant | no |
 | `manufacturing.production_orders.view` / `.create` / `.approve` / `.post` | Production lifecycle (PHASE-018) / دورة أوامر الإنتاج | warehouse (create), owner | branch | `.approve`/`.post` **yes** |
 | `manufacturing.scrap.post` / `manufacturing.qc.manage` | Scrap posting & QC inspections (PHASE-018) / ترحيل الهالك وفحوصات الجودة | owner | tenant | **yes** |

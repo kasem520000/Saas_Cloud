@@ -32,6 +32,8 @@ export interface JournalLineSpec {
   partnerId?: string;
   itemId?: string;
   costCenterId?: string;
+  /** PHASE-019: analytical project/case dimension stamped on the line (never a GL split). */
+  projectId?: string;
   taxCodeId?: string;
   memo?: LocalizedText;
 }
@@ -82,6 +84,7 @@ export interface ResolvedLine {
   partnerId?: string;
   itemId?: string;
   costCenterId?: string;
+  projectId?: string;
   taxCodeId?: string;
   memo?: LocalizedText;
   /** True when the resolved account is the active AR/AP control mapping. */

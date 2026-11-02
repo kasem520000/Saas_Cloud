@@ -4,9 +4,9 @@
 
 ## The single next action
 
-**Execute PHASE-018** per
-[../implementation/phases/PHASE-018.md](../implementation/phases/PHASE-018.md)
-(identified only — not started). PHASE-018 is COMPLETE (2026-11-02; evidence: reports/PHASE-018-COMPLETION.md): manufacturing module + food_manufacturing template live via the unmodified engine. PHASE-017 is COMPLETE (2026-11-02, tag `phase/017`;
+**Execute PHASE-020 (Offline Sync Foundation)** per
+[../implementation/phases/PHASE-020.md](../implementation/phases/PHASE-020.md)
+(identified only — not started). PHASE-019 is COMPLETE (2026-11-02; evidence: reports/PHASE-019-COMPLETION.md): crm module (leads→partner conversion, contracts + idempotent recurring billing through the posting engine, tasks/activities/time entries, service orders), projects analytical dimension stamped on journal lines, `industry.professional_services` template live via the unmodified engine, 2 services report contracts (registry 64→66), drift 242=242. PHASE-018 is COMPLETE (2026-11-02; evidence: reports/PHASE-018-COMPLETION.md): manufacturing module + food_manufacturing template live via the unmodified engine. PHASE-017 is COMPLETE (2026-11-02, tag `phase/017`;
 evidence: reports/PHASE-017-COMPLETION.md): automotive & distribution templates seeded via
 the unmodified PHASE-015 engine, domain cores for job cards / settlements / tiers /
 free goods / commissions with unit proof, drift 237=237, unit 195 PASS.

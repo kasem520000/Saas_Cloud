@@ -271,11 +271,6 @@
       ],
       "available_from_phase": "PHASE-019"
     },
-    "bom_production": {
-      "level": "N/A",
-      "feature_keys": [],
-      "available_from_phase": "PHASE-018"
-    },
     "deposits_late_fees": {
       "level": "OPTIONAL",
       "feature_keys": [

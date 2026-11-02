@@ -213,6 +213,20 @@ Legend: **Phase** = first implementation phase · **OC** = offline-creatable
 
 `item_batches` gains `production_order_id` provenance and a `QUARANTINED` stock status (stock flag, not a ledger state).
 
+## crm + projects (PHASE-019)
+
+| Table | Purpose |
+|---|---|
+| `projects` | Analytical dimension (cases) for professional services and job costing — code, bilingual name, OPEN/CLOSED, optional parent, contract link; stamped on `journal_lines.project_id` (engine-written, never a GL split) |
+| `leads` | Lead pipeline NEW/QUALIFIED/CONVERTED/LOST with source, owner rep, lost reason; CONVERTED links `partner_id` forever and is immutable (CHECK-enforced) |
+| `tasks` | Follow-ups with due date, reminder flag, links to lead/partner/contract; no ledger effects |
+| `activities` | Timeline entries (NOTE/CALL/MEETING/EMAIL) per lead/partner/contract |
+| `service_contracts` | RETAINER/MILESTONE/HOURLY fee model, term, renewal state, partner + optional project; posts nothing itself |
+| `contract_schedule_lines` | Billing schedule: undated retainer/milestone lines and dated expansions; `billed_invoice_id` marks billed entries |
+| `service_orders` | Service delivery documents (job-card generalization) linked to a contract or standalone |
+| `service_order_lines` | SERVICE (labor) / PARTS lines; parts consume stock through the inventory service |
+| `time_entries` | Recorded hours per project + fee item; billable requires narrative (CHECK) unless already billed; feeds billing only |
+
 ## industry configuration (PHASE-004/015)
 
 | Entity | Purpose | Key fields | Phase | OC |

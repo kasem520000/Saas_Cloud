@@ -190,6 +190,18 @@ export const TENANT_TABLES_REGISTRY: readonly RegisteredTenantTable[] = [
   // registry rows (synced from the code-defined catalog).
   { table: "report_runs" },
   { table: "print_templates" },
+
+  // PHASE-019 (migration 0026): crm + projects cluster.
+  { table: "projects" },
+  { table: "leads" },
+  { table: "tasks" },
+  { table: "activities" },
+  { table: "service_contracts" },
+  // carries DELETE by design (schedule re-expansion removes unbilled dated entries)
+  { table: "contract_schedule_lines", deleteGranted: true },
+  { table: "service_orders" },
+  { table: "service_order_lines" },
+  { table: "time_entries" },
 ];
 
 export const TENANT_TABLE_NAMES: readonly string[] = TENANT_TABLES_REGISTRY.map(

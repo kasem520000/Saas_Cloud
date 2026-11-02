@@ -1328,6 +1328,70 @@ async function seedFixtures(superuser: {
      ON CONFLICT (id) DO NOTHING`,
     [TENANT_A, TENANT_B],
   );
+  // PHASE-019 (migration 0026): crm + projects fixtures.
+  await superuser.query(
+    `INSERT INTO projects (id, tenant_id, code, name)
+     VALUES ('c1c1c1c1-0000-4000-8000-000000000001', $1, 'CASE-001', 'Case A'),
+            ('c1c1c1c1-0000-4000-8000-000000000002', $2, 'CASE-001', 'Case B')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO leads (id, tenant_id, branch_id, name, source, status)
+     VALUES ('c2c2c2c2-0000-4000-8000-000000000001', $1, 'abababab-0000-4000-8000-000000000001', 'Lead A', 'WALK_IN', 'NEW'),
+            ('c2c2c2c2-0000-4000-8000-000000000002', $2, 'abababab-0000-4000-8000-000000000002', 'Lead B', 'WEB', 'QUALIFIED')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO tasks (id, tenant_id, title, due_date, status, partner_id)
+     VALUES ('c3c3c3c3-0000-4000-8000-000000000001', $1, 'Follow up A', '2026-11-05', 'OPEN', 'b5b5b5b5-0000-4000-8000-000000000001'),
+            ('c3c3c3c3-0000-4000-8000-000000000002', $2, 'Follow up B', '2026-11-06', 'OPEN', 'b5b5b5b5-0000-4000-8000-000000000002')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO activities (id, tenant_id, kind, body, partner_id)
+     VALUES ('c4c4c4c4-0000-4000-8000-000000000001', $1, 'CALL', 'Called A', 'b5b5b5b5-0000-4000-8000-000000000001'),
+            ('c4c4c4c4-0000-4000-8000-000000000002', $2, 'NOTE', 'Noted B', 'b5b5b5b5-0000-4000-8000-000000000002')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO service_contracts (id, tenant_id, branch_id, contract_no, partner_id, project_id, fee_model, status, start_date, end_date)
+     VALUES ('c5c5c5c5-0000-4000-8000-000000000001', $1, 'abababab-0000-4000-8000-000000000001', 'SC-2026-0001', 'b5b5b5b5-0000-4000-8000-000000000001', 'c1c1c1c1-0000-4000-8000-000000000001', 'RETAINER', 'ACTIVE', '2026-01-15', '2026-03-14'),
+            ('c5c5c5c5-0000-4000-8000-000000000002', $2, 'abababab-0000-4000-8000-000000000002', 'SC-2026-0001', 'b5b5b5b5-0000-4000-8000-000000000002', 'c1c1c1c1-0000-4000-8000-000000000002', 'RETAINER', 'ACTIVE', '2026-01-15', '2026-03-14')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO contract_schedule_lines (id, tenant_id, contract_id, description, amount, due_date)
+     VALUES ('c6c6c6c6-0000-4000-8000-000000000001', $1, 'c5c5c5c5-0000-4000-8000-000000000001', 'Retainer 2026-01', 1700.0000, '2026-01-31'),
+            ('c6c6c6c6-0000-4000-8000-000000000002', $2, 'c5c5c5c5-0000-4000-8000-000000000002', 'Retainer 2026-01', 1700.0000, '2026-01-31')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO service_orders (id, tenant_id, branch_id, order_no, contract_id, partner_id, project_id, status)
+     VALUES ('c7c7c7c7-0000-4000-8000-000000000001', $1, 'abababab-0000-4000-8000-000000000001', 'SO-2026-0001', 'c5c5c5c5-0000-4000-8000-000000000001', 'b5b5b5b5-0000-4000-8000-000000000001', 'c1c1c1c1-0000-4000-8000-000000000001', 'DRAFT'),
+            ('c7c7c7c7-0000-4000-8000-000000000002', $2, 'abababab-0000-4000-8000-000000000002', 'SO-2026-0001', 'c5c5c5c5-0000-4000-8000-000000000002', 'b5b5b5b5-0000-4000-8000-000000000002', 'c1c1c1c1-0000-4000-8000-000000000002', 'DRAFT')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO service_order_lines (id, tenant_id, service_order_id, line_type, description, qty, unit_price)
+     VALUES ('c8c8c8c8-0000-4000-8000-000000000001', $1, 'c7c7c7c7-0000-4000-8000-000000000001', 'SERVICE', 'Consulting hour', 8, 250.0000),
+            ('c8c8c8c8-0000-4000-8000-000000000002', $2, 'c7c7c7c7-0000-4000-8000-000000000002', 'SERVICE', 'Consulting hour', 8, 250.0000)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO time_entries (id, tenant_id, project_id, fee_item_id, hours, billable, narrative, entry_date)
+     VALUES ('c9c9c9c9-0000-4000-8000-000000000001', $1, 'c1c1c1c1-0000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 8, true, 'Discovery session', '2026-11-02'),
+            ('c9c9c9c9-0000-4000-8000-000000000002', $2, 'c1c1c1c1-0000-4000-8000-000000000002', 'babababa-0000-4000-8000-000000000002', 4, true, 'Draft review', '2026-11-02')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
   // PHASE-016 (migration 0023): POS terminals + narrow sync slice fixtures.
   await superuser.query(
     `INSERT INTO devices (id, user_id, platform, name, device_key_hash)
@@ -1552,6 +1616,15 @@ const OWN_ROW: Record<string, [string, string]> = {
   production_orders: ["a90a90a9-0000-4000-8000-000000000001", "a90a90a9-0000-4000-8000-000000000002"],
   production_consumptions: ["b90b90b9-0000-4000-8000-000000000001", "b90b90b9-0000-4000-8000-000000000002"],
   inspections: ["c80c80c8-0000-4000-8000-000000000001", "c80c80c8-0000-4000-8000-000000000002"],
+  projects: ["c1c1c1c1-0000-4000-8000-000000000001", "c1c1c1c1-0000-4000-8000-000000000002"],
+  leads: ["c2c2c2c2-0000-4000-8000-000000000001", "c2c2c2c2-0000-4000-8000-000000000002"],
+  tasks: ["c3c3c3c3-0000-4000-8000-000000000001", "c3c3c3c3-0000-4000-8000-000000000002"],
+  activities: ["c4c4c4c4-0000-4000-8000-000000000001", "c4c4c4c4-0000-4000-8000-000000000002"],
+  service_contracts: ["c5c5c5c5-0000-4000-8000-000000000001", "c5c5c5c5-0000-4000-8000-000000000002"],
+  contract_schedule_lines: ["c6c6c6c6-0000-4000-8000-000000000001", "c6c6c6c6-0000-4000-8000-000000000002"],
+  service_orders: ["c7c7c7c7-0000-4000-8000-000000000001", "c7c7c7c7-0000-4000-8000-000000000002"],
+  service_order_lines: ["c8c8c8c8-0000-4000-8000-000000000001", "c8c8c8c8-0000-4000-8000-000000000002"],
+  time_entries: ["c9c9c9c9-0000-4000-8000-000000000001", "c9c9c9c9-0000-4000-8000-000000000002"],
 };
 
 
@@ -1916,6 +1989,24 @@ const MISMATCHED_INSERT: Record<string, string> = {
      VALUES ('b90b90b9-3000-4000-8000-000000000003', $1, 'a90a90a9-0000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 1, 1)`,
   inspections: `INSERT INTO inspections (id, tenant_id, inspection_no, target_type, target_id, result, disposition)
      VALUES ('c80c80c8-3000-4000-8000-000000000003', $1, 'QC-ISO', 'PRODUCTION_ORDER', 'a90a90a9-0000-4000-8000-000000000001', 'FAIL', 'SCRAP')`,
+  projects: `INSERT INTO projects (id, tenant_id, code, name)
+     VALUES ('c1c1c1c1-3000-4000-8000-000000000003', $1, 'CASE-ISO', 'Attack Case')`,
+  leads: `INSERT INTO leads (id, tenant_id, branch_id, name, source)
+     VALUES ('c2c2c2c2-3000-4000-8000-000000000003', $1, 'abababab-0000-4000-8000-000000000001', 'Attack Lead', 'OTHER')`,
+  tasks: `INSERT INTO tasks (id, tenant_id, title, status)
+     VALUES ('c3c3c3c3-3000-4000-8000-000000000003', $1, 'Attack Task', 'OPEN')`,
+  activities: `INSERT INTO activities (id, tenant_id, kind, body)
+     VALUES ('c4c4c4c4-3000-4000-8000-000000000003', $1, 'NOTE', 'attack')`,
+  service_contracts: `INSERT INTO service_contracts (id, tenant_id, branch_id, contract_no, partner_id, fee_model, status, start_date)
+     VALUES ('c5c5c5c5-3000-4000-8000-000000000003', $1, 'abababab-0000-4000-8000-000000000001', 'SC-ISO', 'b5b5b5b5-0000-4000-8000-000000000001', 'RETAINER', 'DRAFT', '2026-11-01')`,
+  contract_schedule_lines: `INSERT INTO contract_schedule_lines (id, tenant_id, contract_id, description, amount)
+     VALUES ('c6c6c6c6-3000-4000-8000-000000000003', $1, 'c5c5c5c5-0000-4000-8000-000000000001', 'ISO line', 100)`,
+  service_orders: `INSERT INTO service_orders (id, tenant_id, branch_id, order_no, partner_id)
+     VALUES ('c7c7c7c7-3000-4000-8000-000000000003', $1, 'abababab-0000-4000-8000-000000000001', 'SO-ISO', 'b5b5b5b5-0000-4000-8000-000000000001')`,
+  service_order_lines: `INSERT INTO service_order_lines (id, tenant_id, service_order_id, line_type, description)
+     VALUES ('c8c8c8c8-3000-4000-8000-000000000003', $1, 'c7c7c7c7-0000-4000-8000-000000000001', 'SERVICE', 'attack line')`,
+  time_entries: `INSERT INTO time_entries (id, tenant_id, project_id, fee_item_id, hours, entry_date)
+     VALUES ('c9c9c9c9-3000-4000-8000-000000000003', $1, 'c1c1c1c1-0000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 1, '2026-11-02')`,
 };
 
 beforeAll(async () => {

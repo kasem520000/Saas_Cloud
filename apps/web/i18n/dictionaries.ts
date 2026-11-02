@@ -275,6 +275,9 @@ export interface Dictionary {
   mfgOrdersTitle: string;
   mfgBomsTitle: string;
   mfgGenealogyTitle: string;
+  crmLeadsTitle: string;
+  crmContractsTitle: string;
+  projectsTitle: string;
   posTerminalsTitle: string;
   posTerminalsDescription: string;
   posTerminalCode: string;
@@ -1985,6 +1988,9 @@ const ar: Dictionary = {
   mfgOrdersTitle: "أوامر الإنتاج",
   mfgBomsTitle: "قوائم المواد (BOM)",
   mfgGenealogyTitle: "شجرة نسب الدفعات",
+  crmLeadsTitle: "العملاء المحتملون",
+  crmContractsTitle: "عقود الخدمات",
+  projectsTitle: "المشاريع / القضايا",
   posTerminalsTitle: "أجهزة نقاط البيع",
   posTerminalsDescription: "سجّل الأجهزة ربطه بالفرع والصندوق وحجم الإيصال",
   posTerminalCode: "كود الجهاز",
@@ -3682,6 +3688,9 @@ const en: Dictionary = {
   mfgOrdersTitle: "Production orders",
   mfgBomsTitle: "Bills of materials (BOM)",
   mfgGenealogyTitle: "Batch genealogy",
+  crmLeadsTitle: "Leads",
+  crmContractsTitle: "Service contracts",
+  projectsTitle: "Projects / cases",
   posTerminalsTitle: "POS terminals",
   posTerminalsDescription: "Register terminals bound to a branch, till cash account and receipt size",
   posTerminalCode: "Terminal code",

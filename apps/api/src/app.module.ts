@@ -17,6 +17,7 @@ import { NotificationsModule } from "./modules/notifications/notifications.modul
 import { ConfigurationModule } from "./modules/configuration/configuration.module";
 import { PosModule } from "./modules/pos/pos.module";
 import { ManufacturingModule } from "./modules/manufacturing/manufacturing.module";
+import { CrmModule } from "./modules/crm/crm.module";
 import { TenancyModule } from "./modules/tenancy/tenancy.module";
 import { PartnersModule } from "./modules/partners/partners.module";
 import { ItemsModule } from "./modules/items/items.module";
@@ -50,6 +51,7 @@ import { UsageLimitsGuard } from "./infra/auth/usage-limits.guard";
     ConfigurationModule,
     PosModule,
     ManufacturingModule,
+    CrmModule,
     TenancyModule,
     PartnersModule,
     ItemsModule,

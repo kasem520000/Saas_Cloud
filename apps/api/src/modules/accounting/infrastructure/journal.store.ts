@@ -54,6 +54,7 @@ export interface JournalLineRow {
   partnerId: string | null;
   itemId: string | null;
   costCenterId: string | null;
+  projectId: string | null;
   taxCodeId: string | null;
   memo: string | null;
   memoAr: string | null;
@@ -69,7 +70,7 @@ const ENTRY_COLUMNS = sql`id, entry_no AS "entryNo", entry_date AS "entryDate",
 const LINE_COLUMNS = sql`l.id, l.journal_entry_id AS "journalEntryId", l.line_no AS "lineNo",
   l.account_id AS "accountId", a.code AS "accountCode", l.direction, l.amount, l.base_amount AS "baseAmount",
   l.partner_id AS "partnerId", l.item_id AS "itemId", l.cost_center_id AS "costCenterId",
-  l.tax_code_id AS "taxCodeId", l.memo, l.memo_ar AS "memoAr"`;
+  l.project_id AS "projectId", l.tax_code_id AS "taxCodeId", l.memo, l.memo_ar AS "memoAr"`;
 
 export async function findEntryById(id: string): Promise<JournalEntryRow | undefined> {
   const rows = await tenantTx().execute(sql`
@@ -159,15 +160,15 @@ async function insertLine(
 ): Promise<JournalLineRow> {
   const rows = await tenantTx().execute(sql`
     INSERT INTO journal_lines (id, tenant_id, journal_entry_id, line_no, account_id, direction,
-                               amount, base_amount, partner_id, item_id, cost_center_id, tax_code_id,
+                               amount, base_amount, partner_id, item_id, cost_center_id, project_id, tax_code_id,
                                memo, memo_ar)
     VALUES (${generateUuidV7()}, erp.current_tenant_id(), ${entryId}, ${line.lineNo}, ${line.accountId},
             ${line.direction}, ${line.amount}, ${line.baseAmount}, ${line.partnerId ?? null},
-            ${line.itemId ?? null}, ${line.costCenterId ?? null}, ${line.taxCodeId ?? null},
+            ${line.itemId ?? null}, ${line.costCenterId ?? null}, ${line.projectId ?? null}, ${line.taxCodeId ?? null},
             ${line.memo?.en ?? null}, ${line.memo?.ar ?? null})
     RETURNING id, journal_entry_id AS "journalEntryId", line_no AS "lineNo", account_id AS "accountId",
               direction, amount, base_amount AS "baseAmount", partner_id AS "partnerId",
-              item_id AS "itemId", cost_center_id AS "costCenterId", tax_code_id AS "taxCodeId",
+              item_id AS "itemId", cost_center_id AS "costCenterId", project_id AS "projectId", tax_code_id AS "taxCodeId",
               memo, memo_ar AS "memoAr"
   `);
   return (rows.rows as unknown as JournalLineRow[])[0]!;

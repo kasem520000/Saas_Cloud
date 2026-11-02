@@ -16,6 +16,7 @@ import { ReconciliationService } from "./application/reconciliation-service";
 import { AccountingController } from "./presentation/accounting.controller";
 import { JournalsController } from "./presentation/journals.controller";
 import { GlController } from "./presentation/gl.controller";
+import { ProjectsController } from "./presentation/projects.controller";
 import { PARTNER_SUBLEDGER_PORT } from "./application/partner-subledger-port";
 
 /**
@@ -32,7 +33,7 @@ import { PARTNER_SUBLEDGER_PORT } from "./application/partner-subledger-port";
   // PHASE-014: tenancy api supplies the UsageService port (documents/month
   // counter — a read-model beside the posting, never in front of it).
   imports: [AuditModule, TenancyModule],
-  controllers: [AccountingController, JournalsController, GlController],
+  controllers: [AccountingController, JournalsController, GlController, ProjectsController],
   providers: [
     { provide: PARTNER_SUBLEDGER_PORT, useClass: PartnerSubledgerService },
     CoaService,

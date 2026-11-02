@@ -20,7 +20,8 @@ export type ReportCategory =
   | "treasury"
   | "tax"
   | "platform"
-  | "industry";
+  | "industry"
+  | "services";
 
 export type DataSourceModule =
   | "accounting"
@@ -35,7 +36,8 @@ export type DataSourceModule =
   | "tenancy"
   | "reporting"
   | "distribution"
-  | "manufacturing";
+  | "manufacturing"
+  | "crm";
 
 export interface DataSourceDecl {
   readonly module: DataSourceModule;
