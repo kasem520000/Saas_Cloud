@@ -4,7 +4,7 @@
 
 ## The single next action
 
-**Execute PHASE-029** — PHASE-028 COMPLETE (budgeting & variance; evidence: reports/PHASE-028-COMPLETION.md).
+**Execute PHASE-030** — PHASE-029 COMPLETE (payroll; evidence: reports/PHASE-029-COMPLETION.md).
 evidence: reports/PHASE-017-COMPLETION.md): automotive & distribution templates seeded via
 the unmodified PHASE-015 engine, domain cores for job cards / settlements / tiers /
 free goods / commissions with unit proof, drift 237=237, unit 195 PASS.

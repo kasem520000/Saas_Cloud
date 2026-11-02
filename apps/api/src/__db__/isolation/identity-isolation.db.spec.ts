@@ -45,6 +45,7 @@ const NO_UPDATE_GRANT = new Set([
   "audit_events",
   "depreciation_lines", // PHASE-026: append-only (INV-003 pattern)
   "note_events", // PHASE-027: append-only custody log (INV-003/INV-024)
+  "payroll_run_lines", // PHASE-029: append-only (INV-025)
   "journal_lines",
   "partner_subledger_entries",
   "cash_movements",
@@ -1550,6 +1551,63 @@ async function seedFixtures(superuser: {
      ON CONFLICT (id) DO NOTHING`,
     [TENANT_A, TENANT_B],
   );
+  // PHASE-029 fixtures (migration 0031): FK-consistent chain per tenant.
+  await superuser.query(
+    `INSERT INTO employees (id, tenant_id, code, name, hire_date, basic_salary, status)
+     VALUES
+       ('a1a1a1a1-0000-4000-8000-000000000001', $1, 'E-001', 'Employee A', '2026-01-01', 8000, 'ACTIVE'),
+       ('a1a1a1a1-0000-4000-8000-000000000002', $2, 'E-001', 'Employee B', '2026-01-01', 8000, 'ACTIVE')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO salary_structures (id, tenant_id, code, name, status)
+     VALUES
+       ('a2a2a2a2-0000-4000-8000-000000000001', $1, 'STD', 'Standard', 'ACTIVE'),
+       ('a2a2a2a2-0000-4000-8000-000000000002', $2, 'STD', 'Standard', 'ACTIVE')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO salary_components (id, tenant_id, structure_id, code, name, kind, calc, amount, gl_account_id, seq)
+     VALUES
+       ('a3a3a3a3-0000-4000-8000-000000000001', $1, 'a2a2a2a2-0000-4000-8000-000000000001', 'HOUSING', 'Housing', 'EARNING', 'FIXED', 2000, 'b0b0b0b0-0000-4000-8000-000000000001', 1),
+       ('a3a3a3a3-0000-4000-8000-000000000002', $2, 'a2a2a2a2-0000-4000-8000-000000000002', 'HOUSING', 'Housing', 'EARNING', 'FIXED', 2000, 'b0b0b0b0-0000-4000-8000-000000000002', 1)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO payroll_runs (id, tenant_id, code, fiscal_period_id, status, gross_total, deductions_total, net_total)
+     VALUES
+       ('a4a4a4a4-0000-4000-8000-000000000001', $1, 'PR-2026-11', '00000000-0000-4000-8000-000000000009', 'DRAFT', 10000, 1500, 8500),
+       ('a4a4a4a4-0000-4000-8000-000000000002', $2, 'PR-2026-11', '00000000-0000-4000-8000-000000000009', 'DRAFT', 10000, 1500, 8500)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO payroll_run_lines (id, tenant_id, run_id, employee_id, gross, deductions, net)
+     VALUES
+       ('a5a5a5a5-0000-4000-8000-000000000001', $1, 'a4a4a4a4-0000-4000-8000-000000000001', 'a1a1a1a1-0000-4000-8000-000000000001', 10000, 1500, 8500),
+       ('a5a5a5a5-0000-4000-8000-000000000002', $2, 'a4a4a4a4-0000-4000-8000-000000000002', 'a1a1a1a1-0000-4000-8000-000000000002', 10000, 1500, 8500)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO employee_loans (id, tenant_id, employee_id, amount, installment, start_date, status)
+     VALUES
+       ('a6a6a6a6-0000-4000-8000-000000000001', $1, 'a1a1a1a1-0000-4000-8000-000000000001', 6000, 500, '2026-11-01', 'ACTIVE'),
+       ('a6a6a6a6-0000-4000-8000-000000000002', $2, 'a1a1a1a1-0000-4000-8000-000000000002', 6000, 500, '2026-11-01', 'ACTIVE')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO loan_schedule_lines (id, tenant_id, loan_id, seq, due_date, amount, status)
+     VALUES
+       ('a7a7a7a7-0000-4000-8000-000000000001', $1, 'a6a6a6a6-0000-4000-8000-000000000001', 1, '2026-12-01', 500, 'PENDING'),
+       ('a7a7a7a7-0000-4000-8000-000000000002', $2, 'a6a6a6a6-0000-4000-8000-000000000002', 1, '2026-12-01', 500, 'PENDING')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
   // -- seedFixtures end --
 
 }
@@ -1762,6 +1820,14 @@ const OWN_ROW: Record<string, [string, string]> = {
 
   budgets: ["f1f1f1f1-0000-4000-8000-000000000001", "f1f1f1f1-0000-4000-8000-000000000002"],
   budget_lines: ["f2f2f2f2-0000-4000-8000-000000000001", "f2f2f2f2-0000-4000-8000-000000000002"],
+
+  employees: ["a1a1a1a1-0000-4000-8000-000000000001", "a1a1a1a1-0000-4000-8000-000000000002"],
+  salary_structures: ["a2a2a2a2-0000-4000-8000-000000000001", "a2a2a2a2-0000-4000-8000-000000000002"],
+  salary_components: ["a3a3a3a3-0000-4000-8000-000000000001", "a3a3a3a3-0000-4000-8000-000000000002"],
+  payroll_runs: ["a4a4a4a4-0000-4000-8000-000000000001", "a4a4a4a4-0000-4000-8000-000000000002"],
+  payroll_run_lines: ["a5a5a5a5-0000-4000-8000-000000000001", "a5a5a5a5-0000-4000-8000-000000000002"],
+  employee_loans: ["a6a6a6a6-0000-4000-8000-000000000001", "a6a6a6a6-0000-4000-8000-000000000002"],
+  loan_schedule_lines: ["a7a7a7a7-0000-4000-8000-000000000001", "a7a7a7a7-0000-4000-8000-000000000002"],
 };
 
 
@@ -2182,6 +2248,21 @@ const MISMATCHED_INSERT: Record<string, string> = {
   budget_lines: `INSERT INTO budget_lines (id, tenant_id, budget_id, fiscal_period_id, account_id, amount)
      VALUES ('f2f2f2f2-3000-4000-8000-000000000003', $1, 'f1f1f1f1-0000-4000-8000-000000000001',
              '00000000-0000-4000-8000-000000000009', 'b0b0b0b0-0000-4000-8000-000000000001', 100)`,
+
+  employees: `INSERT INTO employees (id, tenant_id, code, name, hire_date, basic_salary, status)
+     VALUES ('a1a1a1a1-3000-4000-8000-000000000003', $1, 'E-ATK', 'Attack Emp', '2026-01-01', 1000, 'ACTIVE')`,
+  salary_structures: `INSERT INTO salary_structures (id, tenant_id, code, name, status)
+     VALUES ('a2a2a2a2-3000-4000-8000-000000000003', $1, 'ATK', 'Attack Structure', 'ACTIVE')`,
+  salary_components: `INSERT INTO salary_components (id, tenant_id, structure_id, code, name, kind, calc, amount, gl_account_id)
+     VALUES ('a3a3a3a3-3000-4000-8000-000000000003', $1, 'a2a2a2a2-0000-4000-8000-000000000001', 'ATK', 'Attack Comp', 'EARNING', 'FIXED', 100, 'b0b0b0b0-0000-4000-8000-000000000001')`,
+  payroll_runs: `INSERT INTO payroll_runs (id, tenant_id, code, fiscal_period_id, status)
+     VALUES ('a4a4a4a4-3000-4000-8000-000000000003', $1, 'ATK', '00000000-0000-4000-8000-000000000009', 'DRAFT')`,
+  payroll_run_lines: `INSERT INTO payroll_run_lines (id, tenant_id, run_id, employee_id, gross, deductions, net)
+     VALUES ('a5a5a5a5-3000-4000-8000-000000000003', $1, 'a4a4a4a4-0000-4000-8000-000000000001', 'a1a1a1a1-0000-4000-8000-000000000001', 100, 10, 90)`,
+  employee_loans: `INSERT INTO employee_loans (id, tenant_id, employee_id, amount, installment, start_date, status)
+     VALUES ('a6a6a6a6-3000-4000-8000-000000000003', $1, 'a1a1a1a1-0000-4000-8000-000000000001', 1000, 100, '2026-11-01', 'ACTIVE')`,
+  loan_schedule_lines: `INSERT INTO loan_schedule_lines (id, tenant_id, loan_id, seq, due_date, amount, status)
+     VALUES ('a7a7a7a7-3000-4000-8000-000000000003', $1, 'a6a6a6a6-0000-4000-8000-000000000001', 1, '2026-12-01', 100, 'PENDING')`,
 };
 
 beforeAll(async () => {
@@ -2354,7 +2435,9 @@ describe("generated attack suite A1–A10 — as erp_app", () => {
                                   ? "period_amount"
                                   : table === "note_events"
                                     ? "reason"
-                                    : "updated_at";
+                                    : table === "payroll_run_lines"
+                                      ? "gross"
+                                      : "updated_at";
         const whereCol = table === "tombstones" ? "entity_id" : "id";
         await expect(
           app.query(`UPDATE ${table} SET ${column} = ${column} WHERE ${whereCol} = $1`, [foreignRow]),

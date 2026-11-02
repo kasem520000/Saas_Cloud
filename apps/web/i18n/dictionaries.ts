@@ -49,6 +49,12 @@ export interface Dictionary {
   bgScope: string;
   bgStatus: string;
   bgVersion: string;
+  prTitle: string;
+  prCode: string;
+  prName: string;
+  prSalary: string;
+  prStatus: string;
+  prRuns: string;
 
   navHome: string;
   navUsers: string;
@@ -1804,6 +1810,12 @@ const ar: Dictionary = {
   bgScope: "النطاق",
   bgStatus: "الحالة",
   bgVersion: "الإصدار",
+  prTitle: "الموظفون والرواتب",
+  prCode: "الرمز",
+  prName: "الاسم",
+  prSalary: "الراتب الأساسي",
+  prStatus: "الحالة",
+  prRuns: " مسيرات الرواتب",
   appTitle: "منصة الأعمال الشاملة",
   switchLabel: "English",
   signOut: "تسجيل الخروج",
@@ -3548,6 +3560,12 @@ const en: Dictionary = {
   bgScope: "Scope",
   bgStatus: "Status",
   bgVersion: "Version",
+  prTitle: "HR & Payroll",
+  prCode: "Code",
+  prName: "Name",
+  prSalary: "Basic salary",
+  prStatus: "Status",
+  prRuns: "Payroll runs",
   appTitle: "Universal Business ERP",
   switchLabel: "العربية",
   signOut: "Sign out",

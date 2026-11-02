@@ -25,7 +25,8 @@ export type ReportCategory =
   | "fixed-assets"
   | "notes"
   | "installments"
-  | "budgeting";
+  | "budgeting"
+  | "payroll";
 
 export type DataSourceModule =
   | "accounting"
@@ -45,7 +46,8 @@ export type DataSourceModule =
   | "fixed_assets"
   | "notes"
   | "installments"
-  | "budgeting";
+  | "budgeting"
+  | "payroll";
 
 export interface DataSourceDecl {
   readonly module: DataSourceModule;

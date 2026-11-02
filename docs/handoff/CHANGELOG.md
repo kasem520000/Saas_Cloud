@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-02 — PHASE-029 COMPLETE: payroll (financial scope) — migration 0031 (7 RLS tables, INV-025 row CHECK), G-29/30/31 goldens, BR-052..055, run SoD flows, 3 report contracts (registry 79), 942/942 isolation on real PG — see reports/PHASE-029-COMPLETION.md
+
 2026-11-02 — PHASE-028 COMPLETE: budgeting & variance — migration 0030 (BR-050 DB-level single-ACTIVE), lifecycle/SoD/supersede, advisory controls (BR-051, POSTED never blocked), variance engine read-only, 2 report contracts (registry 76), 900/900 isolation on real PG — see reports/PHASE-028-COMPLETION.md
 
 2026-11-02 — PHASE-027 COMPLETE: notes & installments modules — custody machine (INV-024), G-24..G-28, installment plans (BR-048/049 flat fees), RC-11, 5 report contracts, 888/888 isolation on real PG — see reports/PHASE-027-COMPLETION.md

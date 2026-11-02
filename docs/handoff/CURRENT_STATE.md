@@ -516,6 +516,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-028 (2026-11-02):** budgeting & variance delivered — BR-050 single-ACTIVE at DB level, lifecycle with SoD, advisory-only controls (ledger never blocked), read-only variance engine, 2 report contracts, isolation 900/900 on real PG (`reports/PHASE-028-COMPLETION.md`).
 
+- **PHASE-029 (2026-11-02):** payroll delivered in financial scope — G-29/30/31 goldens (worked example exact), BR-052…055, INV-025 row-level, 942/944 DB green, isolation 942/942 on real PG (`reports/PHASE-029-COMPLETION.md`).
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

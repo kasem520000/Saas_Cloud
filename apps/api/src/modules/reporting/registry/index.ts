@@ -15,6 +15,11 @@ import {
   budgetVsActualContract,
   varianceAnalysisContract,
 } from "./budgeting/contracts";
+import {
+  payrollRegisterContract,
+  payrollCostSummaryContract,
+  payrollEosProvisionContract,
+} from "./payroll/contracts";
 
 
 /**
@@ -207,6 +212,10 @@ export const REPORT_CONTRACTS: readonly ReportContract[] = Object.freeze([
   // PHASE-028 budgeting variance reports
   budgetVsActualContract,
   varianceAnalysisContract,
+  // PHASE-029 payroll reports
+  payrollRegisterContract,
+  payrollCostSummaryContract,
+  payrollEosProvisionContract,
 ]);
 
 export { validateRegistry, registrySnapshot } from "./runtime";

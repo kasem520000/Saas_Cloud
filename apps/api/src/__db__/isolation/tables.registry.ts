@@ -222,6 +222,14 @@ export const TENANT_TABLES_REGISTRY: readonly RegisteredTenantTable[] = [
   // PHASE-028 (migration 0030): budgeting cluster.
   { table: "budgets" },
   { table: "budget_lines", deleteGranted: true }, // DELETE only while DRAFT
+  // PHASE-029 (migration 0031): payroll cluster. payroll_run_lines is append-only.
+  { table: "employees" },
+  { table: "salary_structures" },
+  { table: "salary_components" },
+  { table: "payroll_runs" },
+  { table: "payroll_run_lines" },
+  { table: "employee_loans" },
+  { table: "loan_schedule_lines" },
 ];
 
 export const TENANT_TABLE_NAMES: readonly string[] = TENANT_TABLES_REGISTRY.map(
