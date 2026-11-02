@@ -504,6 +504,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-022 (2026-11-02):** Android app foundation landed in sandbox-provable scope — Expo scaffold (`apps/mobile`), token/i18n port with parity + RTL lint ban, SecureStore + capability-scoped registration (read-only personal-account class), Android sync scheduler with Doze-safe background + cellular budgets, FCM skeleton, mobile CI pipeline; mobile profile proven on real PG (M-01..M-04). On-device chaos slices and signed AAB remain CI-class deferrals (completion report).
 
+- **PHASE-023 (2026-11-02):** external-adapter layer landed in ungated scope — submission registry state machine + job semantics (idempotent, DLQ, circuit breaker, audited), fake-authority harness, chaos idempotency on real PG, bank parser with parked lines, commerce/shipping port fakes, rollout flags default OFF. ZATCA adapter is an UNVERIFIED refuse-to-submit stub (DR-001 OPEN, verification gate unpassed — no fabrication); payment production cutover INCOMPLETE pending DR-002. Details: PHASE-023-COMPLETION.md.
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

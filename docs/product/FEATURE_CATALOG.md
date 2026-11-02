@@ -229,8 +229,8 @@ Treatment model and jurisdiction packs — [../localization/TAX_ENGINE.md](../lo
 | `tax.jurisdiction_packs` | Jurisdiction packs · حزم الدول | Versioned country packs: rates with effective dates, invoice requirements, numbering rules; includes no-VAT jurisdictions | MVP | 009 | platform-level (`tax.packs.apply`) | — |
 | `tax.vat_return` | VAT return · الإقرار الضريبي | Per-period aggregation of tax summaries vs GL tax accounts (INV-012); ready-to-file gating; bilingual report | MVP | 009 | `tax.vat_return.read` | `tax.engine`, `accounting.general_ledger` |
 | `tax.einvoicing_framework` | E-invoicing framework · إطار الفوترة الإلكترونية | Adapter port, submission registry, status tracking — architecture only until verified specs land | MVP | 009 (framework) | `tax.einvoicing.manage` | `tax.engine`, `sales.invoices` |
-| `tax.einvoicing_zatca` | ZATCA (KSA) adapter · محول فاتورة (السعودية) | KSA e-invoicing generation/clearance integration — only against verified official specifications ([OQ-004](../ASSUMPTIONS_AND_OPEN_QUESTIONS.md)) | 3 | 023 | `tax.einvoicing.submit` | `tax.einvoicing_framework` |
-| `tax.einvoicing_eta` | ETA (Egypt) adapter · محول مصلحة الضرائب المصرية | Egypt e-invoice/e-receipt evaluation + adapter | 3 | 023 | `tax.einvoicing.submit` | `tax.einvoicing_framework` |
+| `tax.einvoicing_zatca` | ZATCA (KSA) adapter · محول فاتورة (السعودية) | KSA e-invoicing — registry/jobs/monitoring implemented (PHASE-023); adapter ships as **UNVERIFIED refuse-to-submit stub**: DR-001 OPEN + verification gate unpassed (no fabricated wire formats, RISK-005) — INCOMPLETE with named unmet items in PHASE-023-COMPLETION | 3 | 023 | `tax.einvoicing.submit` | `tax.einvoicing_framework` |
+| `tax.einvoicing_eta` | ETA (Egypt) adapter · محول مصلحة الضرائب المصرية | Egypt evaluation track: evaluation pack + decision-record draft only (RISK-007); no adapter code — deferred honestly per PHASE-023-COMPLETION | 3 | 023 | `tax.einvoicing.submit` | `tax.einvoicing_framework` |
 
 ## 12. Module: reporting
 

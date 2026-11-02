@@ -8,6 +8,8 @@
  * so a malformed file never reaches the store (STATEMENT_FORMAT_INVALID).
  */
 
+import { saNcbCsvAdapter } from "./sa-ncb";
+
 export interface ParsedStatementLine {
   lineDate: string;
   amount: string;
@@ -19,6 +21,8 @@ export interface ParsedStatement {
   lines: ParsedStatementLine[];
   openingBalance: string | null;
   closingBalance: string | null;
+  /** Rows that did not match the format — parked for manual mapping, never guessed. */
+  parkedLines?: readonly string[];
 }
 
 export interface StatementParseInput {
@@ -272,7 +276,7 @@ export const genericXlsxAdapter: BankAdapter = {
 };
 
 /** The registry (§7: adapter sprawl stays out of the core — plugin surface). */
-export const BANK_ADAPTERS: readonly BankAdapter[] = [genericCsvAdapter, genericXlsxAdapter];
+export const BANK_ADAPTERS: readonly BankAdapter[] = [genericCsvAdapter, genericXlsxAdapter, saNcbCsvAdapter];
 
 export function findBankAdapter(id: string): BankAdapter | undefined {
   return BANK_ADAPTERS.find((adapter) => adapter.id === id);
