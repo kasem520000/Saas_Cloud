@@ -335,6 +335,33 @@ export const tenantSettings = pgTable(
   ],
 );
 
+/** PHASE-015 L1 — the tenant's applied industry template (macro RLS). */
+export const tenantIndustryConfig = pgTable(
+  "tenant_industry_config",
+  {
+    tenantId: uuid("tenant_id").primaryKey(),
+    templateKey: text("template_key").notNull(),
+    appliedVersion: text("applied_version").notNull(),
+    appliedManifestHash: text("applied_manifest_hash").notNull(),
+    appliedAt: timestamp("applied_at", { withTimezone: true }).notNull().defaultNow(),
+    overrides: jsonb("overrides").notNull().default({}),
+    archived: jsonb("archived").notNull().default([]),
+  },
+);
+
+/** PHASE-015 L8 — platform-owned rollout flags (registry RLS, platform write). */
+export const featureFlags = pgTable(
+  "feature_flags",
+  {
+    key: text("key").primaryKey(),
+    name: text("name").notNull(),
+    nameAr: text("name_ar").notNull(),
+    enabled: boolean("enabled").notNull().default(false),
+    description: text("description").notNull().default(""),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+);
+
 /** Platform-level subscription plans (RLS: tenant read + platform write path). */
 export const plans = pgTable(
   "plans",

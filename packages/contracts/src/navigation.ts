@@ -281,6 +281,20 @@ export const NAV_ITEMS: readonly NavItem[] = [
     order: 40,
   },
   {
+    // PHASE-015 T11 — industry templates (list/preview/apply/switch); read-gated,
+    // manage actions enforce industry.templates.manage server-side (403).
+    id: "settings.templates",
+    parentGroup: "settings",
+    label: { ar: "قوالب الصناعة", en: "Industry templates" },
+    icon: "copy",
+    route: "/configuration/templates",
+    featureKey: "industry.template_engine",
+    permission: "configuration.config.read",
+    branchScoped: false,
+    archetype: "list-search",
+    order: 45,
+  },
+  {
     id: "settings.sessions",
     parentGroup: "settings",
     label: { ar: "الجلسات", en: "Sessions" },

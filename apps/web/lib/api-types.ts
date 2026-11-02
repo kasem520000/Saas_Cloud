@@ -2146,3 +2146,51 @@ export interface ConsoleInvoiceRow {
   paidVia: string | null;
   paidAt: string | null;
 }
+
+/** PHASE-015 — industry template registry + applied state (configuration module). */
+export interface IndustryTemplateRow {
+  key: string;
+  name: string;
+  nameAr: string | null;
+  version: string;
+  isActive: boolean;
+}
+
+export interface IndustryTemplatesResponse {
+  templates: IndustryTemplateRow[];
+}
+
+export interface AppliedTemplateView {
+  applied: {
+    key: string;
+    version: string;
+    terminologyKeys: string[];
+    navigationGroups: string[];
+    reportPins: string[];
+    onboardingSteps: number;
+  } | null;
+}
+
+export interface TemplatePreviewView {
+  templateKey: string;
+  version: string;
+  manifestHash: string;
+  addedCapabilities: string[];
+  archivedCapabilities: string[];
+  terminologyAdded: string[];
+  terminologyArchived: string[];
+  numberingAdded: string[];
+  reportsPinned: string[];
+  onboardingSteps: number;
+  blocked: boolean;
+  missingRequired: string[];
+  phaseGated: { key: string; phase: string }[];
+}
+
+export interface TemplateApplyView {
+  applied: boolean;
+  alreadyApplied: boolean;
+  templateKey: string;
+  version: string;
+  manifestHash: string;
+}

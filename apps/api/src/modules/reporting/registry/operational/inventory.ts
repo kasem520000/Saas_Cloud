@@ -383,7 +383,7 @@ export const inventorySerialTrackingContract = defineReport({
   ],
   run: async (_ctx, params) => {
     const { inventory } = reportingServices();
-    const rows = await inventory.serials({ serial: params.serial, itemId: params.itemId });
+    const rows = await inventory.serials({ serial: params.serial ?? undefined, itemId: params.itemId });
     return {
       columns: [
         col("serialNo", "المسلسل", "Serial"),

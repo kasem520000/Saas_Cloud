@@ -4,9 +4,14 @@
 
 ## The single next action
 
-**Execute PHASE-015** per
-[../implementation/phases/PHASE-015.md](../implementation/phases/PHASE-015.md)
-(identified only — not started). PHASE-014 is COMPLETE (2026-11-02, tag `phase/014`;
+**Execute PHASE-016** per
+[../implementation/phases/PHASE-016.md](../implementation/phases/PHASE-016.md)
+(identified only — not started). PHASE-015 is COMPLETE (2026-11-02, tag `phase/015`;
+evidence: reports/PHASE-015-COMPLETION.md): industry configuration framework live — ten-layer
+fail-closed resolution with stable `resolved_hash`, 3 priority templates (retail/grocery/restaurant)
+with idempotent audited additive-only apply/switch, phase-gated POS keys labeled PHASE-016,
+3 industry reports registered, admin + onboarding UI, drift 228=228, gate non-browser steps green.
+PHASE-014 is COMPLETE (2026-11-02, tag `phase/014`;
 evidence: reports/PHASE-014-COMPLETION.md): subscriptions/billing/lifecycle/usage/
 notifications substrate live, both payment paths identical (A-009), read-only grace
 typed, posting never limit-blocked (INV-022), dashboards report-contract-bound only,

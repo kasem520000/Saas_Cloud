@@ -14,10 +14,12 @@ import { AppShell } from "../../../components/app-shell";
 import { InfoNotice } from "../../../components/notices";
 import { OnboardingWizard } from "../../../components/onboarding-wizard";
 import { JourneyChecklist } from "../../../components/journey-checklist";
+import { TemplatePicker } from "../../../components/template-picker";
+import { Card } from "../../../components/card";
 import { RetryButton } from "../../../components/retry-button";
 import { getDictionary, isLocale, type Locale } from "../../../i18n/dictionaries";
 import { ONBOARDING_FEATURE_KEY } from "../../../lib/constants";
-import type { DerivedEntitlements, TenantProfile } from "../../../lib/api-types";
+import type { AppliedTemplateView, DerivedEntitlements, IndustryTemplatesResponse, TenantProfile } from "../../../lib/api-types";
 import { localizedApiError } from "../../../lib/messages";
 import { fetchApi, requireSessionToken } from "../../../lib/server-api";
 
@@ -61,9 +63,27 @@ export default async function OnboardingPage({
   } else if (!canProvision) {
     content = <InfoNotice>{d.tenancyErrorFeatureNotEntitled}</InfoNotice>;
   } else {
+    // PHASE-015 T11 — industry step: the active template registry, applied
+    // from onboarding when the feature is entitled (graceful when not).
+    const [templatesRes, appliedRes] = await Promise.all([
+      fetchApi<IndustryTemplatesResponse>("configuration/templates"),
+      fetchApi<AppliedTemplateView>("configuration/template"),
+    ]);
+    const showIndustry =
+      templatesRes.ok && appliedRes.ok && templatesRes.data.templates.length > 0;
     content = (
       <div className="flex flex-col gap-4">
         <OnboardingWizard locale={localeValue} />
+        {showIndustry ? (
+          <Card title={d.onboardingIndustryTitle}>
+            <p className="mb-4 text-sm text-gray-600">{d.onboardingIndustryDescription}</p>
+            <TemplatePicker
+              locale={localeValue}
+              templates={templatesRes.data.templates}
+              applied={appliedRes.ok ? appliedRes.data.applied : null}
+            />
+          </Card>
+        ) : null}
         <JourneyChecklist locale={localeValue} />
       </div>
     );

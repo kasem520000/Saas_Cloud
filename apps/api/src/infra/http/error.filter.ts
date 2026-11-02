@@ -61,6 +61,12 @@ import {
   InvalidSettingValueError,
   UnknownSettingKeyError,
 } from "../../modules/configuration/api";
+import { InvalidManifestError } from "../../modules/configuration/domain/industry-manifest";
+import { ConfigurationResolutionError } from "../../modules/configuration/domain/resolve";
+import {
+  TemplateNotFoundError,
+  TemplatePrerequisitesMissingError,
+} from "../../modules/configuration/application/template-apply.service";
 import {
   AttachmentNotFoundError,
   AttachmentOwnerNotFoundError,
@@ -310,7 +316,9 @@ function domainStatus(error: DomainError): number {
     // PHASE-013 reporting not-founds (404-shaped; A-series parity).
     error instanceof ReportNotFoundError ||
     error instanceof ReportRunNotFoundError ||
-    error instanceof ConversionNotFoundError
+    error instanceof ConversionNotFoundError ||
+    // PHASE-015 configuration not-founds (404; A7 parity).
+    error instanceof TemplateNotFoundError
   ) {
     return HttpStatus.NOT_FOUND;
   }
@@ -380,9 +388,17 @@ function domainStatus(error: DomainError): number {
     error instanceof StatementTooLargeError ||
     error instanceof StatementFormatInvalidError ||
     error instanceof CashAccountCurrencyMismatchError ||
-    error instanceof CashAccountTypeInvalidError
+    error instanceof CashAccountTypeInvalidError ||
+    // PHASE-015: template prerequisite/prereq + manifest validation failures (422).
+    error instanceof TemplatePrerequisitesMissingError ||
+    error instanceof InvalidManifestError
   ) {
     return HttpStatus.UNPROCESSABLE_ENTITY;
+  }
+  // PHASE-015: a fail-closed resolution error is a server bug, never a
+  // partially-defaulted config (§6.6) — 500 with the typed code preserved.
+  if (error instanceof ConfigurationResolutionError) {
+    return HttpStatus.INTERNAL_SERVER_ERROR;
   }
   // Posting-engine taxonomy (POSTING_ENGINE §3; ERROR_MODEL §2): stable
   // codes with their documented statuses.

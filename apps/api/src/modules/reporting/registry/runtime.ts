@@ -63,7 +63,9 @@ const dataSourceSchema = z.object({
   purpose: bilingualSchema,
 });
 
-const REPORT_KEY_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*\.[a-z0-9]+(-[a-z0-9]+)*$/;
+// PHASE-015: industry report keys (docs/industries/reports/README.md) use snake_case subjects
+// (inventory.expiry_list, grocery.expiry_writeoff, retail.imei_register) alongside kebab-case.
+const REPORT_KEY_PATTERN = /^[a-z0-9]+([-_][a-z0-9]+)*\.[a-z0-9]+([-_][a-z0-9]+)*$/;
 
 const contractShapeSchema = z.object({
   id: z.string().regex(REPORT_KEY_PATTERN, "kebab-case '<domain>.<subject>'"),

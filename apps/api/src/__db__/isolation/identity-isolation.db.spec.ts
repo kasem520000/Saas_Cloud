@@ -1212,6 +1212,15 @@ async function seedFixtures(superuser: {
     [TENANT_A, TENANT_B],
   );
 
+  // PHASE-015 (migration 0022): the applied industry template row (PK = tenant_id).
+  await superuser.query(
+    `INSERT INTO tenant_industry_config (tenant_id, template_key, applied_version, applied_manifest_hash)
+     VALUES ($1, 'industry.retail', '1.0.0', 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+            ($2, 'industry.retail', '1.0.0', 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+     ON CONFLICT (tenant_id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+
   // -- seedFixtures end --
 
 }
@@ -1374,6 +1383,8 @@ const OWN_ROW: Record<string, [string, string]> = {
   usage_counters: ["d7d7d7d7-0000-4000-8000-000000000001", "d7d7d7d7-0000-4000-8000-000000000002"],
   notifications: ["d8d8d8d8-0000-4000-8000-000000000001", "d8d8d8d8-0000-4000-8000-000000000002"],
   notification_preferences: ["d9d9d9d9-0000-4000-8000-000000000001", "d9d9d9d9-0000-4000-8000-000000000002"],
+  // PK is tenant_id itself (migration 0022).
+  tenant_industry_config: [TENANT_A, TENANT_B],
 };
 
 /** Mismatched-tenant INSERT shapes per table (A3) — explicit columns so the
@@ -1697,6 +1708,8 @@ const MISMATCHED_INSERT: Record<string, string> = {
              '{"ar":"x","en":"x"}'::jsonb, '{"ar":"x","en":"x"}'::jsonb)`,
   notification_preferences: `INSERT INTO notification_preferences (id, tenant_id, event_type, in_app, email)
      VALUES ('d9d9d9d9-3000-4000-8000-000000000003', $1, 'limit.warning', false, false)`,
+  tenant_industry_config: `INSERT INTO tenant_industry_config (tenant_id, template_key, applied_version, applied_manifest_hash)
+     VALUES ($1, 'industry.grocery', '1.0.0', 'sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')`,
 };
 
 beforeAll(async () => {
@@ -1768,7 +1781,12 @@ describe("structural catalog assertions (FORCE RLS + USING/WITH CHECK)", () => {
 describe("generated attack suite A1–A10 — as erp_app", () => {
   for (const table of TENANT_TABLE_NAMES) {
     const [, foreignRow] = OWN_ROW[table]!;
-    const idColumn = table === "role_permissions" ? "role_id" : "id";
+    const idColumn =
+      table === "role_permissions"
+        ? "role_id"
+        : table === "tenant_industry_config"
+          ? "tenant_id"
+          : "id";
 
     it(`A1 ${table}: SELECT without GUC → 0 tenant rows`, async () => {
       const app = await appClient();
@@ -1871,8 +1889,9 @@ describe("generated attack suite A1–A10 — as erp_app", () => {
         );
         expect(touched.rowCount).toBe(0);
       } else {
+        const probeColumn = table === "tenant_industry_config" ? "applied_version" : "updated_at";
         const touched = await app.query(
-          `UPDATE ${table} SET updated_at = now() WHERE id = $1`,
+          `UPDATE ${table} SET ${probeColumn} = ${probeColumn} WHERE ${idColumn} = $1`,
           [foreignRow],
         );
         expect(touched.rowCount).toBe(0);

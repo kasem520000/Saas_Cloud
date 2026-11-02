@@ -243,6 +243,28 @@ export interface Dictionary {
   navPlatformConsole: string;
   navPlatformAudit: string;
 
+  // -- PHASE-015 T11: industry templates UI -----------------------------------
+  navTemplates: string;
+  templatesPageTitle: string;
+  templatesPageDescription: string;
+  templatesCurrent: string;
+  templatesNone: string;
+  templatesApply: string;
+  templatesSwitch: string;
+  templatesPreview: string;
+  templatesApplied: string;
+  templatesSwitched: string;
+  templatesApplyConfirm: string;
+  templatesSwitchNote: string;
+  templatesVersion: string;
+  templatesStatusActive: string;
+  templatesStatusInactive: string;
+  onboardingIndustryTitle: string;
+  onboardingIndustryDescription: string;
+  onboardingIndustrySelect: string;
+  onboardingIndustrySkip: string;
+  onboardingIndustryApplied: string;
+
   // -- P4-T12a: shared labels -------------------------------------------------
   statusInactive: string;
   statusClosed: string;
@@ -1897,6 +1919,28 @@ const ar: Dictionary = {
   navPlatformConsole: "المنصة",
   navPlatformAudit: "سجل المنصة",
 
+  // -- PHASE-015 T11: industry templates UI -----------------------------------
+  navTemplates: "قوالب الصناعة",
+  templatesPageTitle: "قوالب الصناعة",
+  templatesPageDescription: "اختر قالب الصناعة للمنشأتك وطبقه أو التبديل بينها بشكل إضافي",
+  templatesCurrent: "القالب المطبق حاليًا",
+  templatesNone: "لا يوجد قالب مطبق",
+  templatesApply: "تطبيق",
+  templatesSwitch: "تبديل",
+  templatesPreview: "معاينة",
+  templatesApplied: "تم تطبيق القالب",
+  templatesSwitched: "تم التبديل إلى القالب",
+  templatesApplyConfirm: "تطكيد تطبيق القالب؟",
+  templatesSwitchNote: "التبديل إضافي فقط؟ لا يمكن إزالة الإعدادات",
+  templatesVersion: "الإصدار",
+  templatesStatusActive: "متوفر",
+  templatesStatusInactive: "غير متوفر",
+  onboardingIndustryTitle: "اختر صناعتك",
+  onboardingIndustryDescription: "اختر قالب صناعة يناسبك للمنشأة ليتم تعديل الإعدادات",
+  onboardingIndustrySelect: "اختر قالبًا",
+  onboardingIndustrySkip: "تخطَ",
+  onboardingIndustryApplied: "تم تطبيق قالب الصناعة",
+
   statusInactive: "غير نشط",
   statusClosed: "مغلقة",
   statusIssued: "مُصدر",
@@ -3537,6 +3581,28 @@ const en: Dictionary = {
   navPlatformSection: "Platform administration",
   navPlatformConsole: "Platform",
   navPlatformAudit: "Platform audit",
+
+  // -- PHASE-015 T11: industry templates UI -----------------------------------
+  navTemplates: "Industry templates",
+  templatesPageTitle: "Industry templates",
+  templatesPageDescription: "Pick the template matching your business and apply or switch between templates additively",
+  templatesCurrent: "Current template",
+  templatesNone: "No template applied",
+  templatesApply: "Apply",
+  templatesSwitch: "Switch",
+  templatesPreview: "Preview",
+  templatesApplied: "Template applied",
+  templatesSwitched: "Switched to template",
+  templatesApplyConfirm: "Apply this template?",
+  templatesSwitchNote: "Switching is additive only — settings are never removed",
+  templatesVersion: "Version",
+  templatesStatusActive: "Available",
+  templatesStatusInactive: "Unavailable",
+  onboardingIndustryTitle: "Choose your industry",
+  onboardingIndustryDescription: "Pick an industry template suited to your business — it tunes the workspace settings",
+  onboardingIndustrySelect: "Choose a template",
+  onboardingIndustrySkip: "Skip",
+  onboardingIndustryApplied: "Industry template applied",
 
   statusInactive: "Inactive",
   statusClosed: "Closed",

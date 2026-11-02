@@ -54,6 +54,11 @@ import {
   inventorySlowMovingContract,
 } from "./operational/inventory";
 import {
+  inventoryExpiryListContract,
+  groceryExpiryWriteoffContract,
+  retailImeiRegisterContract,
+} from "./operational/industry";
+import {
   treasuryDailyCashContract,
   treasuryReceiptsRegisterContract,
   treasuryPaymentsRegisterContract,
@@ -109,6 +114,10 @@ export const REPORT_CONTRACTS: readonly ReportContract[] = Object.freeze([
   inventoryTransferLogContract,
   inventorySerialTrackingContract,
   inventorySlowMovingContract,
+  // PHASE-015 T10 industry pins
+  inventoryExpiryListContract,
+  groceryExpiryWriteoffContract,
+  retailImeiRegisterContract,
   // §5 treasury
   treasuryDailyCashContract,
   treasuryReceiptsRegisterContract,

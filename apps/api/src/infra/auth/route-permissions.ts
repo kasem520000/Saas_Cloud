@@ -189,6 +189,37 @@ export const ROUTE_PERMISSIONS: readonly RoutePermissionRule[] = [
     path: "/api/v1/platform/tenants/:id/support-sessions/:sessionId/tenant-data/:resource",
     permission: "platform.support.access",
   },
+  // -- PHASE-015: configuration engine + template apply/switch (matrix §3.8) --
+  {
+    method: "GET",
+    path: "/api/v1/configuration/effective-config",
+    permission: "configuration.config.read",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/configuration/templates",
+    permission: "configuration.config.read",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/configuration/template",
+    permission: "configuration.config.read",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/configuration/templates/:key/preview",
+    permission: "industry.templates.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/configuration/templates/:key/apply",
+    permission: "industry.templates.manage",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/configuration/templates/:key/switch",
+    permission: "industry.templates.switch",
+  },
   // -- PHASE-014: subscription, billing, usage (matrix §3.9/§3.10) --------
   {
     method: "GET",

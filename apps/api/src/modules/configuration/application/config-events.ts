@@ -27,7 +27,26 @@ export type TenancyEvent =
       readonly change: "granted" | "revoked";
     }
   | { readonly type: "plan.changed"; readonly tenantId: string; readonly planKey: string }
-  | { readonly type: "branch.updated"; readonly tenantId: string; readonly branchId: string };
+  | { readonly type: "branch.updated"; readonly tenantId: string; readonly branchId: string }
+  // -- PHASE-015 additions (CONFIGURATION_ENGINE §9 full invalidation table) --
+  | { readonly type: "template.applied"; readonly tenantId: string; readonly templateKey: string }
+  | {
+      readonly type: "template.switched";
+      readonly tenantId: string;
+      readonly fromKey: string;
+      readonly toKey: string;
+    }
+  | { readonly type: "pack.upgraded"; readonly tenantId: string; readonly packVersion: string }
+  | {
+      readonly type: "module.installed" | "module.deactivated";
+      readonly tenantId: string;
+      readonly module: string;
+    }
+  | { readonly type: "policy.changed"; readonly tenantId: string; readonly key: string }
+  // L6 events: request-overlay scope only — they must NEVER drop the
+  // tenant-static cache (the overlay is computed per request, never cached).
+  | { readonly type: "role.updated"; readonly tenantId: string; readonly roleId: string }
+  | { readonly type: "membership.updated"; readonly tenantId: string; readonly userId: string };
 
 const BUS = new EventEmitter();
 BUS.setMaxListeners(50); // per-process consumers; leak-safe for the phase scope
@@ -85,7 +104,10 @@ export function invalidateTenantConfig(tenantId: string): void {
 // Wire the §9 invalidation rules: tenant-level events drop the whole
 // snapshot; settings.changed drops it too (targeted dependents — e.g.
 // numbering displays — re-resolve lazily through the same cache miss).
-for (const type of [
+// Tenant-static scope: dropped on every tenant-level invalidating event.
+// L6 events (role.updated / membership.updated) are deliberately ABSENT —
+// the request overlay is per-request and must never be cached (§9).
+const TENANT_STATIC_EVENTS = [
   "tenant.updated",
   "tenant.suspended",
   "tenant.restored",
@@ -93,7 +115,14 @@ for (const type of [
   "entitlements.changed",
   "plan.changed",
   "branch.updated",
-] as const) {
+  "template.applied",
+  "template.switched",
+  "pack.upgraded",
+  "module.installed",
+  "module.deactivated",
+  "policy.changed",
+] as const;
+for (const type of TENANT_STATIC_EVENTS) {
   BUS.on(type, (event: TenancyEvent) => {
     invalidateTenantConfig(event.tenantId);
   });

@@ -21,6 +21,29 @@ export {
   validateTaxRegistrationPair,
   type SettingDefinition,
 } from "../domain/settings-schema";
+export { ConfigurationService } from "../application/configuration.service";
+export {
+  TemplateApplyService,
+  TemplateNotFoundError,
+  TemplatePrerequisitesMissingError,
+  type TemplateDiff,
+  type ApplyResult,
+} from "../application/template-apply.service";
+export {
+  validateManifest,
+  manifestHash,
+  InvalidManifestError,
+  INTAKE_FEATURE_KEYS,
+  isResolvableFeatureKey,
+  type IndustryManifest,
+} from "../domain/industry-manifest";
+export {
+  ConfigurationResolutionError,
+  resolveEffectiveConfig,
+  applyRequestOverlay,
+  type EffectiveConfig,
+  type LayerInputs,
+} from "../domain/resolve";
 export {
   cachedTenantSettings,
   invalidateTenantConfig,

@@ -43,6 +43,8 @@ export const TENANT_TABLES_REGISTRY: readonly RegisteredTenantTable[] = [
   { table: "subscription_invoices" },
   { table: "billing_events" },
   { table: "usage_counters" },
+  // PHASE-015 (migration 0022): the applied-template row (PK = tenant_id).
+  { table: "tenant_industry_config" },
   { table: "notifications" },
   { table: "notification_preferences", deleteGranted: true },
   { table: "accounts" },

@@ -177,6 +177,10 @@ permissions cannot be granted to `viewer`-derived templates).
 | `audit.export` | Export audit trail (audited) / تصدير سجل التدقيق | owner | tenant | no (audited) |
 | `configuration.templates.apply` | Apply/switch industry template / تطبيق قالب الصناعة | owner | tenant | **yes** |
 | `configuration.settings.manage` | Tenant settings, numbering, feature config / إعدادات المستأجر | owner | tenant | no |
+| `configuration.config.read` | Read resolved effective config + template registry (PHASE-015) / قراءة الإعدادات الفعالة وسجل القوالب | viewer, accountant, owner | tenant | no |
+| `industry.templates.manage` | Apply industry template (PHASE-015) / تطبيق قالب الصناعة | owner | tenant | **yes** (audited) |
+| `industry.templates.switch` | Additive-only template switch, BR-038 (PHASE-015) / تبديل إضافي للقالب | owner | tenant | **yes** (audited) |
+| `industry.terminology.manage` | Template terminology overrides (PHASE-015) / مصطلحات القالب | owner | tenant | no |
 | `sync.devices.register` / `sync.devices.revoke` | Register/revoke offline devices / تسجيل وإلغاء الأجهزة | owner (register delegated to device enrollment) | tenant | `revoke` **yes** (kills device data flow) |
 | `sync.settings.manage` | Sync policies per entity / إعدادات المزامنة | owner | tenant | no |
 | `crm.leads.manage` / `crm.tasks.manage` / `crm.activities.manage` | CRM basics (PHASE-019) / إدارة علاقات العملاء | sales, owner | branch | no |

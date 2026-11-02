@@ -97,6 +97,17 @@ export interface SlowMovingRow {
   daysIdle: number | null;
 }
 
+export interface ExpiryWriteoffRow {
+  id: string;
+  adjustmentNo: string;
+  itemSku: string;
+  warehouseCode: string;
+  reason: string;
+  deltaQty: string;
+  value: string;
+  createdAt: string;
+}
+
 @Injectable()
 export class InventoryQueriesService {
   /** Stock on hand per (item, warehouse) with WAC/FIFO value. */
@@ -219,6 +230,27 @@ export class InventoryQueriesService {
       LIMIT 2000
     `);
     return rows.rows as unknown as SerialRow[];
+  }
+
+  /** PHASE-015 T10 — expiry/write-off adjustments (grocery.expiry_writeoff pin). */
+  async expiryWriteoffs(input: { dateFrom: string; dateTo: string }): Promise<ExpiryWriteoffRow[]> {
+    const rows = await tenantTx().execute(sql`
+      SELECT sa.id::text AS id, sa.adjustment_no AS "adjustmentNo",
+             it.sku AS "itemSku", w.code AS "warehouseCode", sa.reason,
+             sa.delta_qty::text AS "deltaQty",
+             (sa.delta_qty * COALESCE(sa.unit_cost, 0))::text AS value,
+             sa.created_at::text AS "createdAt"
+      FROM stock_adjustments sa
+      JOIN items it ON it.id = sa.item_id
+      JOIN warehouses w ON w.id = sa.warehouse_id
+      WHERE sa.created_at::date BETWEEN ${input.dateFrom}::date AND ${input.dateTo}::date
+        AND sa.delta_qty < 0
+        AND (sa.reason ILIKE ${"%expiry%"} OR sa.reason ILIKE ${"%write%"}
+          OR sa.reason ILIKE ${"%صلاحية%"} OR sa.reason ILIKE ${"%إعدام%"})
+      ORDER BY sa.created_at DESC
+      LIMIT 2000
+    `);
+    return rows.rows as unknown as ExpiryWriteoffRow[];
   }
 
   /** Slow-moving stock: on-hand value with no OUT moves inside the window. */

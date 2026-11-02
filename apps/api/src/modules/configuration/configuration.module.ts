@@ -1,13 +1,22 @@
 import { Module } from "@nestjs/common";
 
+import { AuditModule } from "../audit/audit.module";
+import { ConfigurationService } from "./application/configuration.service";
+import { TemplateApplyService } from "./application/template-apply.service";
+import { ConfigurationController } from "./presentation/configuration.controller";
+
 /**
- * PHASE-004 configuration module skeleton (MODULE_BOUNDARIES.md: owns
+ * PHASE-015 configuration module (MODULE_BOUNDARIES.md: owns
  * `industry_templates, tenant_industry_config, feature_flags`; publishes
- * `resolveEffectiveConfig(tenant)`): this phase ships the feature-catalog
- * mirror + BR-040 closure validation, the settings key registry, and the
- * §9 event bus. The template apply/switch engine (BR-038) and the full
- * L1→L10 resolution pipeline complete in PHASE-015 — no dead providers
- * until then (U8: no stubs).
+ * `resolveEffectiveConfig(tenant)`): the ten-layer resolution engine with
+ * content-hash cache + §9 event invalidation, the validated template registry
+ * (3 priority manifests), the BR-038 additive-only apply/switch service, and
+ * the tenant-plane routes. Other modules consume ONLY the api/ surface.
  */
-@Module({})
+@Module({
+  imports: [AuditModule],
+  controllers: [ConfigurationController],
+  providers: [ConfigurationService, TemplateApplyService],
+  exports: [ConfigurationService, TemplateApplyService],
+})
 export class ConfigurationModule {}

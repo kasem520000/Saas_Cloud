@@ -148,6 +148,13 @@
       "when": 1793491200021,
       "tag": "0021_billing_notifications",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1793577600022,
+      "tag": "0022_industry_configuration",
+      "breakpoints": true
     }
   ]
 }
