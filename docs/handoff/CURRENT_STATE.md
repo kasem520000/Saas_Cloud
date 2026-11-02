@@ -510,6 +510,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-025 (2026-11-02):** GA-readiness sandbox scope landed (load-model seed, SLO policy, observability audit, gate checklist, post-GA pointers). GA gate NOT passed — 10× load, DR drill, cold restore, pen-test closure, release execution are INCOMPLETE with owners in `docs/planning/GA_GATE_CHECKLIST.md`.
 
+- **PHASE-026 (2026-11-02):** fixed-assets foundation landed — migration 0028 with 6 RLS tables (isolation suite 864/864 on real PG), depreciation math with INV-023 property tests, G-21/22/23 goldens, BR-041…044 guards. Pending: UI screens, report contracts, RC-10, purchasing GRN hook (`docs/implementation/phases/reports/PHASE-026-COMPLETION.md`).
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

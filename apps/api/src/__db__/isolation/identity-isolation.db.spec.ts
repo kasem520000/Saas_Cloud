@@ -43,6 +43,7 @@ const DELETE_GRANTED = new Set(
  * append-only by grants per INV-003/INV-009, like audit_events). */
 const NO_UPDATE_GRANT = new Set([
   "audit_events",
+  "depreciation_lines", // PHASE-026: append-only (INV-003 pattern)
   "journal_lines",
   "partner_subledger_entries",
   "cash_movements",
@@ -1447,6 +1448,57 @@ async function seedFixtures(superuser: {
   );
 
 
+  // PHASE-026 fixtures (migration 0028): FK-consistent chain per tenant.
+  await superuser.query(
+    `INSERT INTO asset_categories (id, tenant_id, code, name, useful_life_months_default, depreciation_method_default)
+     VALUES
+       ('d4d4d4d4-0000-4000-8000-000000000001', $1, 'MACH', 'Machinery', 60, 'STRAIGHT_LINE'),
+       ('d4d4d4d4-0000-4000-8000-000000000002', $2, 'MACH', 'Machinery', 60, 'STRAIGHT_LINE')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO assets (id, tenant_id, code, name, category_id, acquisition_date, cost, salvage_value, useful_life_months, depreciation_method, status)
+     VALUES
+       ('d5d5d5d5-0000-4000-8000-000000000001', $1, 'A-001', 'Lathe', 'd4d4d4d4-0000-4000-8000-000000000001', '2026-01-01', 12000, 0, 60, 'STRAIGHT_LINE', 'ACTIVE'),
+       ('d5d5d5d5-0000-4000-8000-000000000002', $2, 'A-001', 'Lathe', 'd4d4d4d4-0000-4000-8000-000000000002', '2026-01-01', 12000, 0, 60, 'STRAIGHT_LINE', 'ACTIVE')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO depreciation_runs (id, tenant_id, fiscal_period_id, status, total_amount)
+     VALUES
+       ('d6d6d6d6-0000-4000-8000-000000000001', $1, '00000000-0000-4000-8000-000000000009', 'DRAFT', 200),
+       ('d6d6d6d6-0000-4000-8000-000000000002', $2, '00000000-0000-4000-8000-000000000009', 'DRAFT', 200)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO depreciation_lines (id, tenant_id, run_id, asset_id, period_amount, accumulated_amount)
+     VALUES
+       ('d7d7d7d7-0000-4000-8000-000000000001', $1, 'd6d6d6d6-0000-4000-8000-000000000001', 'd5d5d5d5-0000-4000-8000-000000000001', 200, 200),
+       ('d7d7d7d7-0000-4000-8000-000000000002', $2, 'd6d6d6d6-0000-4000-8000-000000000002', 'd5d5d5d5-0000-4000-8000-000000000002', 200, 200)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO asset_disposals (id, tenant_id, asset_id, disposal_date, kind, proceeds, net_book_value, gain_loss, status)
+     VALUES
+       ('d8d8d8d8-0000-4000-8000-000000000001', $1, 'd5d5d5d5-0000-4000-8000-000000000001', '2026-11-02', 'SCRAP', 0, 11800, -11800, 'DRAFT'),
+       ('d8d8d8d8-0000-4000-8000-000000000002', $2, 'd5d5d5d5-0000-4000-8000-000000000002', '2026-11-02', 'SCRAP', 0, 11800, -11800, 'DRAFT')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO asset_revaluations (id, tenant_id, asset_id, revaluation_date, new_gross_value, new_accumulated, delta, status)
+     VALUES
+       ('d9d9d9d9-0000-4000-8000-000000000001', $1, 'd5d5d5d5-0000-4000-8000-000000000001', '2026-11-02', 13000, 200, 800, 'DRAFT'),
+       ('d9d9d9d9-0000-4000-8000-000000000002', $2, 'd5d5d5d5-0000-4000-8000-000000000002', '2026-11-02', 13000, 200, 800, 'DRAFT')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+
+
   // -- seedFixtures end --
 
 }
@@ -1644,6 +1696,13 @@ const OWN_ROW: Record<string, [string, string]> = {
   time_entries: ["c9c9c9c9-0000-4000-8000-000000000001", "c9c9c9c9-0000-4000-8000-000000000002"],
   tombstones: ["d1d1d1d1-0000-4000-8000-000000000001", "d1d1d1d1-0000-4000-8000-000000000002"],
   inbox_commands: ["d2d2d2d2-0000-4000-8000-000000000001", "d2d2d2d2-0000-4000-8000-000000000002"],
+
+  asset_categories: ["d4d4d4d4-0000-4000-8000-000000000001", "d4d4d4d4-0000-4000-8000-000000000002"],
+  assets: ["d5d5d5d5-0000-4000-8000-000000000001", "d5d5d5d5-0000-4000-8000-000000000002"],
+  depreciation_runs: ["d6d6d6d6-0000-4000-8000-000000000001", "d6d6d6d6-0000-4000-8000-000000000002"],
+  depreciation_lines: ["d7d7d7d7-0000-4000-8000-000000000001", "d7d7d7d7-0000-4000-8000-000000000002"],
+  asset_disposals: ["d8d8d8d8-0000-4000-8000-000000000001", "d8d8d8d8-0000-4000-8000-000000000002"],
+  asset_revaluations: ["d9d9d9d9-0000-4000-8000-000000000001", "d9d9d9d9-0000-4000-8000-000000000002"],
 };
 
 
@@ -2030,6 +2089,23 @@ const MISMATCHED_INSERT: Record<string, string> = {
      VALUES (99, $1, 'partners_lite', 'd1d1d1d1-0000-4000-8000-000000000001')`,
   inbox_commands: `INSERT INTO inbox_commands (id, tenant_id, device_id, command_id, intent, idempotency_key, status, result)
      VALUES ('d2d2d2d2-3000-4000-8000-000000000003', $1, 'e9e9e9e9-0000-4000-8000-000000000001', 'd3d3d3d3-3000-4000-8000-000000000003', 'pos_sale', 'iso-attack', 'ACCEPTED', '{}')`,
+
+  asset_categories: `INSERT INTO asset_categories (id, tenant_id, code, name, useful_life_months_default)
+     VALUES ('d4d4d4d4-3000-4000-8000-000000000003', $1, 'ATK', 'Attack Category', 12)`,
+  assets: `INSERT INTO assets (id, tenant_id, code, name, category_id, acquisition_date, cost, useful_life_months, depreciation_method)
+     VALUES ('d5d5d5d5-3000-4000-8000-000000000003', $1, 'ATK', 'Attack Asset',
+             'd4d4d4d4-0000-4000-8000-000000000001', '2026-01-01', 1000, 12, 'STRAIGHT_LINE')`,
+  depreciation_runs: `INSERT INTO depreciation_runs (id, tenant_id, fiscal_period_id)
+     VALUES ('d6d6d6d6-3000-4000-8000-000000000003', $1, '00000000-0000-4000-8000-000000000009')`,
+  depreciation_lines: `INSERT INTO depreciation_lines (id, tenant_id, run_id, asset_id, period_amount, accumulated_amount)
+     VALUES ('d7d7d7d7-3000-4000-8000-000000000003', $1,
+             'd6d6d6d6-0000-4000-8000-000000000001', 'd5d5d5d5-0000-4000-8000-000000000001', 10, 10)`,
+  asset_disposals: `INSERT INTO asset_disposals (id, tenant_id, asset_id, disposal_date, kind, proceeds, net_book_value, gain_loss)
+     VALUES ('d8d8d8d8-3000-4000-8000-000000000003', $1, 'd5d5d5d5-0000-4000-8000-000000000001',
+             '2026-11-02', 'SCRAP', 0, 100, -100)`,
+  asset_revaluations: `INSERT INTO asset_revaluations (id, tenant_id, asset_id, revaluation_date, new_gross_value, new_accumulated, delta)
+     VALUES ('d9d9d9d9-3000-4000-8000-000000000003', $1, 'd5d5d5d5-0000-4000-8000-000000000001',
+             '2026-11-02', 2000, 0, 2000)`,
 };
 
 beforeAll(async () => {
@@ -2198,7 +2274,9 @@ describe("generated attack suite A1–A10 — as erp_app", () => {
                               ? "event_type"
                               : table === "tombstones"
                                 ? "deleted_at"
-                                : "updated_at";
+                                : table === "depreciation_lines"
+                                  ? "period_amount"
+                                  : "updated_at";
         const whereCol = table === "tombstones" ? "entity_id" : "id";
         await expect(
           app.query(`UPDATE ${table} SET ${column} = ${column} WHERE ${whereCol} = $1`, [foreignRow]),

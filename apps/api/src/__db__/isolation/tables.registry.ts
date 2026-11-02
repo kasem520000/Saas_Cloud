@@ -207,6 +207,13 @@ export const TENANT_TABLES_REGISTRY: readonly RegisteredTenantTable[] = [
   { table: "tombstones" },
   // carries DELETE only for the audited retention job (A5: policy-confined, 0 foreign rows)
   { table: "inbox_commands", deleteGranted: true },
+  // PHASE-026 (migration 0028): fixed-assets cluster. depreciation_lines is append-only.
+  { table: "asset_categories" },
+  { table: "assets" },
+  { table: "depreciation_runs" },
+  { table: "depreciation_lines" },
+  { table: "asset_disposals" },
+  { table: "asset_revaluations" },
 ];
 
 export const TENANT_TABLE_NAMES: readonly string[] = TENANT_TABLES_REGISTRY.map(
