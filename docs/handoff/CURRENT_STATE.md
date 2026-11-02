@@ -506,6 +506,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-023 (2026-11-02):** external-adapter layer landed in ungated scope — submission registry state machine + job semantics (idempotent, DLQ, circuit breaker, audited), fake-authority harness, chaos idempotency on real PG, bank parser with parked lines, commerce/shipping port fakes, rollout flags default OFF. ZATCA adapter is an UNVERIFIED refuse-to-submit stub (DR-001 OPEN, verification gate unpassed — no fabrication); payment production cutover INCOMPLETE pending DR-002. Details: PHASE-023-COMPLETION.md.
 
+- **PHASE-024 (2026-11-02):** security hardening landed in sandbox-provable scope — MFA role/plan enforcement, rate-limit/lockout oracle, dual-accept rotation window, forensic audit review on real PG, purge legal-hold gate, findings log with SLA-tracked open items (external pen test, staging drills), threat-model update, disclosure policy. Honest deferrals live in `docs/operations/security-findings.md`.
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

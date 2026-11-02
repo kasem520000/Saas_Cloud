@@ -326,6 +326,17 @@ on the watchlist until the implementing phase completes.
 | Performance collapse under load | [RISK-014](../planning/RISK_REGISTER.md) | NFR-006 budgets; k6 smoke per phase; load at PHASE-025 | p95 breach in staging load |
 | Unproven restores | [RISK-018](../planning/RISK_REGISTER.md) | Nightly restore + invariant smoke; quarterly cold drills | Any drill failure |
 
+## 7a. PHASE-024 update cycle — surfaces added since PHASE-001 (2026-11-02)
+
+| Surface (shipped) | Boundary | New threat rows | Score | Residual-risk owner |
+|---|---|---|---|---|
+| Offline sync endpoints (PHASE-020: pull/push/inbox/devices) | B6 server↔device | Cursor forgery → signed opaque cursors; push forgery → per-command authz + idempotency (INV-013); revocation → DEVICE_REVOKED pre-execution; cross-tenant refs → no existence disclosure (C-13) | M | Platform security |
+| Desktop shell + updater (PHASE-021: Tauri, signed updates, keychain) | B6 + endpoint | Malicious update → signed-only bundles, staged rollout + crash gates, minimum-version (D-06); local DB theft → SQLCipher + OS keychain; secrets in logs → redaction verified | M | Platform security |
+| Android client (PHASE-022: Expo, SecureStore, FCM) | B6 + endpoint | Rooted/tampered device → trust flags + online-only degrade (D-07), never a security boundary (server-final); FCM payload leak → templates only, no financial payloads | M | Platform security |
+| E-invoicing adapter surface (PHASE-023: registry/jobs, UNVERIFIED stub) | B4 authority | Stub bypass → UNVERIFIED refuses real submissions (asserted); cert misuse → S-10 signing-job-only access + usage audit; replay → registry unique (tenant, source) | M (stub) / H when verified | Compliance |
+| Payment webhook ingress (PHASE-014/023) | B4 provider | Already row "Callback/webhook spoofing" — hardened: constant-time verify + 5-min freshness + idempotent upsert (payment-fallback.spec 4/4) | L | Platform security |
+| CI/CD + signing keys (S-15) | CI boundary | Key compromise → store-backed keys, CI-only signing; leak → gitleaks full-history + secret-scan gate (0 findings) | M | Release engineering |
+
 ## 8. Maintenance protocol
 
 1. **New module/phase**: extend §2 (assets) and §4 (boundary table) in the same phase;

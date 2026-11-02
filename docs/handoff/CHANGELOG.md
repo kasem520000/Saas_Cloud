@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-02 — PHASE-024 Security Hardening: MFA policy matrix + rate-limit oracle + dual-accept rotation + forensic audit + purge gate + findings log + threat model update + disclosure policy; pen-test/staging drills recorded as open findings with SLAs — PHASE-NNN
+
 2026-11-02 — PHASE-023 External Integrations & E-Invoicing: submission registry lifecycle + orchestrator (idempotent, DLQ, circuit breaker) 7/7, fake-authority matrix, chaos X-01/02 on real PG 2/2, ZATCA UNVERIFIED stub (DR-001 open), payment hardening + fallback, sa-ncb-csv parser, commerce/shipping fakes, rollout flags default OFF — PHASE-NNN
 
 2026-11-02 — PHASE-022 follow-up: Android chaos profile in-sim on real SQLite kernel (C-05/C-06/C-07/C-13 + battery/connectivity + DEFERRED retryAfterMs, 19/19 mobile tests), T-03 proxy measurement, M-05 personal-account read-only capability on real PG (sync suite 16/16) — PHASE-NNN
