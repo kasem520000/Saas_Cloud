@@ -502,6 +502,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-021 (2026-11-02):** desktop app foundation landed in sandbox-provable scope — Tauri v2 shell scaffold (`apps/desktop`), static web export target with guard, and `@erp/sync-core` desktop modules (SQLite local store on real better-sqlite3 with WAL + migrations + corruption path, sync host, keychain credential lifecycle with memory-only access tokens, D-06 updater gate, WebView2 probe, ESC/POS reprint builder) — 28/28 unit tests green; CI release workflow added. Native Windows signing / SQLCipher key wiring / chaos matrix / Playwright smoke are recorded as CI-class deferrals in the completion report.
 
+- **PHASE-022 (2026-11-02):** Android app foundation landed in sandbox-provable scope — Expo scaffold (`apps/mobile`), token/i18n port with parity + RTL lint ban, SecureStore + capability-scoped registration (read-only personal-account class), Android sync scheduler with Doze-safe background + cellular budgets, FCM skeleton, mobile CI pipeline; mobile profile proven on real PG (M-01..M-04). On-device chaos slices and signed AAB remain CI-class deferrals (completion report).
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

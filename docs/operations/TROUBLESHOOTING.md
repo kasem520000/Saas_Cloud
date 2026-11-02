@@ -130,3 +130,14 @@ only one tenant is affected. Post-incident reviews: [DISASTER_RECOVERY.md](DISAS
 | Local DB corruption suspected | `PRAGMA integrity_check` ≠ ok at start | Automatic: stage outbox/inbox → reset → re-import → full pull; if staging fails, wipe local cache (server is source of truth) and full-pull | [../offline/LOCAL_DATABASE.md](../offline/LOCAL_DATABASE.md) §6.4 |
 | Receipt reprint shows wrong/duplicate number | Must NEVER happen: reprint renders stored POSTED bytes only | Sev-1 (RISK-011 class) — collect device logs (redacted), freeze sync for the tenant, incident | [../offline/OFFLINE_CAPABILITIES_MATRIX.md](../offline/OFFLINE_CAPABILITIES_MATRIX.md) row 32 |
 | Update prompt loops / unsigned update offered | Updater manifest signature invalid or version ≤ current | Fails closed by design (D-06): `UNSIGNED`/`DOWNGRADE` rejected in `evaluateUpdate`; check CI signing + channel manifest | [../planning/RELEASE_STRATEGY.md](../planning/RELEASE_STRATEGY.md) §Rollout |
+
+## 10. Mobile app (PHASE-022)
+
+| Symptom | Diagnosis | Remediation | Runbook |
+|---------|-----------|-------------|---------|
+| Background sync not running on a regional OEM phone | Doze / OEM task killer — foreground cycles are the reliability path | User runs "sync now"; documented honestly in help; never promise background freshness | [../offline/SYNC_PROTOCOL.md](../offline/SYNC_PROTOCOL.md) §8 |
+| Van sale shows PENDING_SYNC forever | Push rejected or device offline — check parked-rejections screen for the typed reason + traceId | Resolve via the §3 action for that reason; resend = new commandId | [../offline/CONFLICT_RESOLUTION.md](../offline/CONFLICT_RESOLUTION.md) §3 |
+| Personal-account device shows a write affordance | Must never happen — ReadOnlyLocalStore refuses all write paths | Sev-1 bug; the device class has no outbox | [../offline/LOCAL_DATABASE.md](../offline/LOCAL_DATABASE.md) §1.1 |
+| App read-only after 7 days offline | Permission-snapshot watermark (same rule as desktop) | Reconnect once to refresh; until then read-only + online-required for writes | [../offline/OFFLINE_CAPABILITIES_MATRIX.md](../offline/OFFLINE_CAPABILITIES_MATRIX.md) |
+| Force-update prompt | Contract-version gate or Play minimum-version enforcement | Update via Play staged channel | [../planning/RELEASE_STRATEGY.md](../planning/RELEASE_STRATEGY.md) §Rollout |
+| Rooted/tampered device flagged | trust_flags recorded (D-07) — NOT a security boundary; server-final enforcement | Degrade to online-only until admin acknowledgment; never brick on false positive | [../security/SECURITY_TEST_PLAN.md](../security/SECURITY_TEST_PLAN.md) D-07 |

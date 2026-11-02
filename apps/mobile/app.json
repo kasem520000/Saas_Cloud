@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "ERP Mobile",
+    "slug": "erp-mobile",
+    "version": "2026.11.0",
+    "orientation": "portrait",
+    "platforms": ["android"],
+    "android": {
+      "package": "com.erp.mobile",
+      "versionCode": 1,
+      "permissions": ["INTERNET", "ACCESS_NETWORK_STATE", "USE_BIOMETRIC", "CAMERA", "VIBRATE"],
+      "blockedPermissions": ["RECORD_AUDIO"],
+      "allowBackup": false,
+      "softwareKeyboardLayoutMode": "pan"
+    },
+    "plugins": ["expo-router", "expo-secure-store", ["expo-local-authentication", { "faceIDPermission": "Allow $(PRODUCT_NAME) to use biometric unlock" }]],
+    "extra": {
+      "eas": { "projectId": "REPLACE_IN_CI" }
+    }
+  }
+}

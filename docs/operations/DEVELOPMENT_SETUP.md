@@ -342,3 +342,23 @@ are memory-only; refresh token + device private key are one-time-use in the
 keychain. Corruption path: stage outbox/inbox → reset machinery → re-import →
 full pull (LOCAL_DATABASE §6.4; implemented in
 `@erp/sync-core` `SqliteLocalStore.stageAndResetMachinery`).
+
+## §12 PHASE-022 — Mobile app (Expo / React Native, Android-only this phase)
+
+```bash
+pnpm --filter @erp/mobile install
+pnpm --filter @erp/mobile start          # Expo dev server
+pnpm --filter @erp/mobile android        # dev-client on device/emulator (bare escape hatch documented in ADR-0014)
+pnpm --filter @erp/mobile test           # core logic + parity tests (12)
+pnpm --filter @erp/mobile lint           # incl. RTL physical-prop ban + @erp/ui import ban
+```
+
+Rules (ADR-0014): the app shares `@erp/contracts`, `@erp/domain-core`,
+`@erp/sync-core` ONLY — never `@erp/ui` (tokens are ported to
+`src/theme/tokens.ts` with a parity test against the web source). Secrets
+live only in Expo SecureStore (Android Keystore); access tokens memory-only;
+biometric unlock optional with PIN fallback; screenshots blocked on financial
+screens. Local DB: expo-sqlite + SQLCipher key from SecureStore, `sync-core`
+schema, LRU pruning within 128 MB. Background sync: OS-scheduled fetch ≤ every
+15 min (Doze-safe), cellular budgets pull ≤ 8 MB / push ≤ 2 MB (personal-account
+background ≤ 256 KB). iOS out of scope (decision record required).

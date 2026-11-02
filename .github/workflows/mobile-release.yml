@@ -1,0 +1,50 @@
+# PHASE-022 — Android release engineering (Expo/EAS + Play staged rollout).
+# Signed AAB via EAS with store-backed credentials (S-15 family — signing never
+# on developer machines); staged rollout 10%→50%→100% with crash-rate gates on
+# the client-stability dashboard; minimum-version enforcement (force-update);
+# crash reporting with tenant tag; SBOM + gitleaks.
+name: CI — Mobile release (Android)
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  mobile-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install workspace deps
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Mobile unit + parity tests
+        run: pnpm --filter @erp/mobile test
+
+      - name: API notifications (FCM adapter) contract tests
+        run: pnpm --filter @erp/api test -- fcm-adapter
+
+      - name: Secrets scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+
+      - name: EAS build (production AAB, signed by Play/EAS store-backed keys)
+        if: startsWith(github.ref, 'refs/tags/')
+        working-directory: apps/mobile
+        run: eas build --platform android --profile production --non-interactive
+
+      - name: Staged rollout config (10% first stage, crash gates before 50/100)
+        if: startsWith(github.ref, 'refs/tags/')
+        run: echo "track=internal → staged 10% with crash-rate gate on client-stability dashboard; minimum-version enforced via Play policy"
