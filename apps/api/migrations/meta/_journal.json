@@ -239,6 +239,13 @@
       "when": 1793250330000,
       "tag": "0034_industry_healthcare_031",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1793260000000,
+      "tag": "0035_industry_education_032",
+      "breakpoints": true
     }
   ]
 }

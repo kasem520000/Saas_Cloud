@@ -12,7 +12,7 @@
  *   card relabel.
  */
 
-export type IndustryPresetId = "industry.wholesale" | "industry.electronics" | "industry.healthcare";
+export type IndustryPresetId = "industry.wholesale" | "industry.electronics" | "industry.healthcare" | "industry.education";
 
 export interface PresetNavItem {
   id: string;
@@ -104,8 +104,37 @@ export const HEALTHCARE_PRESET: IndustryPreset = {
   },
 };
 
+export const EDUCATION_PRESET: IndustryPreset = {
+  id: "industry.education",
+  workspaces: [
+    { id: "enrollment_contracts", target: "crm.contracts", featureKey: "crm.service_contracts" },
+    { id: "guardians", target: "partners.directory" },
+    { id: "fee_schedules", target: "items.price_lists", featureKey: "items.price_lists" },
+    { id: "tuition_invoices", target: "sales.invoices" },
+    { id: "installment_plans", target: "installments.plans", featureKey: "installments.plans" },
+    { id: "collections", target: "installments.collections", featureKey: "installments.collections" },
+    { id: "receipts", target: "treasury.receipts", featureKey: "treasury.receipts_disbursements" },
+  ],
+  dashboardReports: [
+    "installments.schedule",
+    "installments.aging",
+    "services.contract_revenue_schedule",
+    "partners.ar_aging",
+  ],
+  relabels: {
+    "partner.student": { en: "Student (financial file)", ar: "الطالب (الملف المالي)" },
+    "partner.guardian": { en: "Guardian (payer)", ar: "ولي الأمر (الدافع)" },
+    "crm.contract": { en: "Enrollment contract", ar: "عقد الالتحاق" },
+    "installments.plan": { en: "Installment plan", ar: "خطة الأقساط" },
+    "installments.line": { en: "Tuition installment", ar: "القسط" },
+    "sales.discount": { en: "Sibling discount", ar: "خصم الأشقاء" },
+  },
+};
+
 export const INDUSTRY_PRESETS: Record<IndustryPresetId, IndustryPreset> = {
   "industry.wholesale": WHOLESALE_PRESET,
   "industry.electronics": ELECTRONICS_PRESET,
   "industry.healthcare": HEALTHCARE_PRESET,
+  "industry.education": EDUCATION_PRESET,
 };
+

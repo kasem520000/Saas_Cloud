@@ -522,6 +522,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-031 (2026-11-03):** healthcare commercial shell delivered — one additive nullable `sales_invoices.claim_ref` (migration 0033) + `industry.healthcare` template (migration 0034), policy-gated `CLAIM_REF_REQUIRED` capture, `groupByClaim` param on existing report contracts, zero-clinical-surface gate, DB 5/5 on real PG incl. zero-journal proof, unit 363/363, tsc clean, docs 29/29 (`reports/PHASE-031-COMPLETION.md`).
 
+- **PHASE-032 (2026-11-03):** education commercial shell delivered configuration-only — migration 0035 seeds `industry.education` over the unmodified engine; manifest spec 5/5 incl. zero-academic-surface gate, DB 4/4 on real PG with BR-038 switch + zero-journal proof, web preset config-only, unit 368/368, tsc clean, docs 29/29 (`reports/PHASE-032-COMPLETION.md`).
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

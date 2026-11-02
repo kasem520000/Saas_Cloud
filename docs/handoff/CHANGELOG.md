@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-03 — PHASE-032 COMPLETE: education commercial shell, configuration-only — migration 0035 seeds industry.education (stock modules off), manifest spec 5/5 with zero-academic gate, DB 4/4 real PG incl. zero-journal proof, unit 368/368, tsc clean, docs 29/29 — see reports/PHASE-032-COMPLETION.md
+
 2026-11-03 — PHASE-031 COMPLETE: healthcare commercial shell — migration 0033 (additive nullable sales_invoices.claim_ref) + 0034 (industry.healthcare seed), policy-gated CLAIM_REF_REQUIRED, groupByClaim on existing report contracts, zero-clinical gate, DB 5/5 real PG with zero-journal proof, unit 363/363, tsc clean, docs 29/29 — see reports/PHASE-031-COMPLETION.md
 
 2026-11-03 — PHASE-030 COMPLETE: wholesale & electronics v2.0 templates, configuration-only — migration 0032 seeds both manifests (schema_version 32), manifest spec 4/4, DB suite 4/4 on real PG16 (idempotent audited apply, BR-038 additive-only switch, zero-journal negative ledger proof), T11 UI presets config-only, api unit 358/358, api+web tsc clean, docs 29/29 — see reports/PHASE-030-COMPLETION.md

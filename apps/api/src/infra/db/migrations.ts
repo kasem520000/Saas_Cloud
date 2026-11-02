@@ -48,6 +48,7 @@ export const MIGRATIONS: readonly string[] = [
   "0032_industry_wholesale_electronics_030",
   "0033_healthcare_claim_ref_031",
   "0034_industry_healthcare_031",
+  "0035_industry_education_032",
 ];
 
 /**

@@ -72,6 +72,13 @@ export interface Dictionary {
   indVisits: string;
   indExpiryControl: string;
   indClaimCheques: string;
+  indEducationTitle: string;
+  indStudentFile: string;
+  indGuardian: string;
+  indEnrollmentContract: string;
+  indInstallmentPlan: string;
+  indTuitionInvoice: string;
+  indSiblingDiscount: string;
 
   navHome: string;
   navUsers: string;
@@ -1848,6 +1855,13 @@ const ar: Dictionary = {
   indVisits: "الزيارات وأوامر الخدمة",
   indExpiryControl: "الرقابة على الصلاحية",
   indClaimCheques: "شيكات المطالبات",
+  indEducationTitle: "التعليم",
+  indStudentFile: "الطالب (الملف المالي)",
+  indGuardian: "ولي الأمر (الدافع)",
+  indEnrollmentContract: "عقد الالتحاق",
+  indInstallmentPlan: "خطة الأقساط",
+  indTuitionInvoice: "فاتورة الرسوم",
+  indSiblingDiscount: "خصم الأشقاء",
   appTitle: "منصة الأعمال الشاملة",
   switchLabel: "English",
   signOut: "تسجيل الخروج",
@@ -3613,6 +3627,13 @@ const en: Dictionary = {
   indVisits: "Visits & service orders",
   indExpiryControl: "Expiry control",
   indClaimCheques: "Claim cheques",
+  indEducationTitle: "Education",
+  indStudentFile: "Student (financial file)",
+  indGuardian: "Guardian (payer)",
+  indEnrollmentContract: "Enrollment contract",
+  indInstallmentPlan: "Installment plan",
+  indTuitionInvoice: "Tuition invoice",
+  indSiblingDiscount: "Sibling discount",
   appTitle: "Universal Business ERP",
   switchLabel: "العربية",
   signOut: "Sign out",

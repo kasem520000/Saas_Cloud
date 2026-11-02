@@ -4,7 +4,7 @@
 
 ## The single next action
 
-**Execute PHASE-032** — PHASE-031 COMPLETE (healthcare commercial shell: claim_ref + template; evidence: reports/PHASE-031-COMPLETION.md).
+**Execute PHASE-033** — PHASE-032 COMPLETE (education commercial shell, configuration-only; evidence: reports/PHASE-032-COMPLETION.md).
 evidence: reports/PHASE-017-COMPLETION.md): automotive & distribution templates seeded via
 the unmodified PHASE-015 engine, domain cores for job cards / settlements / tiers /
 free goods / commissions with unit proof, drift 237=237, unit 195 PASS.
