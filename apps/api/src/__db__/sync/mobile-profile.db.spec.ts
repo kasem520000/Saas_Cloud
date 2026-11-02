@@ -35,6 +35,11 @@ beforeAll(async () => {
      ($1, $2, 'ANDROID', 'field van phone', 'hash-c3', '{van_sales}') ON CONFLICT (id) DO NOTHING`,
     [ANDROID_DEV, S_CASHIER],
   );
+  await su.query(
+    `INSERT INTO devices (id, user_id, platform, name, device_key_hash, capabilities) VALUES
+     ('00000000-0000-4000-8000-0000000000c4', $1, 'ANDROID', 'customer phone', 'hash-c4', '{personal_account}') ON CONFLICT (id) DO NOTHING`,
+    [S_CASHIER],
+  );
   await su.end();
 });
 
@@ -76,6 +81,17 @@ describe("PHASE-022 mobile profile (real PG)", () => {
       const status = await pull.status({ deviceId: ANDROID_DEV, entities: ["sales_invoice"] });
       expect(status.contractVersion).toBe(1);
     });
+  });
+
+  it("M-05: personal-account device registers with the read-only capability subset", async () => {
+    const su = await superuserClient();
+    const r = await su.query<{ capabilities: string[] }>(
+      `SELECT capabilities FROM devices WHERE id = '00000000-0000-4000-8000-0000000000c4'`,
+    );
+    await su.end();
+    expect(r.rows[0]?.capabilities).toEqual(["personal_account"]);
+    // client-side: ReadOnlyLocalStore (unit-tested in @erp/mobile) refuses all
+    // writes for this class; server-side feed scoping is the PHASE-020 proof
   });
 
   it("M-04: revoked android device is rejected on the kill switch (D-01)", async () => {

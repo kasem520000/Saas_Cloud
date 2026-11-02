@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-02 — PHASE-022 follow-up: Android chaos profile in-sim on real SQLite kernel (C-05/C-06/C-07/C-13 + battery/connectivity + DEFERRED retryAfterMs, 19/19 mobile tests), T-03 proxy measurement, M-05 personal-account read-only capability on real PG (sync suite 16/16) — PHASE-NNN
+
 2026-11-02 — PHASE-022 Android Application (Expo/RN): scaffold + token/i18n port + SecureStore + capability-scoped registration + read-only personal class + Android scheduler + FCM skeleton + mobile-release CI + mobile profile on real PG (4/4) + 12/12 unit — PHASE-NNN
 
 2026-11-02 — PHASE-021 follow-up: chaos desktop kill-matrix + 7-day watermark gate + rejection UX (CONFLICT_RESOLUTION §3) + desktop profile on real PG (D-01/D-02/D-03, 3/3) + dynamic-route static-export fixes (162 pages generate) + sync-core 35/35 — PHASE-NNN

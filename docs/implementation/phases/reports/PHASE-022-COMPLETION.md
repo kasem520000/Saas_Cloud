@@ -28,12 +28,14 @@ store items are CI-class deferrals, listed below — none claimed complete.
 | T10 rejection UX data | `src/reconciliation/rejection-actions.ts` — §3 table as data | parity test asserts every reason exists in CONFLICT_RESOLUTION.md |
 | T11 FCM skeleton | `apps/api/.../notifications/application/fcm-adapter.ts` + spec | **3/3 contract tests** on fake provider (locale-before-call, unknown template fails closed, per-tenant quota) |
 | T12 release CI | `.github/workflows/mobile-release.yml` (EAS build, Play staged 10→50→100 + crash gates, gitleaks) | workflow authored; execution CI-class |
-| T13/T4 mobile profile on real PG | `apps/api/src/__db__/sync/mobile-profile.db.spec.ts` — M-01 capability subset persisted, M-02 attestation-lite trust flags, M-03 scoped pull on frozen contract v1, M-04 revoke kill switch | **4/4 on embedded PG16** (sync suite total 15/15) |
+| T13 Android chaos profile (in-sim) | `apps/mobile/src/__tests__/android-chaos.test.ts` — C-06 revoke mid-queue (pre-execution rejection, zero effects), C-05 connectivity fault (outbox preserved, drains), battery-saver batch constraint, C-07 clock skew stays client metadata, C-13 tenant switch never crosses contexts, DEFERRED honors retryAfterMs, T-03 proxy (50-line LOCAL-VALID < 50 ms JS budget) | **19/19 mobile tests** |
+| T13/T4 mobile profile on real PG | `apps/api/src/__db__/sync/mobile-profile.db.spec.ts` — M-01 van_sales subset persisted, M-02 attestation-lite trust flags, M-03 scoped pull on frozen contract v1, M-04 revoke kill switch, M-05 personal_account read-only subset persisted | **5/5 on embedded PG16** (sync suite total 16/16) |
 
 ## Deferred (CI-class / device-farm) — NOT claimed complete
 
 1. On-device chaos slices C-06/C-07/C-13 on the Expo/SQLite profile (emulator
-   farm), T-03 scan-to-cart measurement on reference hardware.
+   farm) — the in-sim equivalents are green above; T-03 scan-to-cart
+   measurement on reference hardware (JS-side proxy measured here).
 2. Signed AAB via EAS/Play (store-backed keys, S-15), staged rollout execution,
    crash-reporting dashboard panels.
 3. RN component tests, AR/EN visual parity snapshots, a11y suite (44 px targets)
@@ -51,6 +53,6 @@ data; no server contract changes.
 
 ## Verification summary
 
-- `@erp/mobile`: **12/12** unit/parity tests · typecheck/lint clean (RTL ban negative-tested)
-- api: FCM adapter **3/3** · sync db suite (020 golden + 021 desktop + 022 mobile) **15/15** on embedded PG16 · api typecheck/lint clean
+- `@erp/mobile`: **19/19** unit/parity/chaos tests · typecheck/lint clean (RTL ban negative-tested)
+- api: FCM adapter **3/3** · sync db suite (020 golden + 021 desktop + 022 mobile) **16/16** on embedded PG16 · api typecheck/lint clean
 - `pnpm docs:validate`: **29/29**
