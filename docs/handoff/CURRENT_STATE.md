@@ -508,6 +508,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-024 (2026-11-02):** security hardening landed in sandbox-provable scope — MFA role/plan enforcement, rate-limit/lockout oracle, dual-accept rotation window, forensic audit review on real PG, purge legal-hold gate, findings log with SLA-tracked open items (external pen test, staging drills), threat-model update, disclosure policy. Honest deferrals live in `docs/operations/security-findings.md`.
 
+- **PHASE-025 (2026-11-02):** GA-readiness sandbox scope landed (load-model seed, SLO policy, observability audit, gate checklist, post-GA pointers). GA gate NOT passed — 10× load, DR drill, cold restore, pen-test closure, release execution are INCOMPLETE with owners in `docs/planning/GA_GATE_CHECKLIST.md`.
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

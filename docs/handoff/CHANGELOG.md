@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-02 — PHASE-025 (sandbox scope): GA load-model seed generator + 4/4 tests, k6 load/spike/soak scaffolds, SLO & error-budget policy, observability audit, GA gate checklist (gate NOT passed; staging/prod items INCOMPLETE with owners), post-GA roadmap pointers — see reports/PHASE-025-COMPLETION.md
+
 2026-11-02 — PHASE-024 Security Hardening: MFA policy matrix + rate-limit oracle + dual-accept rotation + forensic audit + purge gate + findings log + threat model update + disclosure policy; pen-test/staging drills recorded as open findings with SLAs — PHASE-NNN
 
 2026-11-02 — PHASE-023 External Integrations & E-Invoicing: submission registry lifecycle + orchestrator (idempotent, DLQ, circuit breaker) 7/7, fake-authority matrix, chaos X-01/02 on real PG 2/2, ZATCA UNVERIFIED stub (DR-001 open), payment hardening + fallback, sa-ncb-csv parser, commerce/shipping fakes, rollout flags default OFF — PHASE-NNN
