@@ -17,7 +17,9 @@ import {
 } from "../../inventory/application/movement-core";
 import { ownTenantBaseCurrency } from "../../../infra/settings/setting-reader";
 import * as store from "../infrastructure/sales.store";
+import { ConfigurationService } from "../../configuration/application/configuration.service";
 import {
+  ClaimRefRequiredError,
   DeliveryAlreadyInvoicedError,
   DeliveryNoteNotFoundError,
   EmptyDocumentError,
@@ -82,6 +84,7 @@ export class SalesInvoiceService {
     private readonly posting: PostingService,
     private readonly numbering: NumberingService,
     private readonly resolver: TaxResolverService,
+    private readonly configuration: ConfigurationService,
   ) {}
 
   async list(filter: {
@@ -127,10 +130,23 @@ export class SalesInvoiceService {
     cashAccountId: string | null;
     note: string | null;
     noteAr: string | null;
+    /** PHASE-031: external insurer claim reference (مطالبة تأمينية). Undefined = self-pay; null/blank with the policy active is rejected. */
+    claimRef?: string | null;
     actorId: string | null;
     lines: readonly InvoiceLineInput[];
   }): Promise<store.SalesInvoiceRow> {
     if (input.lines.length === 0) throw new EmptyDocumentError("sales invoice");
+    // PHASE-031: policy-gated claim-ref capture. An explicitly provided but
+    // blank claim ref on an insured invoice is rejected (CLAIM_REF_REQUIRED);
+    // an absent claimRef means self-pay (دفع مباشر) and always saves. Capture
+    // only — never alters posting (INV-022).
+    if (input.claimRef !== undefined) {
+      const effective = await this.configuration.resolveEffectiveConfig();
+      const required = effective.policies["claim_ref_required_for_insured_invoices"] === true;
+      if (required && (input.claimRef === null || input.claimRef.trim() === "")) {
+        throw new ClaimRefRequiredError();
+      }
+    }
     const customer = await requireCustomer(input.customerId);
     const base = await ownTenantBaseCurrency();
     if (input.currencyCode !== base && (input.exchangeRate === null || Number(input.exchangeRate) <= 0)) {
@@ -352,6 +368,7 @@ export class SalesInvoiceService {
       cashAccountId: input.cashAccountId,
       note: input.note,
       noteAr: input.noteAr,
+      claimRef: input.claimRef === undefined ? null : input.claimRef,
       actorId: input.actorId,
       totalNet: totalNetS,
       totalTax: totalTaxS,

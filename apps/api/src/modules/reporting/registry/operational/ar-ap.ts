@@ -193,6 +193,7 @@ export const partnerStatementContract = defineReport({
     partnerId: z.string().uuid(),
     asOf: ISO_DATE,
     locale: LOCALE,
+    groupByClaim: z.boolean().optional(),
   }),
   requiredPermission: "sales.statements.read",
   dataSources: [

@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-03 — PHASE-031 COMPLETE: healthcare commercial shell — migration 0033 (additive nullable sales_invoices.claim_ref) + 0034 (industry.healthcare seed), policy-gated CLAIM_REF_REQUIRED, groupByClaim on existing report contracts, zero-clinical gate, DB 5/5 real PG with zero-journal proof, unit 363/363, tsc clean, docs 29/29 — see reports/PHASE-031-COMPLETION.md
+
 2026-11-03 — PHASE-030 COMPLETE: wholesale & electronics v2.0 templates, configuration-only — migration 0032 seeds both manifests (schema_version 32), manifest spec 4/4, DB suite 4/4 on real PG16 (idempotent audited apply, BR-038 additive-only switch, zero-journal negative ledger proof), T11 UI presets config-only, api unit 358/358, api+web tsc clean, docs 29/29 — see reports/PHASE-030-COMPLETION.md
 
 2026-11-02 — PHASE-029 COMPLETE: payroll (financial scope) — migration 0031 (7 RLS tables, INV-025 row CHECK), G-29/30/31 goldens, BR-052..055, run SoD flows, 3 report contracts (registry 79), 942/942 isolation on real PG — see reports/PHASE-029-COMPLETION.md

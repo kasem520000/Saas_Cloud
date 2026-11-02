@@ -225,6 +225,20 @@
       "when": 1793240000000,
       "tag": "0032_industry_wholesale_electronics_030",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1793250320000,
+      "tag": "0033_healthcare_claim_ref_031",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1793250330000,
+      "tag": "0034_industry_healthcare_031",
+      "breakpoints": true
     }
   ]
 }

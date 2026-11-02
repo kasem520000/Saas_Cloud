@@ -65,6 +65,13 @@ export interface Dictionary {
   indRepairCard: string;
   indPdcCustody: string;
   indMaturityCalendar: string;
+  indHealthcareTitle: string;
+  indPatientFile: string;
+  indInsurer: string;
+  indClaimRef: string;
+  indVisits: string;
+  indExpiryControl: string;
+  indClaimCheques: string;
 
   navHome: string;
   navUsers: string;
@@ -1834,6 +1841,13 @@ const ar: Dictionary = {
   indRepairCard: "بطاقة إصلاح",
   indPdcCustody: "عهدة الشيكات المؤجلة",
   indMaturityCalendar: "تقويم الاستحقاق",
+  indHealthcareTitle: "الرعاية الصحية",
+  indPatientFile: "المريض (الملف المالي)",
+  indInsurer: "شركة التأمين",
+  indClaimRef: "مطالبة تأمينية",
+  indVisits: "الزيارات وأوامر الخدمة",
+  indExpiryControl: "الرقابة على الصلاحية",
+  indClaimCheques: "شيكات المطالبات",
   appTitle: "منصة الأعمال الشاملة",
   switchLabel: "English",
   signOut: "تسجيل الخروج",
@@ -3592,6 +3606,13 @@ const en: Dictionary = {
   indRepairCard: "Repair card",
   indPdcCustody: "PDC custody",
   indMaturityCalendar: "Maturity calendar",
+  indHealthcareTitle: "Healthcare",
+  indPatientFile: "Patient (financial file)",
+  indInsurer: "Insurance company",
+  indClaimRef: "Insurance claim",
+  indVisits: "Visits & service orders",
+  indExpiryControl: "Expiry control",
+  indClaimCheques: "Claim cheques",
   appTitle: "Universal Business ERP",
   switchLabel: "العربية",
   signOut: "Sign out",

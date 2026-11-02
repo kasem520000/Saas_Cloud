@@ -656,6 +656,7 @@ export interface SalesInvoiceRow {
   customerId: string;
   salesRepId: string | null;
   kind: string;
+  claimRef: string | null;
   invoiceNo: string | null;
   invoiceDate: string;
   dueDate: string;
@@ -686,7 +687,7 @@ const INVOICE_COLUMNS = sql`id, branch_id AS "branchId", customer_id AS "custome
   order_id AS "orderId", delivery_id AS "deliveryId", warehouse_id AS "warehouseId",
   cash_account_id AS "cashAccountId", status, total_net AS "totalNet", total_tax AS "totalTax",
   total_gross AS "totalGross", cogs_value AS "cogsValue", tax_summary AS "taxSummary",
-  credit_check AS "creditCheck", note, note_ar AS "noteAr", created_by AS "createdBy",
+  credit_check AS "creditCheck", claim_ref AS "claimRef", note, note_ar AS "noteAr", created_by AS "createdBy",
   approved_by AS "approvedBy", posted_journal_id AS "postedJournalId",
   posted_cogs_journal_id AS "postedCogsJournalId"`;
 
@@ -705,6 +706,7 @@ export async function insertSalesInvoice(input: {
   cashAccountId: string | null;
   note: string | null;
   noteAr: string | null;
+  claimRef: string | null;
   actorId: string | null;
   totalNet: string;
   totalTax: string;
@@ -735,13 +737,13 @@ export async function insertSalesInvoice(input: {
     INSERT INTO sales_invoices (id, tenant_id, branch_id, customer_id, sales_rep_id, kind, invoice_date,
                                 due_date, currency_code, exchange_rate, order_id, delivery_id,
                                 warehouse_id, cash_account_id, total_net, total_tax, total_gross,
-                                tax_summary, credit_check, note, note_ar, created_by)
+                                tax_summary, credit_check, claim_ref, note, note_ar, created_by)
     VALUES (${id}, erp.current_tenant_id(), ${input.branchId}, ${input.customerId}, ${input.salesRepId},
             ${input.kind}, ${input.invoiceDate}, ${input.dueDate}, ${input.currencyCode}, ${input.exchangeRate},
             ${input.orderId}, ${input.deliveryId}, ${input.warehouseId}, ${input.cashAccountId},
             ${input.totalNet}, ${input.totalTax}, ${input.totalGross},
             ${JSON.stringify(input.taxSummary)}::jsonb, ${JSON.stringify(input.creditCheck)}::jsonb,
-            ${input.note}, ${input.noteAr}, ${input.actorId})
+            ${input.claimRef}, ${input.note}, ${input.noteAr}, ${input.actorId})
   `);
   let lineNo = 0;
   for (const line of input.lines) {

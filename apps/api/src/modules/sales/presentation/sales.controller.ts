@@ -153,6 +153,7 @@ const createInvoiceSchema = z.object({
   cashAccountId: UUID.nullable().optional(),
   note: z.string().min(1).max(500).nullable().optional(),
   noteAr: z.string().min(1).max(500).nullable().optional(),
+  claimRef: z.string().min(1).max(64).nullable().optional(),
   lines: z.array(invoiceLineSchema).min(1).max(200),
 });
 
@@ -559,6 +560,7 @@ export class SalesController {
         cashAccountId: input.cashAccountId ?? null,
         note: input.note ?? null,
         noteAr: input.noteAr ?? null,
+        claimRef: input.claimRef,
         actorId: identity.userId,
         lines: input.lines.map((line) => ({
           itemId: line.itemId ?? null,

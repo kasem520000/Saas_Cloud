@@ -520,6 +520,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-030 (2026-11-03):** wholesale & electronics v2.0 templates seeded configuration-only via migration 0032 over the unmodified PHASE-015 engine — manifest spec 4/4, DB suite 4/4 on real PG incl. BR-038 additive switch and zero-journal negative ledger proof, UI presets config-only, unit 358/358, tsc clean, docs 29/29 (`reports/PHASE-030-COMPLETION.md`).
 
+- **PHASE-031 (2026-11-03):** healthcare commercial shell delivered — one additive nullable `sales_invoices.claim_ref` (migration 0033) + `industry.healthcare` template (migration 0034), policy-gated `CLAIM_REF_REQUIRED` capture, `groupByClaim` param on existing report contracts, zero-clinical-surface gate, DB 5/5 on real PG incl. zero-journal proof, unit 363/363, tsc clean, docs 29/29 (`reports/PHASE-031-COMPLETION.md`).
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

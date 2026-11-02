@@ -1,3 +1,4 @@
+import { ConfigurationService } from "../../modules/configuration/application/configuration.service";
 import type { Client } from "pg";
 
 import { appClient, ensureTestDb, seedTenants, superuserClient } from "../test-db";
@@ -53,11 +54,12 @@ const audit = new AuditService(new DrizzleAuditStore());
 const posting = new PostingService(audit, new PartnerSubledgerService(), null);
 const numbering = new NumberingService(audit);
 const resolver = new TaxResolverService();
+const configuration = new ConfigurationService();
 
 export const quotations = new QuotationService(audit, numbering);
 export const salesOrders = new SalesOrderService(audit, numbering);
 export const deliveries = new DeliveryNoteService(audit, posting, numbering);
-export const salesInvoices = new SalesInvoiceService(audit, posting, numbering, resolver);
+export const salesInvoices = new SalesInvoiceService(audit, posting, numbering, resolver, configuration);
 export const creditNotes = new CreditNoteService(audit, posting, numbering, resolver);
 export const salesReallocations = new SalesReallocationService(audit, numbering);
 export const arQueries = new ArQueriesService();

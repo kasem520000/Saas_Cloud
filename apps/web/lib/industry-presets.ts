@@ -12,7 +12,7 @@
  *   card relabel.
  */
 
-export type IndustryPresetId = "industry.wholesale" | "industry.electronics";
+export type IndustryPresetId = "industry.wholesale" | "industry.electronics" | "industry.healthcare";
 
 export interface PresetNavItem {
   id: string;
@@ -80,7 +80,32 @@ export const ELECTRONICS_PRESET: IndustryPreset = {
   },
 };
 
+export const HEALTHCARE_PRESET: IndustryPreset = {
+  id: "industry.healthcare",
+  workspaces: [
+    { id: "visits", target: "crm.service_orders", featureKey: "crm.service_orders" },
+    { id: "invoices_payer", target: "sales.invoices" },
+    { id: "claims_by_insurer", target: "partners.statements" },
+    { id: "expiry_control", target: "reports.inventory_expiry_list" },
+    { id: "pharmacy_counter", target: "pos.sales", featureKey: "pos.sales" },
+    { id: "claim_cheques", target: "notes.received", featureKey: "notes.received" },
+  ],
+  dashboardReports: [
+    "notes.aging",
+    "notes.maturity-calendar",
+    "partners.ar_aging",
+    "inventory.expiry_list",
+  ],
+  relabels: {
+    "partner.patient": { en: "Patient (financial file)", ar: "المريض (الملف المالي)" },
+    "partner.insurer": { en: "Insurance company", ar: "شركة التأمين" },
+    "doc.claim_ref": { en: "Insurance claim", ar: "مطالبة تأمينية" },
+    "doc.sales_invoice": { en: "Medical services invoice", ar: "فاتورة الخدمات الطبية" },
+  },
+};
+
 export const INDUSTRY_PRESETS: Record<IndustryPresetId, IndustryPreset> = {
   "industry.wholesale": WHOLESALE_PRESET,
   "industry.electronics": ELECTRONICS_PRESET,
+  "industry.healthcare": HEALTHCARE_PRESET,
 };

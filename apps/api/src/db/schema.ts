@@ -2976,6 +2976,7 @@ export const salesInvoices = pgTable(
     tableRef: text("table_ref"),
     syncState: text("sync_state").notNull().default("SYNCED"),
     einvoiceStatus: text("einvoice_status"),
+    claimRef: varchar("claim_ref", { length: 64 }),
     note: text("note"),
     noteAr: text("note_ar"),
     submittedAt: timestamp("submitted_at", { withTimezone: true, mode: "string" }),
@@ -3002,6 +3003,7 @@ export const salesInvoices = pgTable(
     index("ix_sales_invoices_tenant_status").on(table.tenantId, table.status, table.invoiceDate),
     index("ix_sales_invoices_tenant_order").on(table.tenantId, table.orderId),
     index("ix_sales_invoices_tenant_delivery").on(table.tenantId, table.deliveryId),
+    index("ix_sales_invoices_tenant_claim_ref").on(table.tenantId, table.claimRef),
   ],
 );
 

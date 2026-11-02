@@ -5,6 +5,7 @@ import { AuditModule } from "../audit/audit.module";
 import { TaxModule } from "../tax/tax.module";
 import { InventoryModule } from "../inventory/inventory.module";
 import { NotificationsModule } from "../notifications/notifications.module";
+import { ConfigurationModule } from "../configuration/configuration.module";
 import { QuotationService } from "./application/quotations";
 import { SalesOrderService } from "./application/orders";
 import { DeliveryNoteService } from "./application/deliveries";
@@ -37,7 +38,7 @@ import { SalesController, PartnerCreditCheckController } from "./presentation/sa
  * PostingEngine.post (ADR-0007).
  */
 @Module({
-  imports: [AccountingModule, AuditModule, TaxModule, InventoryModule, NotificationsModule],
+  imports: [AccountingModule, AuditModule, TaxModule, InventoryModule, NotificationsModule, ConfigurationModule],
   controllers: [SalesController, PartnerCreditCheckController],
   providers: [
     QuotationService,

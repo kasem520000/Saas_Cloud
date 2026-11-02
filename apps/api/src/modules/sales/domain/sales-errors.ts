@@ -29,6 +29,17 @@ export class SalesInvoiceNotFoundError extends DomainError {
     super("SALES_INVOICE_NOT_FOUND", `sales invoice ${id} does not exist in this tenant`);
   }
 }
+
+// -- PHASE-031 healthcare claim reference -----------------------------------------
+/** Typed rejection when an insured invoice is saved without a claim ref. */
+export class ClaimRefRequiredError extends DomainError {
+  constructor() {
+    super(
+      "CLAIM_REF_REQUIRED",
+      "claim reference (مطالبة تأمينية) is required for insured invoices under policy claim_ref_required_for_insured_invoices",
+    );
+  }
+}
 export class CreditNoteNotFoundError extends DomainError {
   constructor(id: string) {
     super("CREDIT_NOTE_NOT_FOUND", `credit note ${id} does not exist in this tenant`);
