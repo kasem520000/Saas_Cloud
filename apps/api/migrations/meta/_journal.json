@@ -246,6 +246,13 @@
       "when": 1793260000000,
       "tag": "0035_industry_education_032",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1793270000000,
+      "tag": "0036_industry_agriculture_033",
+      "breakpoints": true
     }
   ]
 }

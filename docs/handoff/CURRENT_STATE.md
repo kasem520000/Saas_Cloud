@@ -524,6 +524,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-032 (2026-11-03):** education commercial shell delivered configuration-only — migration 0035 seeds `industry.education` over the unmodified engine; manifest spec 5/5 incl. zero-academic-surface gate, DB 4/4 on real PG with BR-038 switch + zero-journal proof, web preset config-only, unit 368/368, tsc clean, docs 29/29 (`reports/PHASE-032-COMPLETION.md`).
 
+- **PHASE-033 (2026-11-03):** agriculture commercial shell delivered configuration-only — migration 0036 seeds `industry.agriculture` over the unmodified engine; manifest spec 5/5 incl. zero-agronomy-surface gate, DB 4/4 on real PG with BR-038 switch + zero-journal proof, web preset config-only, unit 373/373, tsc clean, docs 29/29 (`reports/PHASE-033-COMPLETION.md`). The five v2.0 template phases (030–033) are now all shipped.
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

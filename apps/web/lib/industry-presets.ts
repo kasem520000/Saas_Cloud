@@ -12,7 +12,7 @@
  *   card relabel.
  */
 
-export type IndustryPresetId = "industry.wholesale" | "industry.electronics" | "industry.healthcare" | "industry.education";
+export type IndustryPresetId = "industry.wholesale" | "industry.electronics" | "industry.healthcare" | "industry.education" | "industry.agriculture";
 
 export interface PresetNavItem {
   id: string;
@@ -131,10 +131,35 @@ export const EDUCATION_PRESET: IndustryPreset = {
   },
 };
 
+export const AGRICULTURE_PRESET: IndustryPreset = {
+  id: "industry.agriculture",
+  workspaces: [
+    { id: "crop_cycles", target: "manufacturing.production_orders", featureKey: "manufacturing.production_orders" },
+    { id: "field_projects", target: "accounting.projects", featureKey: "accounting.projects" },
+    { id: "input_purchases", target: "purchasing.goods_receipts", featureKey: "purchasing.goods_receipts" },
+    { id: "harvest_batches", target: "inventory.batches", featureKey: "inventory.batch_tracking" },
+    { id: "produce_sales", target: "sales.invoices" },
+    { id: "per_field_profit", target: "reports.manufacturing_production_cost" },
+  ],
+  dashboardReports: [
+    "manufacturing.production_cost",
+    "inventory.stock_valuation",
+    "inventory.expiry_list",
+    "manufacturing.batch_genealogy",
+  ],
+  relabels: {
+    "manufacturing.production_order": { en: "Crop cycle", ar: "الدورة الزراعية" },
+    "accounting.project": { en: "Field project", ar: "مشروع الحقل" },
+    "inventory.batch": { en: "Harvest batch", ar: "دفعة الحصاد" },
+    "inventory.serial": { en: "Head (livestock)", ar: "رأس (الماشية)" },
+  },
+};
+
 export const INDUSTRY_PRESETS: Record<IndustryPresetId, IndustryPreset> = {
   "industry.wholesale": WHOLESALE_PRESET,
   "industry.electronics": ELECTRONICS_PRESET,
   "industry.healthcare": HEALTHCARE_PRESET,
   "industry.education": EDUCATION_PRESET,
+  "industry.agriculture": AGRICULTURE_PRESET,
 };
 

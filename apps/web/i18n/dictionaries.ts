@@ -79,6 +79,13 @@ export interface Dictionary {
   indInstallmentPlan: string;
   indTuitionInvoice: string;
   indSiblingDiscount: string;
+  indAgricultureTitle: string;
+  indCropCycle: string;
+  indFieldProject: string;
+  indHarvestBatch: string;
+  indHeadLivestock: string;
+  indInputPurchases: string;
+  indPerFieldProfit: string;
 
   navHome: string;
   navUsers: string;
@@ -1862,6 +1869,13 @@ const ar: Dictionary = {
   indInstallmentPlan: "خطة الأقساط",
   indTuitionInvoice: "فاتورة الرسوم",
   indSiblingDiscount: "خصم الأشقاء",
+  indAgricultureTitle: "الزراعة",
+  indCropCycle: "الدورة الزراعية",
+  indFieldProject: "مشروع الحقل",
+  indHarvestBatch: "دفعة الحصاد",
+  indHeadLivestock: "رأس (الماشية)",
+  indInputPurchases: "مشتريات المدخلات",
+  indPerFieldProfit: "ربحية الحقل",
   appTitle: "منصة الأعمال الشاملة",
   switchLabel: "English",
   signOut: "تسجيل الخروج",
@@ -3634,6 +3648,13 @@ const en: Dictionary = {
   indInstallmentPlan: "Installment plan",
   indTuitionInvoice: "Tuition invoice",
   indSiblingDiscount: "Sibling discount",
+  indAgricultureTitle: "Agriculture",
+  indCropCycle: "Crop cycle",
+  indFieldProject: "Field project",
+  indHarvestBatch: "Harvest batch",
+  indHeadLivestock: "Head (livestock)",
+  indInputPurchases: "Input purchases",
+  indPerFieldProfit: "Per-field profitability",
   appTitle: "Universal Business ERP",
   switchLabel: "العربية",
   signOut: "Sign out",

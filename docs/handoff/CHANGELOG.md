@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-03 — PHASE-033 COMPLETE: agriculture commercial shell, configuration-only — migration 0036 seeds industry.agriculture, manifest spec 5/5 with zero-agronomy gate, DB 4/4 real PG incl. zero-journal proof, unit 373/373, tsc clean, docs 29/29 — see reports/PHASE-033-COMPLETION.md (v2.0 templates ED-06..ED-09 all shipped)
+
 2026-11-03 — PHASE-032 COMPLETE: education commercial shell, configuration-only — migration 0035 seeds industry.education (stock modules off), manifest spec 5/5 with zero-academic gate, DB 4/4 real PG incl. zero-journal proof, unit 368/368, tsc clean, docs 29/29 — see reports/PHASE-032-COMPLETION.md
 
 2026-11-03 — PHASE-031 COMPLETE: healthcare commercial shell — migration 0033 (additive nullable sales_invoices.claim_ref) + 0034 (industry.healthcare seed), policy-gated CLAIM_REF_REQUIRED, groupByClaim on existing report contracts, zero-clinical gate, DB 5/5 real PG with zero-journal proof, unit 363/363, tsc clean, docs 29/29 — see reports/PHASE-031-COMPLETION.md

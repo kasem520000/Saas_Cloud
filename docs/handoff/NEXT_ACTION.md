@@ -4,7 +4,7 @@
 
 ## The single next action
 
-**Execute PHASE-033** — PHASE-032 COMPLETE (education commercial shell, configuration-only; evidence: reports/PHASE-032-COMPLETION.md).
+**Execute PHASE-034** — PHASE-033 COMPLETE (agriculture commercial shell, configuration-only; the five v2.0 templates ED-06..ED-09 are all shipped; evidence: reports/PHASE-033-COMPLETION.md).
 evidence: reports/PHASE-017-COMPLETION.md): automotive & distribution templates seeded via
 the unmodified PHASE-015 engine, domain cores for job cards / settlements / tiers /
 free goods / commissions with unit proof, drift 237=237, unit 195 PASS.
