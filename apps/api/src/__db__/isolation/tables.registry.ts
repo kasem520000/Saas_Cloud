@@ -219,6 +219,9 @@ export const TENANT_TABLES_REGISTRY: readonly RegisteredTenantTable[] = [
   { table: "note_events" },
   { table: "installment_plans" },
   { table: "installment_lines" },
+  // PHASE-028 (migration 0030): budgeting cluster.
+  { table: "budgets" },
+  { table: "budget_lines", deleteGranted: true }, // DELETE only while DRAFT
 ];
 
 export const TENANT_TABLE_NAMES: readonly string[] = TENANT_TABLES_REGISTRY.map(

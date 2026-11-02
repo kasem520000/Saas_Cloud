@@ -44,6 +44,7 @@ const CATEGORIES: readonly ReportCategory[] = [
   "fixed-assets",
   "notes",
   "installments",
+  "budgeting",
 ];
 
 const SOURCE_MODULES: readonly DataSourceModule[] = [
@@ -64,6 +65,7 @@ const SOURCE_MODULES: readonly DataSourceModule[] = [
     "fixed_assets",
     "notes",
     "installments",
+    "budgeting",
 ];
 
 const dataSourceSchema = z.object({
@@ -187,9 +189,10 @@ const MODULE_DATA_PHASE: Readonly<Record<DataSourceModule, number>> = Object.fre
   fixed_assets: 26,
   notes: 27,
   installments: 27,
+  budgeting: 28,
 });
 
-const REGISTERED_PHASE_WINDOW = 27;
+const REGISTERED_PHASE_WINDOW = 28;
 
 /** Financial reports must carry the §11 minimum assertion set (§16 checklist). */
 const FINANCIAL_MINIMUM_ASSERTIONS: Readonly<Record<string, readonly string[]>> = Object.freeze({

@@ -44,6 +44,11 @@ export interface Dictionary {
   ipPlan: string;
   ipTotal: string;
   ipStatus: string;
+  bgTitle: string;
+  bgCode: string;
+  bgScope: string;
+  bgStatus: string;
+  bgVersion: string;
 
   navHome: string;
   navUsers: string;
@@ -1794,6 +1799,11 @@ const ar: Dictionary = {
   ipPlan: "الخطة",
   ipTotal: "الإجمالي",
   ipStatus: "الحالة",
+  bgTitle: "الموازنات",
+  bgCode: "الرمز",
+  bgScope: "النطاق",
+  bgStatus: "الحالة",
+  bgVersion: "الإصدار",
   appTitle: "منصة الأعمال الشاملة",
   switchLabel: "English",
   signOut: "تسجيل الخروج",
@@ -3533,6 +3543,11 @@ const en: Dictionary = {
   ipPlan: "Plan",
   ipTotal: "Total",
   ipStatus: "Status",
+  bgTitle: "Budgets",
+  bgCode: "Code",
+  bgScope: "Scope",
+  bgStatus: "Status",
+  bgVersion: "Version",
   appTitle: "Universal Business ERP",
   switchLabel: "العربية",
   signOut: "Sign out",

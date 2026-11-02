@@ -1,5 +1,7 @@
 # Changelog
 
+2026-11-02 — PHASE-028 COMPLETE: budgeting & variance — migration 0030 (BR-050 DB-level single-ACTIVE), lifecycle/SoD/supersede, advisory controls (BR-051, POSTED never blocked), variance engine read-only, 2 report contracts (registry 76), 900/900 isolation on real PG — see reports/PHASE-028-COMPLETION.md
+
 2026-11-02 — PHASE-027 COMPLETE: notes & installments modules — custody machine (INV-024), G-24..G-28, installment plans (BR-048/049 flat fees), RC-11, 5 report contracts, 888/888 isolation on real PG — see reports/PHASE-027-COMPLETION.md
 
 2026-11-02 — PHASE-026 COMPLETE (full sandbox scope): fixed-assets module — service layer (G-21/22/23 flows, BR-041..044), RC-10 reconciliation, 3 report contracts (registry now 69), purchasing GRN hook, UI scaffold, 864/864 isolation attacks on real PG — see reports/PHASE-026-COMPLETION.md

@@ -514,6 +514,8 @@ table) and [NEXT_ACTION.md](NEXT_ACTION.md).
 
 - **PHASE-027 (2026-11-02):** cheques/notes + installments delivered — custody machine with INV-024, G-24…G-28 goldens and flows, BR-045…049, RC-11, 5 report contracts (registry 74), isolation 888/888 on real PG (`reports/PHASE-027-COMPLETION.md`).
 
+- **PHASE-028 (2026-11-02):** budgeting & variance delivered — BR-050 single-ACTIVE at DB level, lifecycle with SoD, advisory-only controls (ledger never blocked), read-only variance engine, 2 report contracts, isolation 900/900 on real PG (`reports/PHASE-028-COMPLETION.md`).
+
 ## Known open items
 
 - Open questions OQ-001…OQ-010 in

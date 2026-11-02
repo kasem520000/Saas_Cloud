@@ -11,6 +11,10 @@ import {
   installmentsScheduleContract,
   installmentsAgingContract,
 } from "./notes-installments/contracts";
+import {
+  budgetVsActualContract,
+  varianceAnalysisContract,
+} from "./budgeting/contracts";
 
 
 /**
@@ -200,6 +204,9 @@ export const REPORT_CONTRACTS: readonly ReportContract[] = Object.freeze([
   notesDishonoredContract,
   installmentsScheduleContract,
   installmentsAgingContract,
+  // PHASE-028 budgeting variance reports
+  budgetVsActualContract,
+  varianceAnalysisContract,
 ]);
 
 export { validateRegistry, registrySnapshot } from "./runtime";

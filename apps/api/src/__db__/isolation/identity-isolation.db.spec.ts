@@ -1533,6 +1533,23 @@ async function seedFixtures(superuser: {
      ON CONFLICT (id) DO NOTHING`,
     [TENANT_A, TENANT_B],
   );
+  // PHASE-028 fixtures (migration 0030): FK-consistent rows per tenant.
+  await superuser.query(
+    `INSERT INTO budgets (id, tenant_id, code, fiscal_year_id, scope, name, version, status)
+     VALUES
+       ('f1f1f1f1-0000-4000-8000-000000000001', $1, 'B-2026', '00000000-0000-4000-8000-000000000009', 'ACCOUNTS', 'OPEX 2026', 1, 'DRAFT'),
+       ('f1f1f1f1-0000-4000-8000-000000000002', $2, 'B-2026', '00000000-0000-4000-8000-000000000009', 'ACCOUNTS', 'OPEX 2026', 1, 'DRAFT')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO budget_lines (id, tenant_id, budget_id, fiscal_period_id, account_id, amount)
+     VALUES
+       ('f2f2f2f2-0000-4000-8000-000000000001', $1, 'f1f1f1f1-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000009', 'b0b0b0b0-0000-4000-8000-000000000001', 1000),
+       ('f2f2f2f2-0000-4000-8000-000000000002', $2, 'f1f1f1f1-0000-4000-8000-000000000002', '00000000-0000-4000-8000-000000000009', 'b0b0b0b0-0000-4000-8000-000000000002', 1000)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
   // -- seedFixtures end --
 
 }
@@ -1742,6 +1759,9 @@ const OWN_ROW: Record<string, [string, string]> = {
   note_events: ["e2e2e2e2-0000-4000-8000-000000000001", "e2e2e2e2-0000-4000-8000-000000000002"],
   installment_plans: ["e3e3e3e3-0000-4000-8000-000000000001", "e3e3e3e3-0000-4000-8000-000000000002"],
   installment_lines: ["e4e4e4e4-0000-4000-8000-000000000001", "e4e4e4e4-0000-4000-8000-000000000002"],
+
+  budgets: ["f1f1f1f1-0000-4000-8000-000000000001", "f1f1f1f1-0000-4000-8000-000000000002"],
+  budget_lines: ["f2f2f2f2-0000-4000-8000-000000000001", "f2f2f2f2-0000-4000-8000-000000000002"],
 };
 
 
@@ -2156,6 +2176,12 @@ const MISMATCHED_INSERT: Record<string, string> = {
              'c0c0c0c0-0000-4000-8000-000000000001', 1000, 4, '2026-11-01', 'MONTHLY')`,
   installment_lines: `INSERT INTO installment_lines (id, tenant_id, plan_id, seq, due_date, amount)
      VALUES ('e4e4e4e4-3000-4000-8000-000000000003', $1, 'e3e3e3e3-0000-4000-8000-000000000001', 1, '2026-12-01', 250)`,
+
+  budgets: `INSERT INTO budgets (id, tenant_id, code, fiscal_year_id, scope, name, status)
+     VALUES ('f1f1f1f1-3000-4000-8000-000000000003', $1, 'ATK', '00000000-0000-4000-8000-000000000009', 'ACCOUNTS', 'Attack Budget', 'DRAFT')`,
+  budget_lines: `INSERT INTO budget_lines (id, tenant_id, budget_id, fiscal_period_id, account_id, amount)
+     VALUES ('f2f2f2f2-3000-4000-8000-000000000003', $1, 'f1f1f1f1-0000-4000-8000-000000000001',
+             '00000000-0000-4000-8000-000000000009', 'b0b0b0b0-0000-4000-8000-000000000001', 100)`,
 };
 
 beforeAll(async () => {
