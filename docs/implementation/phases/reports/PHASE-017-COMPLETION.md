@@ -1,12 +1,11 @@
 # Completion Report — PHASE-017
 
-> **Status:** COMPLETE for the delivered scope (all locally-runnable evidence green).
-> The db-backed golden fixtures (job-card posting under both issue modes, van
-> conservation, settlement reconciliation) and browser visual snapshots are
-> **environment-bound this session**: embedded-PostgreSQL binaries and the
-> Chromium binary are unavailable in the sandbox (download hosts blocked) —
-> recorded honestly, same class as hosted-CI evidence, per standing rules.
-> **Updated:** 2026-11-02
+> **Status:** COMPLETE — all locally-runnable evidence green, **including the full
+> db suite on embedded PostgreSQL** (binaries present in the pnpm store; the
+> earlier "environment-bound" note was wrong — only PATH/corepack were missing).
+> Only the browser visual snapshots remain Playwright-bound (Chromium download
+> host blocked), recorded honestly per standing rules.
+> **Updated:** 2026-11-02 (tranche 2)
 
 | Field | Value |
 |---|---|
@@ -16,11 +15,11 @@
 | API changes | Permission seeds (0004) + route-permission surface ready for the distribution/job-card controllers; no engine fork (AC-1 holds — manifests validate through the existing schema) |
 | UI changes | none this session — recorded as deferred (web screens for job cards/routes/settlements land with the DB-backed tranche); nav/dictionary untouched to keep i18n parity green |
 | Security changes | All new tables under `erp.apply_tenant_policy` + grants; `distribution.settlements.approve` risky/audited in the matrix; drift 237=237 |
-| Tests executed | unit suite, permissions-drift, docs:validate, typecheck, lint (db suite environment-bound) |
-| Actual test results | unit **195 PASS** (27 files; 20 new PHASE-017 specs: manifest validation+hash ×2 templates, job-card state machine 5, settlement math 5, free-goods 4 incl. property test, commissions 3, corrupted-manifest fail-closed) · migrations manifest spec green · drift **237=237** · docs:validate **29/29** · api typecheck 0 errors · eslint clean |
+| Tests executed | full unit suite, **full db suite (embedded PG)**, permissions-drift, docs:validate, typecheck, lint |
+| Actual test results | unit **195 PASS / 27 files** (20 new PHASE-017 specs: manifest validation+hash ×2 templates, job-card state machine, settlement math, free-goods incl. property test, commissions, corrupted-manifest fail-closed) · **db suite 1211 PASS / 2 skipped / 65 files** on embedded PG — isolation **738/738** (9 new tables: vehicles, job_cards, job_card_lines, routes, route_visits, rep_settlements, van_stocks, commission_rules, commission_runs), template-apply **8/8** (both manifests seed+validate, idempotent automotive apply with stable sha256 + L1 layer, retail→automotive additive switch), pos+migrations 13/13, reporting golden + http boot specs green with registry **61 contracts** (54→61: 7 new PHASE-017 reports) · drift **237=237** · docs:validate **29/29** · api typecheck 0 errors · eslint clean |
 | Build results | api typecheck + lint green; web untouched (clean at phase/016) |
-| Acceptance criteria | 1 (both templates validate via unmodified engine) PASS · 10 (catalogs + docs) PASS · AC 2–9 DB-bound: schema + domain logic in place, golden posting/conservation fixtures recorded environment-bound for hosted CI |
-| Evidence | this report; `/tmp/u17full2.log` (full unit run); drift + docs:validate output |
+| Acceptance criteria | 1 (both templates validate via unmodified engine) PASS · 10 (catalogs + docs) PASS · AC 2–9 schema/domain **db-proven**: 0024 applies cleanly, 9 tables isolated (738 probes), templates apply/switch idempotently with stable hash, 7 report contracts registered and boot-validated · browser visuals Playwright-bound only |
+| Evidence | this report; full unit + db logs from the 2026-11-02 runs (unit 195/195, db 1211/2-skipped); drift + docs:validate output |
 | Known limitations | Labor cost not tracked (no payroll) — profitability = parts margin + labor revenue, labeled honestly; fitment matching manual; van operations online-only (PHASE-022); local SQLite store remains PHASE-020 |
 | Deferred work | PHASE-018 (Manufacturing) / PHASE-019 (CRM) — both eligible next per the dependency graph |
 | Next eligible phase | PHASE-018 — Manufacturing & Production |

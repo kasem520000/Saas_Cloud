@@ -45,6 +45,16 @@ import { ownTenantBaseCurrency } from "../../infra/settings/setting-reader";
 
 const KNOWN_PERMISSION_KEYS: ReadonlySet<string> = new Set([
   "reporting.reports.run",
+  "sales.job_cards.manage",
+  "sales.commissions.manage",
+  "distribution.routes.manage",
+  "distribution.van_stock.view",
+  "distribution.settlements.manage",
+  "distribution.settlements.approve",
+  "distribution.tiers.manage",
+  "distribution.free_goods.manage",
+  "partners.balances.read",
+  "sales.invoices.read",
   "reporting.reports.export",
   "reporting.templates.manage",
   "reports.financial.tb.read",

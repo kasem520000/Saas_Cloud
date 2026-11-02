@@ -367,17 +367,17 @@ async function seedFixtures(superuser: {
   await superuser.query(
     `INSERT INTO fiscal_years (id, tenant_id, name, start_date, end_date)
      VALUES
-       ('c1c1c1c1-0000-4000-8000-000000000001', $1, 'FY2026', '2026-01-01', '2026-12-31'),
-       ('c1c1c1c1-0000-4000-8000-000000000002', $2, 'FY2026', '2026-01-01', '2026-12-31')
+       ('b5b5b5b5-0000-4000-8000-000000000001', $1, 'FY2026', '2026-01-01', '2026-12-31'),
+       ('b5b5b5b5-0000-4000-8000-000000000002', $2, 'FY2026', '2026-01-01', '2026-12-31')
      ON CONFLICT (id) DO NOTHING`,
     [TENANT_A, TENANT_B],
   );
   await superuser.query(
     `INSERT INTO fiscal_periods (id, tenant_id, fiscal_year_id, name, kind, start_date, end_date)
      VALUES
-       ('c2c2c2c2-0000-4000-8000-000000000001', $1, 'c1c1c1c1-0000-4000-8000-000000000001',
+       ('c2c2c2c2-0000-4000-8000-000000000001', $1, 'b5b5b5b5-0000-4000-8000-000000000001',
         '2026-01', 'REGULAR', '2026-01-01', '2026-01-31'),
-       ('c2c2c2c2-0000-4000-8000-000000000002', $2, 'c1c1c1c1-0000-4000-8000-000000000002',
+       ('c2c2c2c2-0000-4000-8000-000000000002', $2, 'b5b5b5b5-0000-4000-8000-000000000002',
         '2026-01', 'REGULAR', '2026-01-01', '2026-01-31')
      ON CONFLICT (id) DO NOTHING`,
     [TENANT_A, TENANT_B],
@@ -1220,6 +1220,71 @@ async function seedFixtures(superuser: {
      ON CONFLICT (tenant_id) DO NOTHING`,
     [TENANT_A, TENANT_B],
   );
+  // PHASE-017 (migration 0024): automotive & distribution fixtures (FKs reuse
+  // the base branch/partner/item/warehouse/sales_reps rows seeded above).
+  await superuser.query(
+    `INSERT INTO vehicles (id, tenant_id, partner_id, make, model, vin, plate)
+     VALUES ('a10a10a1-0000-4000-8000-000000000001', $1, 'b5b5b5b5-0000-4000-8000-000000000001', 'Toyota', 'Corolla', 'JTDBU4EE9J9000001', 'ABC-1234'),
+            ('a10a10a1-0000-4000-8000-000000000002', $2, 'b5b5b5b5-0000-4000-8000-000000000002', 'Toyota', 'Corolla', 'JTDBU4EE9J9000002', 'ABC-1235')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO job_cards (id, tenant_id, branch_id, card_no, customer_id, status)
+     VALUES ('b20b20b2-0000-4000-8000-000000000001', $1, 'abababab-0000-4000-8000-000000000001', 'JC-0001', 'b5b5b5b5-0000-4000-8000-000000000001', 'DRAFT'),
+            ('b20b20b2-0000-4000-8000-000000000002', $2, 'abababab-0000-4000-8000-000000000002', 'JC-0001', 'b5b5b5b5-0000-4000-8000-000000000002', 'DRAFT')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO job_card_lines (id, tenant_id, job_card_id, line_type, qty, unit_price)
+     VALUES ('c30c30c3-0000-4000-8000-000000000001', $1, 'b20b20b2-0000-4000-8000-000000000001', 'LABOR', 2, 50),
+            ('c30c30c3-0000-4000-8000-000000000002', $2, 'b20b20b2-0000-4000-8000-000000000002', 'LABOR', 2, 50)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO routes (id, tenant_id, rep_id, name)
+     VALUES ('d40d40d4-0000-4000-8000-000000000001', $1, '70707070-0000-4000-8000-000000000001', 'Route 1'),
+            ('d40d40d4-0000-4000-8000-000000000002', $2, '70707070-0000-4000-8000-000000000002', 'Route 1')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO route_visits (id, tenant_id, route_id, customer_id, planned_date)
+     VALUES ('e50e50e5-0000-4000-8000-000000000001', $1, 'd40d40d4-0000-4000-8000-000000000001', 'b5b5b5b5-0000-4000-8000-000000000001', '2026-11-02'),
+            ('e50e50e5-0000-4000-8000-000000000002', $2, 'd40d40d4-0000-4000-8000-000000000002', 'b5b5b5b5-0000-4000-8000-000000000002', '2026-11-02')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO rep_settlements (id, tenant_id, rep_id, settlement_no, settlement_date, expected_cash)
+     VALUES ('f60f60f6-0000-4000-8000-000000000001', $1, '70707070-0000-4000-8000-000000000001', 'STL-0001', '2026-11-02', 100),
+            ('f60f60f6-0000-4000-8000-000000000002', $2, '70707070-0000-4000-8000-000000000002', 'STL-0001', '2026-11-02', 100)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO van_stocks (tenant_id, warehouse_id, item_id, qty, value_amount)
+     VALUES ($1, 'f0f0f0f0-1000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 5, 25),
+            ($2, 'f0f0f0f0-1000-4000-8000-000000000002', 'babababa-0000-4000-8000-000000000002', 5, 25)
+     ON CONFLICT DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO commission_rules (id, tenant_id, rep_id, basis, rate_pct)
+     VALUES ('a70a70a7-0000-4000-8000-000000000001', $1, '70707070-0000-4000-8000-000000000001', 'COLLECTED', 5),
+            ('a70a70a7-0000-4000-8000-000000000002', $2, '70707070-0000-4000-8000-000000000002', 'COLLECTED', 5)
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
+  await superuser.query(
+    `INSERT INTO commission_runs (id, tenant_id, run_no, period_from, period_to)
+     VALUES ('b80b80b8-0000-4000-8000-000000000001', $1, 'CR-0001', '2026-11-01', '2026-11-30'),
+            ('b80b80b8-0000-4000-8000-000000000002', $2, 'CR-0001', '2026-11-01', '2026-11-30')
+     ON CONFLICT (id) DO NOTHING`,
+    [TENANT_A, TENANT_B],
+  );
   // PHASE-016 (migration 0023): POS terminals + narrow sync slice fixtures.
   await superuser.query(
     `INSERT INTO devices (id, user_id, platform, name, device_key_hash)
@@ -1294,7 +1359,7 @@ const OWN_ROW: Record<string, [string, string]> = {
   opening_balance_docs: ["bebebebe-0000-4000-8000-000000000001", "bebebebe-0000-4000-8000-000000000002"],
   file_objects: ["bfbfbfbf-0000-4000-8000-000000000001", "bfbfbfbf-0000-4000-8000-000000000002"],
   import_jobs: ["c0c0c0c0-0000-4000-8000-000000000001", "c0c0c0c0-0000-4000-8000-000000000002"],
-  fiscal_years: ["c1c1c1c1-0000-4000-8000-000000000001", "c1c1c1c1-0000-4000-8000-000000000002"],
+  fiscal_years: ["b5b5b5b5-0000-4000-8000-000000000001", "b5b5b5b5-0000-4000-8000-000000000002"],
   fiscal_periods: ["c2c2c2c2-0000-4000-8000-000000000001", "c2c2c2c2-0000-4000-8000-000000000002"],
   exchange_rates: ["c3c3c3c3-0000-4000-8000-000000000001", "c3c3c3c3-0000-4000-8000-000000000002"],
   cost_centers: ["c4c4c4c4-0000-4000-8000-000000000001", "c4c4c4c4-0000-4000-8000-000000000002"],
@@ -1428,7 +1493,18 @@ const OWN_ROW: Record<string, [string, string]> = {
   change_log: ["e0e0e0e0-0000-4000-8000-000000000001", "e0e0e0e0-0000-4000-8000-000000000002"],
   sync_cursors: ["e1e1e1e1-0000-4000-8000-000000000001", "e1e1e1e1-0000-4000-8000-000000000002"],
   sync_commands: ["iso-cmd-a", "iso-cmd-b"],
+  // PHASE-017 (migration 0024): keyed by id; van_stocks by warehouse_id (PK = tenant+warehouse+item).
+  vehicles: ["a10a10a1-0000-4000-8000-000000000001", "a10a10a1-0000-4000-8000-000000000002"],
+  job_cards: ["b20b20b2-0000-4000-8000-000000000001", "b20b20b2-0000-4000-8000-000000000002"],
+  job_card_lines: ["c30c30c3-0000-4000-8000-000000000001", "c30c30c3-0000-4000-8000-000000000002"],
+  routes: ["d40d40d4-0000-4000-8000-000000000001", "d40d40d4-0000-4000-8000-000000000002"],
+  route_visits: ["e50e50e5-0000-4000-8000-000000000001", "e50e50e5-0000-4000-8000-000000000002"],
+  rep_settlements: ["f60f60f6-0000-4000-8000-000000000001", "f60f60f6-0000-4000-8000-000000000002"],
+  van_stocks: ["f0f0f0f0-1000-4000-8000-000000000001", "f0f0f0f0-1000-4000-8000-000000000002"],
+  commission_rules: ["a70a70a7-0000-4000-8000-000000000001", "a70a70a7-0000-4000-8000-000000000002"],
+  commission_runs: ["b80b80b8-0000-4000-8000-000000000001", "b80b80b8-0000-4000-8000-000000000002"],
 };
+
 
 /** Mismatched-tenant INSERT shapes per table (A3) — explicit columns so the
  * attack isolates the RLS WITH CHECK, never an incidental PK conflict.
@@ -1510,7 +1586,7 @@ const MISMATCHED_INSERT: Record<string, string> = {
   fiscal_years: `INSERT INTO fiscal_years (id, tenant_id, name, start_date, end_date)
      VALUES ('c1c1c1c1-3000-4000-8000-000000000003', $1, 'ATK', '2027-01-01', '2027-12-31')`,
   fiscal_periods: `INSERT INTO fiscal_periods (id, tenant_id, fiscal_year_id, name, kind, start_date, end_date)
-     VALUES ('c2c2c2c2-3000-4000-8000-000000000003', $1, 'c1c1c1c1-0000-4000-8000-000000000002',
+     VALUES ('c2c2c2c2-3000-4000-8000-000000000003', $1, 'b5b5b5b5-0000-4000-8000-000000000002',
              '2027-01', 'REGULAR', '2027-01-01', '2027-01-31')`,
   exchange_rates: `INSERT INTO exchange_rates (id, tenant_id, currency_code, rate_date, rate)
      VALUES ('c3c3c3c3-3000-4000-8000-000000000003', $1, 'EUR', '2026-02-01', 4.05)`,
@@ -1755,6 +1831,24 @@ const MISMATCHED_INSERT: Record<string, string> = {
      VALUES ($1, 'industry.grocery', '1.0.0', 'sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')`,
   pos_terminals: `INSERT INTO pos_terminals (id, tenant_id, branch_id, code, name, cash_account_id)
      VALUES ('e0e0e0e0-3000-4000-8000-000000000003', $1, 'abababab-0000-4000-8000-000000000001', 'POS-XX', 'X', 'd0d0d0d0-0000-4000-8000-000000000001')`,
+  vehicles: `INSERT INTO vehicles (id, tenant_id, partner_id, make, model, vin)
+     VALUES ('a10a10a1-3000-4000-8000-000000000003', $1, 'b5b5b5b5-0000-4000-8000-000000000001', 'Kia', 'Rio', 'KNADC5A19N6000003')`,
+  job_cards: `INSERT INTO job_cards (id, tenant_id, branch_id, card_no, customer_id)
+     VALUES ('b20b20b2-3000-4000-8000-000000000003', $1, 'abababab-0000-4000-8000-000000000001', 'JC-ISO', 'b5b5b5b5-0000-4000-8000-000000000001')`,
+  job_card_lines: `INSERT INTO job_card_lines (id, tenant_id, job_card_id, line_type, qty, unit_price)
+     VALUES ('c30c30c3-3000-4000-8000-000000000003', $1, 'b20b20b2-0000-4000-8000-000000000001', 'LABOR', 1, 10)`,
+  routes: `INSERT INTO routes (id, tenant_id, rep_id, name)
+     VALUES ('d40d40d4-3000-4000-8000-000000000003', $1, '70707070-0000-4000-8000-000000000001', 'ISO-R')`,
+  route_visits: `INSERT INTO route_visits (id, tenant_id, route_id, customer_id, planned_date)
+     VALUES ('e50e50e5-3000-4000-8000-000000000003', $1, 'd40d40d4-0000-4000-8000-000000000001', 'b5b5b5b5-0000-4000-8000-000000000001', '2026-11-03')`,
+  rep_settlements: `INSERT INTO rep_settlements (id, tenant_id, rep_id, settlement_no, settlement_date, expected_cash)
+     VALUES ('f60f60f6-3000-4000-8000-000000000003', $1, '70707070-0000-4000-8000-000000000001', 'STL-ISO', '2026-11-03', 0)`,
+  van_stocks: `INSERT INTO van_stocks (tenant_id, warehouse_id, item_id, qty, value_amount)
+     VALUES ($1, 'f0f0f0f0-1000-4000-8000-000000000001', 'babababa-0000-4000-8000-000000000001', 1, 5)`,
+  commission_rules: `INSERT INTO commission_rules (id, tenant_id, rep_id, basis, rate_pct)
+     VALUES ('a70a70a7-3000-4000-8000-000000000003', $1, '70707070-0000-4000-8000-000000000001', 'INVOICED', 2)`,
+  commission_runs: `INSERT INTO commission_runs (id, tenant_id, run_no, period_from, period_to)
+     VALUES ('b80b80b8-3000-4000-8000-000000000003', $1, 'CR-ISO', '2026-11-01', '2026-11-30')`,
   change_log: `INSERT INTO change_log (tenant_id, entity_type, entity_id, op)
      VALUES ($1, 'pos_terminal', 'e0e0e0e0-3000-4000-8000-000000000003', 'INSERT')`,
   sync_cursors: `INSERT INTO sync_cursors (id, tenant_id, device_id, entity_type, cursor)
@@ -1841,7 +1935,9 @@ describe("generated attack suite A1–A10 — as erp_app", () => {
             ? "entity_id"
             : table === "sync_commands"
               ? "idempotency_key"
-              : "id";
+              : table === "van_stocks"
+                ? "warehouse_id"
+                : "id";
 
     it(`A1 ${table}: SELECT without GUC → 0 tenant rows`, async () => {
       const app = await appClient();

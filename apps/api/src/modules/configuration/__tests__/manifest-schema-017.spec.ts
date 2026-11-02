@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { InvalidManifestError, manifestHash, validateManifest } from "../domain/industry-manifest";
+import { InvalidManifestError, manifestHash, validateManifest, type IndustryManifest } from "../domain/industry-manifest";
 
 /**
  * PHASE-017 T2 — the two new template manifests (migration 0024, source of
@@ -30,7 +30,8 @@ describe("PHASE-017 template manifests (T2)", () => {
   it("industry.automotive and industry.distribution v1.0.0 validate and hash deterministically", () => {
     const manifests = seeded017Manifests();
     expect(Object.keys(manifests).sort()).toEqual(["industry.automotive", "industry.distribution"]);
-    for (const manifest of Object.values(manifests)) {
+    for (const raw of Object.values(manifests)) {
+      const manifest = raw as IndustryManifest;
       const valid = validateManifest(manifest);
       expect(valid.id).toMatch(/^industry\.[a-z_]+$/);
       expect(valid.version).toBe("1.0.0");

@@ -64,6 +64,15 @@ import {
   retailImeiRegisterContract,
 } from "./operational/industry";
 import {
+  automotiveJobCardProfitabilityContract,
+  automotiveVehicleServiceHistoryContract,
+  distributionRepSettlementContract,
+  distributionRouteVisitComplianceContract,
+  distributionVanStockBalancesContract,
+  salesCommissionsDueContract,
+  salesDiscountEffectivenessContract,
+} from "./operational/industry-017";
+import {
   treasuryDailyCashContract,
   treasuryReceiptsRegisterContract,
   treasuryPaymentsRegisterContract,
@@ -123,6 +132,14 @@ export const REPORT_CONTRACTS: readonly ReportContract[] = Object.freeze([
   inventoryExpiryListContract,
   groceryExpiryWriteoffContract,
   retailImeiRegisterContract,
+  // PHASE-017 T13 industry reports
+  automotiveJobCardProfitabilityContract,
+  automotiveVehicleServiceHistoryContract,
+  distributionRepSettlementContract,
+  distributionRouteVisitComplianceContract,
+  distributionVanStockBalancesContract,
+  salesCommissionsDueContract,
+  salesDiscountEffectivenessContract,
   // PHASE-016 T12 POS end-of-day reports
   posSalesByTerminalContract,
   posSalesByHourContract,

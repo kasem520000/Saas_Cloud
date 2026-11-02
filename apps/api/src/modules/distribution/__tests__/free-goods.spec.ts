@@ -31,7 +31,7 @@ describe("free-goods rule math (PHASE-017 T11)", () => {
     for (let p = 0; p <= 500; p += 7) {
       const free = Number(freeUnitsFor(rule, String(p)));
       expect(free).toBeGreaterThanOrEqual(0);
-      expect(free).toBeLessThanOrEqual(Math.floor(p / 10) + 1e-9);
+      expect(free * 10).toBeLessThanOrEqual(p + 1e-9);
     }
   });
 });

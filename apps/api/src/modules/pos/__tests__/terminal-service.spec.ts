@@ -46,38 +46,38 @@ describe("PHASE-016 terminal registry (unit)", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("register upper-cases the code and inserts + audits", async () => {
-    const svc = new TerminalService(new AuditService());
+    const svc = new TerminalService(new AuditService(undefined as never));
     const row = await svc.register({ ...base, code: "pos-1" });
     expect(row.code).toBe("POS-1");
     expect(store.insertTerminal).toHaveBeenCalledWith(expect.objectContaining({ code: "POS-1" }));
   });
 
   it("register rejects invalid code shapes fail-closed", async () => {
-    const svc = new TerminalService(new AuditService());
+    const svc = new TerminalService(new AuditService(undefined as never));
     await expect(svc.register({ ...base, code: "x" })).rejects.toBeInstanceOf(TerminalCodeInvalidError);
     await expect(svc.register({ ...base, code: "has space" })).rejects.toBeInstanceOf(TerminalCodeInvalidError);
     await expect(svc.register({ ...base, code: "a".repeat(21) })).rejects.toBeInstanceOf(TerminalCodeInvalidError);
   });
 
   it("register rejects receipt sizes other than 80/58", async () => {
-    const svc = new TerminalService(new AuditService());
+    const svc = new TerminalService(new AuditService(undefined as never));
     await expect(svc.register({ ...base, receiptSizeMm: 57 })).rejects.toBeInstanceOf(TerminalCodeInvalidError);
   });
 
   it("register rejects a duplicate code with a conflict error", async () => {
     vi.mocked(store.findTerminalByCode).mockResolvedValueOnce({ id: "t-0", code: "POS-1" } as never);
-    const svc = new TerminalService(new AuditService());
+    const svc = new TerminalService(new AuditService(undefined as never));
     await expect(svc.register({ ...base })).rejects.toBeInstanceOf(TerminalCodeConflictError);
     expect(store.insertTerminal).not.toHaveBeenCalled();
   });
 
   it("setStatus on an unknown terminal ⇒ TerminalNotFoundError", async () => {
-    const svc = new TerminalService(new AuditService());
+    const svc = new TerminalService(new AuditService(undefined as never));
     await expect(svc.setStatus("nope", "INACTIVE", "u-1")).rejects.toBeInstanceOf(TerminalNotFoundError);
   });
 
   it("bindDevice on an unknown terminal ⇒ TerminalNotFoundError, no bind", async () => {
-    const svc = new TerminalService(new AuditService());
+    const svc = new TerminalService(new AuditService(undefined as never));
     await expect(svc.bindDevice("nope", "dev-1", "u-1")).rejects.toBeInstanceOf(TerminalNotFoundError);
     expect(store.bindDevice).not.toHaveBeenCalled();
   });

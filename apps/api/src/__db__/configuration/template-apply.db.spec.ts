@@ -204,3 +204,49 @@ describe("T7 — prerequisite blocking (BR-040 closure, degraded mode)", () => {
     });
   });
 });
+
+describe("PHASE-017 T2 — automotive & distribution templates via the unmodified engine", () => {
+  it("seeds industry.automotive / industry.distribution v1.0.0 and both validate", async () => {
+    const su = await superuserClient();
+    const rows = await su.query<{ key: string; manifest: string }>(
+      `SELECT key, manifest::text AS manifest FROM industry_templates
+       WHERE key IN ('industry.automotive', 'industry.distribution') ORDER BY key`,
+    );
+    await su.end();
+    expect(rows.rows.map((r) => r.key)).toEqual(["industry.automotive", "industry.distribution"]);
+    for (const row of rows.rows) {
+      expect(validateManifest(JSON.parse(row.manifest)).version).toBe("1.0.0");
+    }
+  });
+
+  it("applies industry.automotive to a fresh tenant; L1 lands (terminology + nav + pins) with stable hash", async () => {
+    const { tenantId, userId } = await registerTenant("auto");
+    await withTenant(tenantId, async () => {
+      const result = await applyService.apply(userId, "industry.automotive");
+      expect(result.applied).toBe(true);
+      const again = await applyService.apply(userId, "industry.automotive");
+      expect(again.alreadyApplied).toBe(true);
+      expect(again.manifestHash).toBe(result.manifestHash);
+
+      const config = await configuration.resolveEffectiveConfig();
+      expect(config.layers.l1Template?.key).toBe("industry.automotive");
+      expect(config.resolvedHash).toMatch(/^sha256:[0-9a-f]{64}$/);
+      // automotive terminology override present (بطاقة عمل family)
+      expect(Object.keys(config.ui.terminology).length).toBeGreaterThan(0);
+    });
+  });
+
+  it("retail → automotive switch is additive-only (BR-038): settings intact, retail archived read-only", async () => {
+    const { tenantId, userId } = await registerTenant("switch017");
+    await withTenant(tenantId, async () => {
+      await applyService.apply(userId, "industry.retail");
+      const before = await configuration.resolveEffectiveConfig();
+      const switched = await applyService.switch(userId, "industry.automotive");
+      expect(switched.templateKey).toBe("industry.automotive");
+      const after = await configuration.resolveEffectiveConfig();
+      expect(after.layers.l1Template?.key).toBe("industry.automotive");
+      // settings layer untouched by the switch (additive-only)
+      expect({ ...after.layers, l1Template: null }).toEqual({ ...before.layers, l1Template: null });
+    });
+  });
+});

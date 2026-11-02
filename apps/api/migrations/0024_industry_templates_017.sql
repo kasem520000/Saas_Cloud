@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS "job_card_lines" (
   "batch_id" uuid REFERENCES "item_batches" ("id") ON DELETE SET NULL,
   "labor_hours" numeric(8, 3),
   "created_at" timestamptz NOT NULL DEFAULT now(),
+  "updated_at" timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT ck_jcl_line_type CHECK ("line_type" IN ('PARTS', 'LABOR')),
   CONSTRAINT ck_jcl_parts_item CHECK ("line_type" <> 'PARTS' OR "item_id" IS NOT NULL),
   CONSTRAINT ck_jcl_labor_item CHECK ("line_type" <> 'LABOR' OR "item_id" IS NULL),
@@ -113,6 +114,7 @@ CREATE TABLE IF NOT EXISTS "routes" (
   "day_pattern" text NOT NULL DEFAULT 'DAILY',
   "is_active" boolean NOT NULL DEFAULT true,
   "created_at" timestamptz NOT NULL DEFAULT now(),
+  "updated_at" timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT ck_routes_day_pattern CHECK ("day_pattern" IN ('DAILY', 'WEEKDAYS', 'CUSTOM'))
 );
 --> statement-breakpoint
@@ -131,6 +133,7 @@ CREATE TABLE IF NOT EXISTS "route_visits" (
   "visited_at" timestamptz,
   "source_document_type" text,
   "source_document_id" uuid,
+  "updated_at" timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT ck_route_visits_source CHECK ("visited_at" IS NULL OR "source_document_id" IS NOT NULL OR "source_document_type" = 'CHECK_IN')
 );
 --> statement-breakpoint
@@ -174,6 +177,7 @@ CREATE TABLE IF NOT EXISTS "van_stocks" (
   "qty" numeric(19, 6) NOT NULL,
   "value_amount" numeric(19, 4) NOT NULL,
   "as_of" timestamptz NOT NULL DEFAULT now(),
+  "updated_at" timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT pk_van_stocks PRIMARY KEY ("tenant_id", "warehouse_id", "item_id")
 );
 --> statement-breakpoint
@@ -191,6 +195,7 @@ CREATE TABLE IF NOT EXISTS "commission_rules" (
   "rate_pct" numeric(7, 4) NOT NULL,
   "is_active" boolean NOT NULL DEFAULT true,
   "created_at" timestamptz NOT NULL DEFAULT now(),
+  "updated_at" timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT ck_commission_basis CHECK ("basis" IN ('COLLECTED', 'INVOICED')),
   CONSTRAINT ck_commission_rate CHECK ("rate_pct" >= 0 AND "rate_pct" <= 100)
 );
@@ -211,6 +216,7 @@ CREATE TABLE IF NOT EXISTS "commission_runs" (
   "total_accrual" numeric(19, 4) NOT NULL DEFAULT 0,
   "posted_journal_id" uuid REFERENCES "journal_entries" ("id") ON DELETE SET NULL,
   "created_at" timestamptz NOT NULL DEFAULT now(),
+  "updated_at" timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT uq_commission_runs_tenant_no UNIQUE ("tenant_id", "run_no"),
   CONSTRAINT ck_commission_runs_status CHECK ("status" IN ('DRAFT', 'POSTED'))
 );

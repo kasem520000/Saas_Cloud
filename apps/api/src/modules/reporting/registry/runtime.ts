@@ -54,6 +54,7 @@ const SOURCE_MODULES: readonly DataSourceModule[] = [
   "identity",
   "tenancy",
   "reporting",
+    "distribution",
 ];
 
 const dataSourceSchema = z.object({
@@ -171,9 +172,10 @@ const MODULE_DATA_PHASE: Readonly<Record<DataSourceModule, number>> = Object.fre
   identity: 3,
   tenancy: 4,
   reporting: 13,
+  distribution: 17,
 });
 
-const REGISTERED_PHASE_WINDOW = 13;
+const REGISTERED_PHASE_WINDOW = 17;
 
 /** Financial reports must carry the §11 minimum assertion set (§16 checklist). */
 const FINANCIAL_MINIMUM_ASSERTIONS: Readonly<Record<string, readonly string[]>> = Object.freeze({

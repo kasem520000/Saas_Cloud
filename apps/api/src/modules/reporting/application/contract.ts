@@ -33,7 +33,8 @@ export type DataSourceModule =
   | "audit"
   | "identity"
   | "tenancy"
-  | "reporting";
+  | "reporting"
+  | "distribution";
 
 export interface DataSourceDecl {
   readonly module: DataSourceModule;
@@ -153,6 +154,9 @@ export interface ReportParams {
   readonly customerId?: string;
   readonly supplierId?: string;
   readonly itemId?: string;
+  readonly vehicleId?: string;
+  readonly repId?: string;
+  readonly routeId?: string;
   readonly customerIds?: readonly string[];
   readonly supplierIds?: readonly string[];
   readonly repIds?: readonly string[];

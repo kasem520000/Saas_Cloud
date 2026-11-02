@@ -13,7 +13,7 @@ vi.mock("../infrastructure/pos.store", () => ({
   deviceIsLive: vi.fn(async () => true),
   getCursor: vi.fn(async () => 0),
   setCursor: vi.fn(async () => undefined),
-  readChangeLog: vi.fn(async () => [] as Array<{ seq: number; entityId: string; op: string; payload: unknown }>),
+  readChangeLog: vi.fn(async () => [] as Array<{ seq: number; entityType: string; entityId: string; op: string; payload: unknown; createdAt: string }>),
 }));
 
 vi.mock("../application/pos-sale.service", () => ({
@@ -97,8 +97,8 @@ describe("PHASE-016 sync slice (unit)", () => {
 
   it("pull: advances the cursor to the last change seq and surfaces DELETE tombstones", async () => {
     vi.mocked(store.readChangeLog).mockResolvedValueOnce([
-      { seq: 11, entityId: "i1", op: "UPSERT", payload: {} },
-      { seq: 12, entityId: "i2", op: "DELETE", payload: {} },
+      { seq: 11, entityType: "items", entityId: "i1", op: "UPSERT", payload: {}, createdAt: "2026-11-02" },
+      { seq: 12, entityType: "items", entityId: "i2", op: "DELETE", payload: {}, createdAt: "2026-11-02" },
     ]);
     const svc = new SyncSliceService(makeSaleService({ status: "ACCEPTED", result: {}, replay: false }));
     const page = await svc.pull({ deviceId: "dev-1", entity: "items" });

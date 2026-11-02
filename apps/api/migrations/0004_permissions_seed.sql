@@ -201,9 +201,6 @@ INSERT INTO "permissions" ("key", "module", "description") VALUES
 ('manufacturing.production_orders.create', 'manufacturing', 'Production lifecycle (PHASE-018) / دورة أوامر الإنتاج'),
 ('manufacturing.production_orders.approve', 'manufacturing', 'Production lifecycle (PHASE-018) / دورة أوامر الإنتاج'),
 ('manufacturing.production_orders.post', 'manufacturing', 'Production lifecycle (PHASE-018) / دورة أوامر الإنتاج'),
-('distribution.routes.manage', 'distribution', 'Van-sales operations (PHASE-017) / المبيعات الميدانية'),
-('distribution.van_stock.view', 'distribution', 'Van-sales operations (PHASE-017) / المبيعات الميدانية'),
-('distribution.settlements.approve', 'distribution', 'Rep settlement approval / اعتماد تسويات المناديب'),
 -- §3.9 identity & tenancy (tenant-admin plane; PHASE-003)
 ('identity.users.invite', 'identity', 'User lifecycle / إدارة المستخدمين'),
 ('identity.users.view', 'identity', 'User lifecycle / إدارة المستخدمين'),
