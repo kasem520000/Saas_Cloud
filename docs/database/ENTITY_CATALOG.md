@@ -36,6 +36,15 @@ Legend: **Phase** = first implementation phase · **OC** = offline-creatable
 | `change_log` | Narrow sync slice (SYNC_PROTOCOL §11): POS feed-group change feed for pull cursors | tenant_id + seq (PK), entity_type, entity_id, op, payload jsonb, created_at | 016 (POS subset) / 020 (generalized) | no |
 | `sync_cursors` | Per-device pull cursors over the POS feed group | id (PK), tenant_id, device_id, entity_type (unique triple), cursor, updated_at | 016 (POS subset) / 020 | no |
 | `sync_commands` | Per-command idempotency + result replay (INV-013 second layer; C-01) | tenant_id + idempotency_key (PK), device_id, command_type, client_id, status, result jsonb, created_at | 016 (POS subset) / 020 (inbox retention) | no |
+| `vehicles` | Per-partner vehicle registry (make/model/VIN/plate/odometer) | id (PK), tenant_id, partner_id, make, model, vin (unique per tenant), plate, odometer_km | 017 | no |
+| `job_cards` | Workshop job cards (sales-owned document): lifecycle, vehicle ref, issue-mode policy, linked quotation/invoice | id (PK), tenant_id, branch_id, card_no (unique per tenant), customer_id, vehicle_id, sales_rep_id, status, issue_mode, quotation_id, invoice_id | 017 | no |
+| `job_card_lines` | Job-card lines: PARTS (stock item) vs LABOR (service item, hours) | id (PK), tenant_id, job_card_id, line_type, item_id, qty, unit_price, discount_amount, tax_code_id, batch_id, labor_hours | 017 | no |
+| `routes` | Distribution routes with day patterns (planning only — no posting) | id (PK), tenant_id, rep_id, name, day_pattern, is_active | 017 | no |
+| `route_visits` | Planned vs actual customer visits per route | id (PK), tenant_id, route_id, customer_id, planned_date, visited_at, source_document_type/id | 017 | no |
+| `rep_settlements` | Rep day settlements: expected vs counted cash, variance, day lock (BR-021) | id (PK), tenant_id, rep_id, settlement_no, settlement_date (unique per rep/day), status, expected_cash, counted_cash, variance_amount, approved_by, posted_journal_id | 017 | no |
+| `van_stocks` | Read-model mirror of stock_moves scoped to VAN warehouses | tenant_id + warehouse_id + item_id (PK), qty, value_amount, as_of | 017 | no |
+| `commission_rules` | Per-rep commission rules (basis COLLECTED/INVOICED, rate) | id (PK), tenant_id, rep_id, basis, rate_pct, is_active | 017 | no |
+| `commission_runs` | Commission accrual runs (post at run time only) | id (PK), tenant_id, run_no, period_from/to, status, total_accrual, posted_journal_id | 017 | no |
 | `billing_events` 🔒 | Append-only billing event log (webhook replay protection via unique provider_event_id) | tenant_id, event_type, subscription_id, invoice_id, provider_event_id, payload jsonb, actor_id, via_platform_admin | 014 | no |
 | `usage_counters` | §6 limit-counter read-model (never gates posting — INV-022) | tenant_id, counter_key, period (month), value | 014 | no |
 | `notifications` | In-app inbox (billing-critical subset, PHASE-014) | tenant_id, user_id (null = tenant-wide), type, title jsonb (bilingual), body jsonb, link, read_at | 014 | no |

@@ -4,9 +4,12 @@
 
 ## The single next action
 
-**Execute PHASE-017** per
-[../implementation/phases/PHASE-017.md](../implementation/phases/PHASE-017.md)
-(identified only — not started). PHASE-016 is COMPLETE (2026-11-02, tag `phase/016`;
+**Execute PHASE-018** per
+[../implementation/phases/PHASE-018.md](../implementation/phases/PHASE-018.md)
+(identified only — not started). PHASE-017 is COMPLETE (2026-11-02, tag `phase/017`;
+evidence: reports/PHASE-017-COMPLETION.md): automotive & distribution templates seeded via
+the unmodified PHASE-015 engine, domain cores for job cards / settlements / tiers /
+free goods / commissions with unit proof, drift 237=237, unit 195 PASS.
 evidence: reports/PHASE-016-COMPLETION.md): POS module live — terminals, counter sale
 through the sales chain, narrow offline sync slice with INV-013 dedupe, POS reports,
 template POS entries un-gated. PHASE-015 is COMPLETE (2026-11-02, tag `phase/015`;

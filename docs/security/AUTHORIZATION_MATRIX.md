@@ -181,6 +181,12 @@ permissions cannot be granted to `viewer`-derived templates).
 | `industry.templates.manage` | Apply industry template (PHASE-015) / تطبيق قالب الصناعة | owner | tenant | **yes** (audited) |
 | `industry.templates.switch` | Additive-only template switch, BR-038 (PHASE-015) / تبديل إضافي للقالب | owner | tenant | **yes** (audited) |
 | `industry.terminology.manage` | Template terminology overrides (PHASE-015) / مصطلحات القالب | owner | tenant | no |
+| `sales.job_cards.manage` | Job cards lifecycle (PHASE-017) / إدارة بطاقات العمل | sales, owner | tenant | no |
+| `sales.commissions.manage` | Commission rules/runs (PHASE-017) / قواعد وتشغيل العمولات | sales, owner | tenant | no |
+| `distribution.settlements.manage` | Open/count settlements (PHASE-017) / فتح وجرد التسويات | sales, owner | tenant | no |
+| `distribution.tiers.manage` | Customer price tiers (PHASE-017) / فئات أسعار العملاء | owner | tenant | no |
+| `distribution.free_goods.manage` | Free-goods rules (PHASE-017) / قواعد البضاعة المجانية | owner | tenant | no |
+
 | `pos.terminals.manage` | Register/activate POS terminals (PHASE-016) / تسجيل أجهزة نقاط البيع | owner | tenant | no |
 | `pos.sales.sell` | POS sale screen (PHASE-016) / شاشة البيع السريع | cashier, owner | tenant, terminal-scoped | no |
 | `pos.shifts.manage` | POS shift open/close with variance (PHASE-016) / ورديات نقاط البيع | cashier, owner | tenant, terminal-scoped | no |

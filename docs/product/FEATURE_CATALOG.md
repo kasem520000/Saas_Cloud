@@ -298,6 +298,7 @@ Point of sale (PHASE-016; offline sale queue is the scoped precursor of general 
 | `pos.offline_queue` | Offline sale queue · قائمة البيع دون اتصال | Local completion of sales with `OFF-` numbering, honest pending-sync state, server-side reconciliation | 1 | 016 | (device capability) | `pos.sales`, `pos.shifts` |
 | `pos.table_service` | Table service · خدمة الطاولات | Floor plan, tables/zones, order types, guest check with no ledger until payment (restaurant template) | 1 | 016 | `pos.sales.sell` | `pos.sales` |
 | `pos.kitchen_display` | Kitchen tickets · تذاكر المطبخ | Kitchen ticket printing for sent items; screen KDS is a roadmap extension | 1 | 016 | `pos.sales.sell` | `pos.sales`, `pos.receipts` |
+| `sales.job_cards` | Job cards · بطاقات العمل | Sales-module document combining parts issue + labor lines with vehicle ref; lifecycle DRAFT→IN_PROGRESS→COMPLETED→INVOICED (generalizes to `crm.service_orders` at 019 per CAPABILITY_MATRIX §2.6) | 1 | 017 | `sales.job_cards.manage` | `sales.quotations`, `inventory.reservations` |
 
 ## 17. Module: offline
 
