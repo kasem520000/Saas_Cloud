@@ -1,5 +1,9 @@
 import "reflect-metadata";
 
+// Root .env MUST be loaded before any module that parses process.env at
+// import time (config/env) — this side-effect import runs first.
+import "../scripts/load-env";
+
 import { config as loadDotenv } from "dotenv";
 import { NestFactory } from "@nestjs/core";
 
