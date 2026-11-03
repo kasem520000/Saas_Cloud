@@ -16,6 +16,10 @@ Prerequisites: Node 22 LTS, pnpm 9, Docker with Compose v2, Python 3.12+.
 
 ```bash
 pnpm install                 # workspace install (pnpm workspaces + Turborepo)
+                             # native builds (better-sqlite3 etc.) are NOT run at install time,
+                             # so install succeeds on any machine; to run the offline-sync
+                             # (sqlite) tests on a machine with build tools, add
+                             # "better-sqlite3" back to pnpm.onlyBuiltDependencies and reinstall
 pnpm env:setup               # creates .env from .env.example (never overwrites)
 pnpm db:up                   # docker compose: postgres:16 + redis (+ minio, mailpit)
 #   alternative, no Docker:  pnpm db:local   # embedded PostgreSQL 16 on :5432 (leave running)
