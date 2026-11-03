@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 
 import { DOCUMENT_STATUS_STYLE, DOCUMENT_TRANSITIONS } from "../status";
 import { bidi, isolateLTR, FSI, LRI, PDI } from "../bidi";
-import { DIRECTIONAL } from "../icons";
+import { DIRECTIONAL, ICON_REGISTRY } from "../icons";
 import {
   formatMoneyDisplay,
   moneyColorClass,
@@ -211,5 +211,12 @@ describe("navigation resolution (NAVIGATION_MODEL §2 — server-only)", () => {
     });
     expect(resolved.groups).toHaveLength(10);
     expect(resolved.groups.map((g) => g.id)).toEqual(NAV_GROUPS.map((g) => g.id));
+  });
+});
+
+describe("nav icon drift (NAV_ITEMS icons must exist in ICON_REGISTRY)", () => {
+  it("every navigation icon resolves to a registered component", () => {
+    const missing = NAV_ITEMS.map((i) => i.icon).filter((name) => !(name in ICON_REGISTRY));
+    expect(missing).toEqual([]);
   });
 });
