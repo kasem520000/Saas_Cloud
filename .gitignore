@@ -26,3 +26,6 @@ agent-ctx/local/
 
 # tool-output artifacts (session-local)
 tool-results/
+
+# pnpm db:local embedded PostgreSQL data dir
+.pgdata-local/

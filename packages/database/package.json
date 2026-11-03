@@ -1,0 +1,20 @@
+{
+  "name": "@erp/database",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared database layer constants (ADR-0005/ADR-0018): the single place for connection env names, role names, and schema-version helpers used by scripts, migrations tooling, and the API.",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@erp/config": "workspace:*",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}

@@ -56,7 +56,7 @@ export const faAssetRegisterContract = defineReport({
   category: "fixed-assets",
   description: bilingual("سجل الأصول بتكلفتها 积累 وتراكمية وصافي القيمة الدفترية", "Asset register with cost, accumulated depreciation and NBV"),
   parameters: z.object({ ...AS_OF_PARAMS, categoryCode: z.string().optional(), status: z.string().optional() }),
-  requiredPermission: "reports.fixed-assets.register.read",
+  requiredPermission: "fixed_assets.reports.view",
   dataSources: [
     source("fixed_assets", "fixedAssets.assetRegister", ["assets", "asset_categories", "depreciation_lines"], "Asset register and depreciation lines", "Asset register and depreciation lines"),
   ],
@@ -94,7 +94,7 @@ export const faDepreciationScheduleContract = defineReport({
   category: "fixed-assets",
   description: bilingual("جدولة الإهلاكPostedavenir المتبقي والمرحّل", "Posted and remaining depreciation schedule"),
   parameters: z.object({ assetCode: z.string().optional(), locale: LOCALE }),
-  requiredPermission: "reports.fixed-assets.register.read",
+  requiredPermission: "fixed_assets.reports.view",
   dataSources: [
     source("fixed_assets", "fixedAssets.depreciationSchedule", ["depreciation_lines", "depreciation_runs", "assets"], "Depreciation lines and runs", "Depreciation lines and runs"),
   ],
@@ -123,7 +123,7 @@ export const faMovementsContract = defineReport({
   category: "fixed-assets",
   description: bilingual(" giust IVA Portalnet acquisizioni, rivalutazioni, ammortamenti e dismissioni del periodo", "Acquisitions, revaluations, depreciation and disposals per period"),
   parameters: z.object(WINDOW_PARAMS),
-  requiredPermission: "reports.fixed-assets.register.read",
+  requiredPermission: "fixed_assets.reports.view",
   dataSources: [
     source("fixed_assets", "fixedAssets.movements", ["assets", "asset_disposals", "asset_revaluations", "depreciation_lines"], "Asset movement tables", "Asset movement tables"),
   ],

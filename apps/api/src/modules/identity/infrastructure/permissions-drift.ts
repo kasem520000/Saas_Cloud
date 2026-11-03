@@ -72,6 +72,40 @@ export function parseSeedKeys(seedSql: string): string[] {
   return [...new Set(keys)].sort();
 }
 
+let cachedSeedKeys: ReadonlySet<string> | undefined;
+let cachedKnownKeys: ReadonlySet<string> | undefined;
+
+/**
+ * The runtime known-permission set for boot-time contract validation.
+ *
+ * Two normative sources, unioned:
+ * 1. the permissions seed migration (the grantable catalog — the same file
+ *    the docs-drift checker diffs against AUTHORIZATION_MATRIX.md §3);
+ * 2. docs/reporting/REPORT_CATALOG.md — the report permission keys report
+ *    contracts require (matrix §12 rule; REPORT_CATALOG is their contract).
+ */
+export function loadSeedPermissionKeys(): ReadonlySet<string> {
+  if (cachedSeedKeys === undefined) {
+    const seedPath = resolveMonorepoPath("apps/api/migrations/0004_permissions_seed.sql");
+    cachedSeedKeys = new Set(parseSeedKeys(readFileSync(seedPath, "utf8")));
+  }
+  return cachedSeedKeys;
+}
+
+/** Report permission keys documented in REPORT_CATALOG.md (backticked tokens). */
+export function loadReportCatalogPermissionKeys(): ReadonlySet<string> {
+  const catalogPath = resolveMonorepoPath("docs/reporting/REPORT_CATALOG.md");
+  const tokens = [...readFileSync(catalogPath, "utf8").matchAll(/`([a-z][a-z0-9_]+\.[a-z0-9_.-]+)`/g)].map((m) => m[1]!);
+  return new Set(tokens);
+}
+
+export function loadKnownPermissionKeys(): ReadonlySet<string> {
+  if (cachedKnownKeys === undefined) {
+    cachedKnownKeys = new Set([...loadSeedPermissionKeys(), ...loadReportCatalogPermissionKeys()]);
+  }
+  return cachedKnownKeys;
+}
+
 /** Bidirectional diff (fail-closed on any drift). */
 export function diffDrift(matrixKeys: readonly string[], seedKeys: readonly string[]): DriftResult {
   const matrix = new Set(matrixKeys);

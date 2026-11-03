@@ -24,6 +24,7 @@ import { ExportService } from "./application/export/export-service";
 import { ReportingController } from "./presentation/reporting.controller";
 import { REPORT_CONTRACTS } from "./registry";
 import { validateRegistry } from "./registry/runtime";
+import { loadKnownPermissionKeys } from "../identity/infrastructure/permissions-drift";
 import { ContractValidationError } from "./domain/reporting-errors";
 import { setRenderEngine, getRenderEngine } from "./application/render/engine-holder";
 import { ChromiumRenderEngine } from "./application/render/render-engine";
@@ -43,82 +44,7 @@ import { ownTenantBaseCurrency } from "../../infra/settings/setting-reader";
  * (permissions-drift keeps the seed ↔ matrix parity).
  */
 
-const KNOWN_PERMISSION_KEYS: ReadonlySet<string> = new Set([
-  "reporting.reports.run",
-  "sales.job_cards.manage",
-  "sales.commissions.manage",
-  "distribution.routes.manage",
-  "distribution.van_stock.view",
-  "distribution.settlements.manage",
-  "distribution.settlements.approve",
-  "distribution.tiers.manage",
-  "distribution.free_goods.manage",
-  "partners.balances.read",
-  "sales.invoices.read",
-  "manufacturing.boms.manage",
-  "manufacturing.production_orders.view",
-  "manufacturing.production_orders.create",
-  "manufacturing.production_orders.approve",
-  "manufacturing.production_orders.post",
-  "manufacturing.scrap.post",
-  "manufacturing.qc.manage",
-  "manufacturing.genealogy.read",
-  "manufacturing.costing.read",
-  "crm.leads.manage",
-  "crm.tasks.manage",
-  "crm.activities.manage",
-  "crm.contracts.manage",
-  "crm.service_orders.manage",
-  "accounting.projects.manage",
-  "reporting.reports.export",
-  "reporting.templates.manage",
-  "reports.financial.tb.read",
-  "reports.financial.gl.read",
-  "reports.financial.is.read",
-  "reports.financial.bs.read",
-  "reports.financial.cf.read",
-  "reports.financial.close.read",
-  "reports.accounting.cost-centers.read",
-  "accounting.journals.read",
-  "reports.ar.aging.read",
-  "reports.ap.aging.read",
-  "sales.statements.read",
-  "purchasing.statements.read",
-  "reports.ar-alloc.read",
-  "partners.balances.read",
-  "reports.sales.by-item.read",
-  "reports.sales.by-customer.read",
-  "reports.sales.by-rep.read",
-  "reports.sales.by-paymethod.read",
-  "reports.sales.pipeline.read",
-  "reports.sales.by-branch.read",
-  "reports.sales.profitability.read",
-  "reports.purchasing.by-supplier.read",
-  "reports.purchasing.by-item.read",
-  "reports.purchasing.grni.read",
-  "purchasing.po.read",
-  "reports.purchasing.matching.read",
-  "inventory.stock.read",
-  "inventory.moves.read",
-  "inventory.valuation.read",
-  "inventory.batches.read",
-  "inventory.counts.read",
-  "inventory.serials.read",
-  "treasury.cash.read",
-  "treasury.receipts.read",
-  "treasury.payments.read",
-  "treasury.petty.read",
-  "treasury.expenses.read",
-  "treasury.shifts.read",
-  "treasury.bankrec.read",
-  "reports.treasury.fx.read",
-  "reports.tax.vat-return.read",
-  "reports.tax.summary.read",
-  "platform.audit.read",
-  "platform.users.read",
-  "platform.reporting.read",
-  "platform.tenants.read",
-]);
+const KNOWN_PERMISSION_KEYS: ReadonlySet<string> = loadKnownPermissionKeys();
 
 @Module({
   imports: [

@@ -2,7 +2,7 @@
   "name": "erp-platform",
   "version": "0.1.0",
   "private": true,
-  "description": "Universal Business ERP Platform — multi-tenant, multi-industry SaaS ERP for MENA/GCC (Arabic-first). Monorepo per ADR-0002.",
+  "description": "Universal Business ERP Platform \u2014 multi-tenant, multi-industry SaaS ERP for MENA/GCC (Arabic-first). Monorepo per ADR-0002.",
   "packageManager": "pnpm@9.15.9",
   "engines": {
     "node": ">=22.12"
@@ -30,7 +30,11 @@
     "test:web-security": "pnpm --filter @erp/web build && pnpm --filter @erp/web exec playwright test -c playwright.probe.config.ts",
     "check:token-contrast": "tsx scripts/check-token-contrast.ts",
     "check:ui-catalog": "tsx scripts/check-ui-catalog-coverage.ts",
-    "test:visual-harness-run": "pnpm --filter @erp/ui test:harness"
+    "test:visual-harness-run": "pnpm --filter @erp/ui test:harness",
+    "env:setup": "node scripts/env-setup.mjs",
+    "db:up": "docker compose up -d postgres redis",
+    "db:local": "pnpm --filter @erp/api db:local",
+    "db:seed": "pnpm --filter @erp/api db:seed"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

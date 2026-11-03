@@ -16,10 +16,20 @@ Prerequisites: Node 22 LTS, pnpm 9, Docker with Compose v2, Python 3.12+.
 
 ```bash
 pnpm install                 # workspace install (pnpm workspaces + Turborepo)
-cp .env.example .env         # local env — never commit real secrets
-docker compose up -d         # postgres:16 + minio + mailpit + api + web
+pnpm env:setup               # creates .env from .env.example (never overwrites)
+pnpm db:up                   # docker compose: postgres:16 + redis (+ minio, mailpit)
+#   alternative, no Docker:  pnpm db:local   # embedded PostgreSQL 16 on :5432 (leave running)
+pnpm --filter @erp/config --filter @erp/contracts --filter @erp/database run build
+pnpm db:migrate              # drizzle migrations + dev role passwords
+pnpm db:seed                 # demo test company (idempotent; dev-only credentials)
 pnpm dev                     # api on :3001, web on :3000 (hot reload)
 ```
+
+`pnpm db:seed` creates the demo tenant «شركة الاختبار للتجارة» (Demo Trading Co.,
+SA/SAR, wholesale template) with owner `demo.owner@erp-demo.test` /
+`Demo-12345-strong`, a demo customer `CUST-DEMO-001` and a demo service item
+`SVC-CONSULT-001`. Re-running is a no-op. The old manual flow
+(`cp .env.example .env` + `docker compose up -d` + `pnpm dev`) still works.
 
 Verify:
 

@@ -29,7 +29,7 @@ export const budgetVsActualContract = defineReport({
   category: "budgeting",
   description: bilingual("Budget, actual, variance and variance % per dimension and period", "Budget, actual, variance and variance % per dimension and period"),
   parameters: z.object({ ...WINDOW, budgetId: z.string().optional() }),
-  requiredPermission: "reports.budgeting.variance.read",
+  requiredPermission: "budgeting.reports.view",
   dataSources: [
     source("budgeting", "budgeting.budgetVsActual", ["budgets", "budget_lines"], "Budget register", "Budget register"),
     source("accounting", "gl.accountBalances (read-only actuals)", ["journal_lines", "journal_entries"], "GL actuals via read services", "GL actuals via read services"),
@@ -56,7 +56,7 @@ export const varianceAnalysisContract = defineReport({
   category: "budgeting",
   description: bilingual("Period trends and top over/under-budget lines with threshold highlighting", "Period trends and top over/under-budget lines with threshold highlighting"),
   parameters: z.object(WINDOW),
-  requiredPermission: "reports.budgeting.variance.read",
+  requiredPermission: "budgeting.reports.view",
   dataSources: [
     source("budgeting", "budgeting.varianceAnalysis", ["budgets", "budget_lines"], "Budget register", "Budget register"),
     source("accounting", "gl.accountMovements (read-only)", ["journal_lines", "journal_entries"], "GL period movements via read services", "GL period movements via read services"),

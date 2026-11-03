@@ -253,7 +253,7 @@ export const salesDiscountEffectivenessContract = defineReport({
   category: "sales",
   description: bilingual("إجمالي الخصومات الممنوحة مقابل gross المبيعات", "Total granted discounts vs gross sales"),
   parameters: z.object({ ...WINDOW_PARAMS }),
-  requiredPermission: "sales.invoices.read",
+  requiredPermission: "sales.invoices.view",
   dataSources: [
     source("distribution", "distributionQueries.discountTotals", ["sales_invoices", "sales_invoice_lines"], "الخصومات", "Discounts"),
   ],

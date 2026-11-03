@@ -28,7 +28,10 @@ async function main(): Promise<void> {
   const client = new Client({ connectionString: url });
   await client.connect();
   for (const [role, password] of Object.entries(DEV_PASSWORDS)) {
-    await client.query(`ALTER ROLE ${role} PASSWORD $1`, [password]);
+    // ALTER ROLE does not accept bind parameters — the value is one of the
+    // two known dev constants, single-quote-escaped defensively.
+    const escaped = password.replace(/'/g, "''");
+    await client.query(`ALTER ROLE ${role} PASSWORD '${escaped}'`);
     console.log(`[db-dev-credentials] ${role}: dev password set`);
   }
   await client.end();
