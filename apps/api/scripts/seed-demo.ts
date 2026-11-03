@@ -5,6 +5,8 @@
  * no-op (the owner email is the idempotency key). Requires the DB migrated
  * (pnpm db:migrate) and DATABASE_URL set (pnpm env:setup).
  */
+import "./load-env";
+
 import { sql } from "drizzle-orm";
 
 import { getDb } from "../src/infra/db/client";

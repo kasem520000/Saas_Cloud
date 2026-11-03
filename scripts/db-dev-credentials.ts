@@ -1,3 +1,7 @@
+import { loadDotEnv } from "../apps/api/scripts/load-env";
+
+loadDotEnv();
+
 import { Client } from "pg";
 
 /**

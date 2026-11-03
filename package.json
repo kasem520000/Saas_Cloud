@@ -13,7 +13,7 @@
     "lint": "turbo run lint",
     "lint:depcruise": "dependency-cruiser apps packages --config .dependency-cruiser.cjs",
     "test": "turbo run test",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --filter=@erp/api --filter=@erp/web",
     "docs:validate": "python3 scripts/validate_docs.py",
     "boundary:negative-test": "bash scripts/ci/negative-boundary-test.sh",
     "gate:local": "bash scripts/ci/local-gate.sh",

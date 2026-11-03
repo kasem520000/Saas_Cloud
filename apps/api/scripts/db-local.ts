@@ -5,6 +5,8 @@
  * `pnpm dev` then just work against postgres://...@localhost:5432/erp.
  * Stop with Ctrl+C. (Alternative to `pnpm db:up`'s docker postgres.)
  */
+import "./load-env";
+
 import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -24,9 +26,18 @@ const pg = new EmbeddedPostgres({
 });
 
 async function main(): Promise<void> {
-  await pg.initialise();
+  // Persistent data dir: initialise only on first run (PG_VERSION marks an
+  // existing cluster) so `pnpm db:local` can be stopped and restarted.
+  const { existsSync } = await import("node:fs");
+  if (!existsSync(resolve(dataDir, "PG_VERSION"))) {
+    await pg.initialise();
+  }
   await pg.start();
-  await pg.createDatabase("erp");
+  try {
+    await pg.createDatabase("erp");
+  } catch {
+    // database already exists on a restarted cluster — fine
+  }
 
   console.log(`db:local: PostgreSQL 16 running on localhost:${port} (embedded, persistent at ${dataDir})`);
   console.log(`db:local: DATABASE_URL=postgres://erp_app:erp_app@localhost:${port}/erp`);
